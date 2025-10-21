@@ -15,7 +15,7 @@ class Mass():
                     x_mass = each[2].split('=')[1]
                     y_mass = each[3].split('=')[1]
                     z_mass = each[4].split('=')[1]
-                    mass.write(f"mass {nodeTag} {x_mass} {y_mass} {z_mass}\n")
+                    mass.write(f"mass {nodeTag} {x_mass} {y_mass} {z_mass} 0 0 0\n")
                 else:
                     print("节点质量写入完成")
                     break

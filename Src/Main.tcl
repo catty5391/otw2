@@ -4,7 +4,7 @@ if { [file exists ../output] == 0 } {
 }
 
 puts "System"
-model basic -ndm 3 -ndf 3
+model basic -ndm 3 -ndf 6
 
 puts "Node"
 source Node.tcl
@@ -21,22 +21,20 @@ source Material.tcl
 puts "Section"
 source Section.tcl
 
-# puts "Transformation"
-# source geomtransf.tcl
+puts "Transformation"
+source geomtransf.tcl
 
 puts "Element"
 source Element.tcl
 
-recorder Node -file ../output/Node_accel.out -time -node 172  -dof 2 accel
+recorder Node -file ../output/Node_accel.out -time -node 350  -dof 2 accel
 
-recorder Node -file ../output/Node_velocity.out -time -node 172  -dof 2 vel
+recorder Node -file ../output/Node_velocity.out -time -node 350  -dof 2 vel
 
-recorder Node -file ../output/Node_disp.out -time -node 172  -dof 2 disp
+recorder Node -file ../output/Node_disp.out -time -node 350  -dof 2 disp
 
-recorder Drift -file ../output/drift.out -time -iNode 172 -jNode 732 -dof 2 -perpDirn 3
+recorder Drift -file ../output/drift.out -time -iNode 350 -jNode 510 -dof 2 -perpDirn 3
 
-recorder Element -file ../output/stress.out -time -ele 344 section 1 fiberData 
-#node 1492 3.28 -3.28 3.2
 
 
 
@@ -62,7 +60,7 @@ puts "Force"
 source ../normal_force/force.tcl
 
 
-integrator DisplacementControl 172 2 0.01
+integrator DisplacementControl 350 2 0.01
 
 analyze 200
 

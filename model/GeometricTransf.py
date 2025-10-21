@@ -44,7 +44,7 @@ class GeometricTransf():
                 i_coord = node[node['num'] == nodei]
                 j_coord = node[node['num'] == nodej] 
                 z_axis = self.GeomTransfVector(i_coord, j_coord)
-                geo.write(f"geomTransf PDelta {eletag} {z_axis[0]} {z_axis[1]} {z_axis[2]}\n")
+                geo.write(f"geomTransf Linear {eletag} {z_axis[0]} {z_axis[1]} {z_axis[2]}\n")
 
 if __name__ == "__main__":
     geo_test = GeometricTransf()

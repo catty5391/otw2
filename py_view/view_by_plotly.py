@@ -25,6 +25,7 @@ z_lines = []
 all_x = []
 all_y = []
 all_z = []
+nodes = []
 
 for _, element in element_df.iterrows():
     node1 = element['node1']
@@ -40,6 +41,7 @@ for _, element in element_df.iterrows():
         z_lines.extend([z1, z2, None])
         
         # 收集所有点坐标
+        nodes.extend([node1, node2])
         all_x.extend([x1, x2])
         all_y.extend([y1, y2])
         all_z.extend([z1, z2])
@@ -71,7 +73,7 @@ fig.add_trace(go.Scatter3d(
         opacity=0.8
     ),
     name='Nodes',
-    text=[f'Node: {i}<br>X: {x}<br>Y: {y}<br>Z: {z}' for i, (x, y, z) in enumerate(zip(all_x, all_y, all_z))], # 悬停信息
+    text=[f'Node: {node}<br>X: {x}<br>Y: {y}<br>Z: {z}' for i,(node, x, y, z) in enumerate(zip(nodes, all_x, all_y, all_z))], # 悬停信息
     hoverinfo='text'
 ))
 

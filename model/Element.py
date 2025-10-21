@@ -58,11 +58,11 @@ class Element():
 
                 secTag = secTag_mat[secTag_mat.iloc[:,1] == mat].iloc[0].iloc[0]
  
-                # #dispBeamColumn 建模
-                # ele.write(f"element dispBeamColumn {each['eletag']} {each['nodei']} {each['nodej']} {each['internum']} {secTag} {each['eletag']}\n")
+                #dispBeamColumn 建模
+                ele.write(f"element dispBeamColumn {each['eletag']} {each['nodei']} {each['nodej']} {each['internum']} {secTag} {each['eletag']}\n")
 
-                # truss建模
-                ele.write(f"element trussSection {each['eletag']} {each['nodei']} {each['nodej']} {secTag}\n")
+                # # truss建模
+                # ele.write(f"element trussSection {each['eletag']} {each['nodei']} {each['nodej']} {secTag}\n")
 
 
     
