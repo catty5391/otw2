@@ -262,7 +262,7 @@ def plot_correlation(tau, corr, tau_, corr_, max_lags, figname=None):
 class ConfigData(object):
     def __init__(self, fname):
         self.config = configparser.ConfigParser()
-        self.config.read(fname)
+        self.config.read(fname,encoding="UTF-8")
         self.parse()
 
     def _parse_wind(self):

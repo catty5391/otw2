@@ -5,7 +5,7 @@ import waws
 
 
 if __name__ == "__main__":
-    config = waws.ConfigData("config.ini")
+    config = waws.ConfigData("D:/潘启恒课题相关/work/fluctuate_wind_simulate/config.ini")
 
     # npts = 5
     # points = np.zeros((npts,4))
