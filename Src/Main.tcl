@@ -27,6 +27,12 @@ source geomtransf.tcl
 puts "Element"
 source Element.tcl
 
+puts "Timeseries"
+source ../fluctuate_wind_simulate/wind_press/wind_force_tcl/timeseries.tcl
+
+puts "Pattern"
+source ../fluctuate_wind_simulate/wind_press/wind_force_tcl/pattern.tcl
+
 recorder Node -file ../output/Node_accel.out -time -node 350  -dof 2 accel
 
 recorder Node -file ../output/Node_velocity.out -time -node 350  -dof 2 vel
@@ -53,16 +59,12 @@ constraints Plain;
 numberer RCM;					                       
 system BandGeneral;				
 test NormDispIncr 1.0e-3 40 2;			
-algorithm KrylovNewton;					
+algorithm KrylovNewton;	
+integrator Newmark 0.5 0.25				
 		                                                               
-analysis Static;	
-puts "Force"
-source ../normal_force/force.tcl
+analysis Transient;	
 
-
-integrator DisplacementControl 350 2 0.01
-
-analyze 200
+analyze 8193 8.333333333333332871e-02
 
 
 
