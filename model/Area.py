@@ -12,7 +12,7 @@ class Area:
     def get_area(self):
         #计算输电塔的风荷载输入
 
-
+        os.chdir("./model")
         def SearchKeyword(keyword, lines):
             for index, line in enumerate(lines):
                 if keyword in line:
