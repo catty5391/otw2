@@ -64,7 +64,7 @@ integrator Newmark 0.5 0.25
 		                                                               
 analysis Transient;	
 
-analyze 8193 8.333333333333332871e-02
+analyze 8192 8.333333333333332871e-02
 
 
 

@@ -11,8 +11,8 @@ A_s = A.get_area()
 
 column_name = ["t","n0","n1","n2","n3","n4","n5","n6","n7","n8","n9","n10","n11"]
 
-wind_speed = pd.read_csv(os.path.join(script_dir,  'results/wind_speed.csv'), skiprows=0, header=None, names=column_name)
-
+wind_speed = pd.read_csv(os.path.join(script_dir,  'results/wind_speed.csv'), skiprows=1, header=None, names=column_name)
+print(wind_speed)
 for i in range(12):
     area = A_s[i]
     wind_speed.iloc[:,i+1] = wind_speed.iloc[:,i+1].apply(lambda x: 0.5 * 1.225 * x**2 * area)

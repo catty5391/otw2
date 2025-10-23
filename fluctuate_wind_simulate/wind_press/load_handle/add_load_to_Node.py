@@ -20,7 +20,7 @@ with open("../wind_force_tcl/timeseries.tcl","w") as ts:
             Node_list = config[floor_name]
             Node_num = len(Node_list)
             read_filename = f"../floor{i}_wind_press.csv"
-            floor_wind = pd.read_csv(read_filename) /Node_num
+            floor_wind = pd.read_csv(read_filename, header=None) /Node_num
             write_filename = f"../wind_force_tcl/floor{i}.tcl"
             floor_wind.to_csv(write_filename, header=False, index=False)
             ts.write(f"timeSeries Path {i} -dt {dt} -filePath ../fluctuate_wind_simulate/wind_press/wind_force_tcl/floor{i}.tcl\n")

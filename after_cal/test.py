@@ -10,8 +10,14 @@ os.chdir(script_dir)
 df = pd.read_csv("../output/Node_accel.out", header = None, sep = " ")
 
 time = df.iloc[:,0].values
-force = df.iloc[:, 1].values
+disp = df.iloc[:, 1].values
 
 
-plt.plot(time, force)
+plt.plot(time, disp)
+plt.xticks(fontsize = 20)
+plt.yticks(fontsize = 20)
+plt.xlabel("time(s)", fontsize = 20)
+plt.ylabel("accelerate(m/s^2)", fontsize = 20)
+
+
 plt.show()
