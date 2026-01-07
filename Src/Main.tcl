@@ -7,25 +7,25 @@ puts "System"
 model basic -ndm 3 -ndf 6
 
 puts "Node"
-source Node.tcl
+source ../Src/Node.tcl
 
 puts "Mass"
-source Mass.tcl
+source ../Src/Mass.tcl
 
 puts "Restraint"
-source Fix.tcl
+source ../Src/Fix.tcl
 
 puts "Material"
-source Material.tcl
+source ../Src/Material.tcl
 
 puts "Section"
-source Section.tcl
+source ../Src/Section.tcl
 
 puts "Transformation"
-source geomtransf.tcl
+source ../Src/geomtransf.tcl
 
 puts "Element"
-source Element.tcl
+source ../Src/Element.tcl
 
 puts "Timeseries"
 source ../fluctuate_wind_simulate/wind_press/wind_force_tcl/timeseries.tcl
@@ -46,15 +46,15 @@ recorder Drift -file ../output/drift.out -time -iNode 350 -jNode 510 -dof 2 -per
 
 
 
-set temp [eigen 1]
-scan $temp "%e"  w1s
-set w1 [expr sqrt($w1s)]
-puts "第一阶频率   f: [expr $w1/6.28]"
-set ksi  0.02
-set a0 0
-set a1 [expr $ksi*2.0/$w1]
-rayleigh          $a0            0.0            $a1                0.0
-wipeAnalysis;					                                                              
+# set temp [eigen 1]
+# scan $temp "%e"  w1s
+# set w1 [expr sqrt($w1s)]
+# puts "第一阶频率   f: [expr $w1/6.28]"
+# set ksi  0.02
+# set a0 0
+# set a1 [expr $ksi*2.0/$w1]
+# rayleigh          $a0            0.0            $a1                0.0
+# wipeAnalysis;					                                                              
 constraints Plain;     				                       
 numberer RCM;					                       
 system BandGeneral;				

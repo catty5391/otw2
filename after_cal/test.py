@@ -20,4 +20,4 @@ plt.xlabel("time(s)", fontsize = 20)
 plt.ylabel("accelerate(m/s^2)", fontsize = 20)
 
 
-plt.show()
+plt.savefig("test.png")
