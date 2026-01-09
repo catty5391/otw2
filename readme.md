@@ -19,3 +19,14 @@ sp...
 ...
 }
 ```
+### 使用pushover验证应力应变关系提取正确性
+1. 应力应变关系折线图
+```py
+ops.recorder('Element', '-file', 'opstool/.output/Element9_section1.out', '-time', '-ele', 9, 'section', 1, 'fiber', -0.05, 0.15, 'stressStrain')
+```
+<img src="opstool/.output/plot_element9_stress_strain.png">
+
+2. 最后一步应力分布图
+
+<img src="opstool/.output/stress_Distribution.png">
+
