@@ -2,6 +2,7 @@
 
 import openseespy.opensees as ops
 import opstool as opst
+import opstool.vis.plotly as opsvis
 
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -9916,19 +9917,6 @@ ops.pattern('Plain', 2412, 11)
 ops.load(201, 0, 1, 0, 0, 0, 0)
 ops.pattern('Plain', 492, 11)
 ops.load(41, 0, 1, 0, 0, 0, 0)
-ops.recorder('Node', '-file', '../output/Node_accel.out', '-time', '-node', 350, '-dof', 2, 'accel')
-ops.recorder('Node', '-file', '../output/Node_velocity.out', '-time', '-node', 350, '-dof', 2, 'vel')
-ops.recorder('Node', '-file', '../output/Node_disp.out', '-time', '-node', 350, '-dof', 2, 'disp')
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.001, 40, 2)
-ops.algorithm('KrylovNewton')
-ops.integrator('Newmark', 0.5, 0.25)
-ops.analysis('Transient')
-ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp = True, fiber_ele_tags = [9])
-for i in range(100):
-    ops.analyze(1,0.08333333333333333)
-    ODB.fetch_response_step()
-ODB.save_response()
-print('over')
+opsvis.set_plot_props(point_size=0, line_width=3)
+fig = opsvis.plot_model(show_nodal_loads=True, show_ele_loads=True, show_local_axes=True, show_ele_numbering=True)
+fig.show()

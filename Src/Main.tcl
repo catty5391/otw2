@@ -1,45 +1,40 @@
 wipe
-if { [file exists ../output] == 0 } {
-    file mkdir ../output
-}
 
 puts "System"
 model basic -ndm 3 -ndf 6
 
 puts "Node"
-source ../Src/Node.tcl
+source Src/Node.tcl
 
 puts "Mass"
-source ../Src/Mass.tcl
+source Src/Mass.tcl
 
 puts "Restraint"
-source ../Src/Fix.tcl
+source Src/Fix.tcl
 
 puts "Material"
-source ../Src/Material.tcl
+source Src/Material.tcl
 
 puts "Section"
-source ../Src/Section.tcl
+source Src/Section.tcl
 
 puts "Transformation"
-source ../Src/geomtransf.tcl
+source Src/geomtransf.tcl
 
 puts "Element"
-source ../Src/Element.tcl
+source Src/Element.tcl
 
 puts "Timeseries"
-source ../fluctuate_wind_simulate/wind_press/wind_force_tcl/timeseries.tcl
+source fluctuate_wind_simulate/wind_press/wind_force_tcl/timeseries.tcl
 
 puts "Pattern"
-source ../fluctuate_wind_simulate/wind_press/wind_force_tcl/pattern.tcl
+source fluctuate_wind_simulate/wind_press/wind_force_tcl/pattern.tcl
 
-recorder Node -file ../output/Node_accel.out -time -node 350  -dof 2 accel
+recorder Node -file output/Node_accel.out -time -node 350  -dof 2 accel
 
-recorder Node -file ../output/Node_velocity.out -time -node 350  -dof 2 vel
+recorder Node -file output/Node_velocity.out -time -node 350  -dof 2 vel
 
-recorder Node -file ../output/Node_disp.out -time -node 350  -dof 2 disp
-
-recorder Drift -file ../output/drift.out -time -iNode 350 -jNode 510 -dof 2 -perpDirn 3
+recorder Node -file output/Node_disp.out -time -node 350  -dof 2 disp
 
 
 

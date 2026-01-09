@@ -1,0 +1,26 @@
+import opstool as opst
+import matplotlib.pyplot as plt
+import numpy as np
+sec_resp = opst.post.get_element_responses(odb_tag=1, ele_type="FiberSection")  # odb_tag=1 as above
+print(sec_resp.data_vars)
+print("-" * 100)
+print(sec_resp.dims)
+print("-" * 100)
+print(sec_resp.coords)
+print("-" * 100)
+stress = sec_resp["Stresses"].sel(eleTags = 9, secPoints=1).isel(time=99)
+strain = sec_resp["Strains"].sel(eleTags = 9, secPoints=1).isel(time=-1)
+y = sec_resp["ys"].sel(eleTags = 9, secPoints = 1)
+z = sec_resp["zs"].sel(eleTags = 9, secPoints = 1)
+mat = sec_resp["matTags"].sel(eleTags = 9, secPoints = 1)
+cond = (mat == 3)
+plt.figure(figsize=(6, 5))
+scatter = plt.scatter(y[cond], z[cond], c=stress[cond], cmap="jet", s=50)
+plt.xlabel("Y Coordinate")
+plt.ylabel("Z Coordinate")
+plt.title("Stress Distribution\n(Element 9, Section 1, matTag=3)")
+plt.colorbar(scatter, label="Stress")
+plt.axis("equal")
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+plt.savefig("opstool/.output/stress_Distribution.png")
