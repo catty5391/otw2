@@ -10,3 +10,6 @@ pattern Plain 1 Linear {
    eleLoad -ele 2 -type -beamUniform 0 2000.;
    eleLoad -ele 3 -type -beamUniform 0 0 -2000.;
 };
+
+#时间置零，锁定荷载
+loadConst -time 0.0

@@ -30,3 +30,16 @@ ops.recorder('Element', '-file', 'opstool/.output/Element9_section1.out', '-time
 
 <img src="opstool/.output/stress_Distribution.png">
 
+### 脉动风荷载下应力应变曲线提取
+
+1. 正常情况下应力应变关系折线图
+
+<img src="fluctuate_wind_simulate/.output/opensees_simulate/plot_element9_stress_strain_y=-0.05_z=0.15.png">
+
+2. 将荷载扩大20倍
+
+<img src="fluctuate_wind_simulate/.output/opensees_simulate/plot_element9_stress_strain_y=-0.05_z=0.15_force*20.png">
+
+### 全塔应力云图
+...
+寻找薄弱点针对分析
