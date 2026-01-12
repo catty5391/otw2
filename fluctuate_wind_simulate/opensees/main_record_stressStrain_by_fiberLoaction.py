@@ -9804,8 +9804,8 @@ ops.timeSeries('Path', 10, '-dt', 0.08333333333333333, '-filePath', 'fluctuate_w
 ops.timeSeries('Path', 11, '-dt', 0.08333333333333333, '-filePath', 'fluctuate_wind_simulate/wind_press/wind_force_tcl/floor11.tcl')
 print('Pattern')
 # 施加重力荷载，并完成分析
-ops.timeSeries("Constant", 1)  # Define a constant time series, tag = 1
-ops.pattern("Plain", 1, 1)  # Define a load pattern, tag = 1
+ops.timeSeries("Constant", 12)  # Define a constant time series, tag = 1
+ops.pattern("Plain", 12, 12)  # Define a load pattern, tag = 1
 node_loads = opst.pre.create_gravity_load(direction="Y", factor=-9.81)  # Create gravity loads in the pattern tag=1
 ops.constraints('Plain')
 ops.numberer('RCM')
@@ -9934,12 +9934,12 @@ ops.load(41, 0, 1, 0, 0, 0, 0)
 ops.recorder('Node', '-file', 'fluctuate_wind_simulate/.output/opensees_simulate/Node_accel.out', '-time', '-node', 350, '-dof', 2, 'accel')
 ops.recorder('Node', '-file', 'fluctuate_wind_simulate/.output/opensees_simulate/Node_velocity.out', '-time', '-node', 350, '-dof', 2, 'vel')
 ops.recorder('Node', '-file', 'fluctuate_wind_simulate/.output/opensees_simulate/Node_disp.out', '-time', '-node', 350, '-dof', 2, 'disp')
-ops.recorder('Element', '-file', 'fluctuate_wind_simulate/.output/opensees_simulate/Element9_section1.out', '-time', '-ele', 9, 'section', 1, 'fiber', -0.05, 0.15, 'stressStrain')
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.001, 40, 2)
-ops.algorithm('KrylovNewton')
+ops.recorder('Element', '-file', 'fluctuate_wind_simulate/.output/opensees_simulate/Element_all_section_1.out', '-time', '-ele', *ops.getEleTags(), 'section', 1, 'fiber', -0.05, 1, 'stress')
+# ops.constraints('Plain')
+# ops.numberer('RCM')
+# ops.system('BandGeneral')
+# ops.test('NormDispIncr', 0.001, 40, 2)
+# ops.algorithm('KrylovNewton')
 ops.integrator('Newmark', 0.5, 0.25)
 ops.analysis('Transient')
 ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp = True, fiber_ele_tags = [9])

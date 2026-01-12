@@ -9794,7 +9794,7 @@ ops.recorder('Node', '-file', 'pushover/.output/with_gravity/Node_accel.out', '-
 ops.recorder('Node', '-file', 'pushover/.output/with_gravity/Node_velocity.out', '-time', '-node', 350, '-dof', 2, 'vel')
 ops.recorder('Node', '-file', 'pushover/.output/with_gravity/Node_disp.out', '-time', '-node', 350, '-dof', 2, 'disp')
 ops.recorder('Element', '-file', 'pushover/.output/with_gravity/Element9_section1.out', '-time', '-ele', 9, 'section', 1, 'fiber', -0.05, 0.15, 'stressStrain')
-
+ops.recorder('Element', '-file', 'pushover/.output/with_gravity/Element_all_section1.out', '-time', '-ele', *ops.getEleTags(), 'section', 1, 'fiber', -0.05, 1, 'stress')
 ops.timeSeries("Constant", 1)  # Define a constant time series, tag = 1
 ops.pattern("Plain", 1, 1)  # Define a load pattern, tag = 1
 node_loads = opst.pre.create_gravity_load(direction="Y", factor=-9.81)  # Create gravity loads in the pattern tag=1
@@ -9814,11 +9814,11 @@ ops.loadConst('-time', 0.0)
 ops.timeSeries('Linear', 2)
 ops.pattern('Plain', 2, 2)
 ops.load(350, 0, 1, 0, 0, 0, 0)
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.01, 40, 2)
-ops.algorithm('KrylovNewton')
+# ops.constraints('Plain')
+# ops.numberer('RCM')
+# ops.system('BandGeneral')
+# ops.test('NormDispIncr', 0.01, 40, 2)
+# ops.algorithm('KrylovNewton')
 ops.integrator('DisplacementControl', 350, 2, 0.01)
 ops.analysis('Static')
 

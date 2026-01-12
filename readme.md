@@ -20,6 +20,10 @@ sp...
 }
 ```
 ### 使用pushover验证应力应变关系提取正确性
+提取的杆件
+
+<img src="static/PixPin_2026-01-12_10-22-15.png">
+
 1. 应力应变关系折线图
 ```py
 ops.recorder('Element', '-file', 'opstool/.output/Element9_section1.out', '-time', '-ele', 9, 'section', 1, 'fiber', -0.05, 0.15, 'stressStrain')
