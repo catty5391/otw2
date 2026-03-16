@@ -1,4 +1,9 @@
+import os
+CWD = os.getcwd()
+os.chdir(os.path.join(CWD, "fluctuate_wind_simulate/static"))
 import opstool as opst
+
+os.chdir(CWD)
 import matplotlib.pyplot as plt
 # 最后一步 应力分布图
 sec_resp = opst.post.get_element_responses(odb_tag=1, ele_type="FiberSection")  # odb_tag=1 as above
@@ -18,4 +23,7 @@ plt.colorbar(scatter, label="Stress")
 plt.axis("equal")
 plt.grid(True, linestyle="--", alpha=0.5)
 plt.tight_layout()
-plt.savefig("fluctuate_wind_simulate/.output/opensees_simulate/stress_Distribution_y=-0.05_z=0.15_force*20.png")
+save_dir = os.path.join(CWD, "fluctuate_wind_simulate", "static", ".opstool.output", "picture")
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir, exist_ok=True)
+plt.savefig(os.path.join(save_dir, "stress_Distribution_y=-0.05_z=0.15_force*20.png"))
