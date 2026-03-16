@@ -54,7 +54,7 @@ class Area:
                                 [element_num_2,cos_x_2,cos_y_2,cos_z_2],...]
         """
         geo_dict = []
-        with open('../Src/Geomtransf.tcl', 'r') as f:
+        with open('../Src/geomtransf.tcl', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 geo_dict.append([line.split()[2],line.split()[3],line.split()[4],line.split()[5]])
