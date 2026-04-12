@@ -9797,20 +9797,20 @@ ops.element('dispBeamColumn', 1527, 41, 43, 1527, 1527)
 ops.beamIntegration('Legendre', 1528, 2, 8)
 ops.element('dispBeamColumn', 1528, 40, 42, 1528, 1528)
 
-print('gravity_simulate')
-# 施加重力荷载，并完成分析
-ops.timeSeries("Constant", 12)  # Define a constant time series, tag = 1
-ops.pattern("Plain", 12, 12)  # Define a load pattern, tag = 1
-node_loads = opst.pre.create_gravity_load(direction="Y", factor=-9.81)  # Create gravity loads in the pattern tag=1
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.001, 40, 2)
-ops.algorithm('KrylovNewton')
-ops.integrator('LoadControl', 0.1)
-ops.analysis('Static')
-ops.analyze(10)
-ops.loadConst('-time', 0.0)
+# print('gravity_simulate')
+# # 施加重力荷载，并完成分析
+# ops.timeSeries("Constant", 12)
+# ops.pattern("Plain", 12, 12)
+# node_loads = opst.pre.create_gravity_load(direction="Y", factor=-9.81)
+# ops.constraints('Plain')
+# ops.numberer('RCM')
+# ops.system('BandGeneral')
+# ops.test('NormDispIncr', 0.001, 40, 2)
+# ops.algorithm('KrylovNewton')
+# ops.integrator('LoadControl', 0.1)
+# ops.analysis('Static')
+# ops.analyze(10)
+# ops.loadConst('-time', 0.0)
 
 
 # 施加风荷载
@@ -9822,50 +9822,119 @@ def get_floor_index(floor_name: str) -> int:
     return int(m.group(1))
 
 
-def apply_wind_load(config_path, dt=1/12):
-    config_path = Path(config_path)
-    wind_force_dir = Path(os.path.join(CWD, "fluctuate_wind_simulate", "static", "wind_force_tcl"))
+def get_wind_samples(wind_press_root: Path):
+    """遍历 wind_press_generate 下的 speed/sample 目录。"""
+    samples = []
+    for speed_dir in sorted(wind_press_root.iterdir()):
 
-    with config_path.open("r", encoding="utf-8") as f:
-        config = json.load(f)
+        if not speed_dir.is_dir():
+            continue
+        for sample_dir in sorted(speed_dir.iterdir()):
+            if not sample_dir.is_dir():
+                continue
+            if (sample_dir / "t.csv").exists():
+                samples.append((speed_dir.name, sample_dir.name, sample_dir))
+    return samples
 
+
+def read_time_info(sample_dir: Path):
+    t_path = sample_dir / "t.csv"
+    with t_path.open("r", encoding="utf-8") as f:
+        times = [float(x.strip()) for x in f if x.strip()]
+
+    if len(times) < 2:
+        raise ValueError(f"时间步数不足: {t_path}")
+
+    dt = times[1] - times[0]
+    nsteps = len(times) - 1
+    return dt, nsteps
+
+
+def apply_wind_load_for_sample(config, sample_dir: Path, sample_id: int, dt: float):
+    """对单个样本施加风荷载：每层风压均分到该层所有节点。"""
     floor_names = sorted(config.keys(), key=get_floor_index)
+    ts_tags = []
+    pattern_tags = []
 
+    tag_base = sample_id * 1000
     for floor_name in floor_names:
         floor_idx = get_floor_index(floor_name)
         node_list = config[floor_name]
+        floor_file = sample_dir / f"{floor_name}_wind_press.csv"
+        if not floor_file.exists():
+            raise FileNotFoundError(f"缺少楼层风压文件: {floor_file}")
 
-        # 1. 定义 timeSeries
-        ts_tag = floor_idx
-        file_path = (wind_force_dir / f"{floor_name}.tcl").as_posix()
-        ops.timeSeries('Path', ts_tag, '-dt', dt, '-filePath', file_path)
+        ts_tag = tag_base + floor_idx + 1
+        pattern_tag = tag_base + 500 + floor_idx + 1
+        node_factor = 1.0 / len(node_list)
 
-        # 2. 定义该层唯一的 pattern
-        pattern_tag = 1000 + floor_idx
+        ops.timeSeries('Path', ts_tag, '-dt', dt, '-filePath', floor_file.as_posix())
         ops.pattern('Plain', pattern_tag, ts_tag)
-
-        # 3. 该层所有节点都挂到这个 pattern 下
         for node_tag in node_list:
-            ops.load(node_tag, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0)
-apply_wind_load(os.path.join(CWD, "fluctuate_wind_simulate", ".config", "node_to_add_wind_press.json"))
-ops.wipeAnalysis()
-output_dir = os.path.join(CWD, "fluctuate_wind_simulate", "static", ".opensees.output")
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir, exist_ok=True)
-ops.recorder('Node', '-file', os.path.join(output_dir, "Node_accel.out"), '-time', '-node', 350, '-dof', 2, 'accel')
-ops.recorder('Node', '-file', os.path.join(output_dir, "Node_velocity.out"), '-time', '-node', 350, '-dof', 2, 'vel')
-ops.recorder('Node', '-file', os.path.join(output_dir, "Node_displacement.out"), '-time', '-node', 350, '-dof', 2, 'disp')
-ops.recorder('Element', '-file', os.path.join(output_dir, "Element_all_section_1.out"), '-time', '-ele', *ops.getEleTags(), 'section', 1, 'fiber', -0.05, 1, 'stress')
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.001, 40, 2)
-ops.algorithm('KrylovNewton')
-ops.integrator('Newmark', 0.5, 0.25)
-ops.analysis('Transient')
-ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp = True, fiber_ele_tags = [9])
-for i in range(10):
-    ops.analyze(1,0.08333333333333333)
-    ODB.fetch_response_step()
-ODB.save_response()
+            ops.load(node_tag, 0.0, node_factor, 0.0, 0.0, 0.0, 0.0)
+
+        ts_tags.append(ts_tag)
+        pattern_tags.append(pattern_tag)
+
+    return ts_tags, pattern_tags
+
+
+def remove_wind_load(ts_tags, pattern_tags):
+    for p_tag in pattern_tags:
+        ops.remove('loadPattern', p_tag)
+    for ts_tag in ts_tags:
+        ops.remove('timeSeries', ts_tag)
+
+
+config_file = Path(CWD) / "fluctuate_wind_simulate" / ".config" / "node_to_add_wind_press.json"
+wind_press_root = Path(CWD) / "fluctuate_wind_simulate" / "static" / "wind_press_generate"
+record_root = Path(CWD) / "fluctuate_wind_simulate" / "static" / ".opensees.output"
+
+with config_file.open("r", encoding="utf-8") as f:
+    node_config = json.load(f)
+
+all_samples = get_wind_samples(wind_press_root)
+print(f"total wind samples: {len(all_samples)}")
+
+for sample_id, (speed_name, sample_name, sample_dir) in enumerate(all_samples, start=1):
+    print(f"start analysis: {speed_name}/{sample_name}")
+
+    # 回到重力后的初始基态，避免上一个样本残留状态影响本样本
+    ops.reset()
+    ops.setTime(0.0)
+
+    dt, nsteps = read_time_info(sample_dir)
+    ts_tags, pattern_tags = apply_wind_load_for_sample(node_config, sample_dir, sample_id, dt)
+
+    ops.wipeAnalysis()
+    sample_output_dir = record_root / speed_name / sample_name
+    sample_output_dir.mkdir(parents=True, exist_ok=True)
+
+    ops.recorder('Node', '-file', str(sample_output_dir / "Node_accel.out"), '-time', '-node', 370, '-dof', 2, 'accel')
+    ops.recorder('Node', '-file', str(sample_output_dir / "Node_velocity.out"), '-time', '-node', 370, '-dof', 2, 'vel')
+    ops.recorder('Node', '-file', str(sample_output_dir / "Node_displacement.out"), '-time', '-node', 370, '-dof', 2, 'disp')
+    ops.recorder('Element', '-file', str(sample_output_dir / "Element_all_section_1.out"), '-time', '-ele', *ops.getEleTags(), 'section', 1, 'fiber', -0.05, 1, 'stress')
+
+    ops.constraints('Plain')
+    ops.numberer('RCM')
+    ops.system('BandGeneral')
+    ops.test('NormDispIncr', 0.001, 40, 2)
+    ops.algorithm('KrylovNewton')
+    ops.integrator('Newmark', 0.5, 0.25)
+    ops.analysis('Transient')
+
+    # 暂时注释掉 opst 的后处理逻辑，仅保留重力段 opst 调用
+    # ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp=True, fiber_ele_tags=[9])
+    # for step in range(nsteps):
+    for step in range(50):
+        ok = ops.analyze(1, dt)
+        if ok != 0:
+            raise RuntimeError(f"transient analyze failed at {speed_name}/{sample_name}, step={step}")
+        # ODB.fetch_response_step()
+    # ODB.save_response()
+
+    ops.remove('recorders')
+    remove_wind_load(ts_tags, pattern_tags)
+    print(f"finish analysis: {speed_name}/{sample_name}")
+
 print('over')

@@ -489,11 +489,12 @@ class GustWindField(object):
         return Hw
  
 
-    def generate(self, mean=True, method="fft"):
+    def generate(self, mean=True, method="fft", seed=None):
         """
         Args:
             mean (bool): Including mean wind speed or not? Defaults to True
             method (str, optional): ["fft" or "Deodatis"]. Defaults to "direct".
+            seed (int, optional): random seed for reproducible samples.
         """
         method = method.lower()
         if method not in ["fft", "deodatis"]:
@@ -530,8 +531,8 @@ class GustWindField(object):
 
         self.vt = np.zeros((self.M, npts), dtype=np.float64)
         print("synthesis gust wind speed...")
-        np.random.seed(0)
-        phi = 2 * np.pi * np.random.rand(npts, self.N)
+        rng = np.random.default_rng(seed)
+        phi = 2 * np.pi * rng.random((npts, self.N))
         dw = self.dw
         if method == "deodatis":
             self.vt = synthesis(Heff, self.N, self.M, dw, npts, phi, self.t)
@@ -546,9 +547,12 @@ class GustWindField(object):
 
         print("finished!")
 
-    def save(self):
+    def save(self, output_dir=None):
         # create directory
-        path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        if output_dir is None:
+            path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        else:
+            path = output_dir
         if not os.path.exists(path):
             os.makedirs(path)
 
@@ -584,14 +588,21 @@ class GustWindField(object):
             Sf = self.Sw[:,ind,ind] * 2.0 * np.pi
             plot_spectrum(f, Sf, self.t, vt, p, path)
 
-    def stats_test(self):
+    def stats_test(self, output_dir=None):
+        if output_dir is None:
+            path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        else:
+            path = output_dir
+        if not os.path.exists(path):
+            os.makedirs(path)
+
         # check wind profile
         z = np.arange(0, np.max(self.points[:,3])+1, 1)
         vz = self.v10 * (z / 10) ** self.alpha
         z_ = self.points[:,3].reshape(-1,1)
         vz_ = np.mean(self.vt, axis=0).reshape(-1,1)
         # plot
-        figname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate", "mean.svg")
+        figname = os.path.join(path, "mean.svg")
         plot_stats(vz, z, vz_, z_, "V (m/s)", figname)
 
         # check turbulence intensity
@@ -600,15 +611,22 @@ class GustWindField(object):
         Iz_ = np.std(self.vt, axis=0) / self.vz
         Iz_ = Iz_.reshape(-1,1)
         # plot
-        figname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate", "turbulence.svg")
+        figname = os.path.join(path, "turbulence.svg")
         plot_stats(Iz, z, Iz_, z_, r"$I_u$", figname)
 
         # save all the data
         data = np.hstack((z_, vz_, Iz_))
-        fname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate", "vz_Iu.csv")
+        fname = os.path.join(path, "vz_Iu.csv")
         np.savetxt(fname, data, delimiter=",", header="z(m), vz(m/s), Iu")
 
-    def coherence_test(self):
+    def coherence_test(self, output_dir=None):
+        if output_dir is None:
+            path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        else:
+            path = output_dir
+        if not os.path.exists(path):
+            os.makedirs(path)
+
         f = self.wml[1:self.N] / 2.0 / np.pi
         n = len(self.target_PIDs)
         for i in range(n):
@@ -620,11 +638,18 @@ class GustWindField(object):
                 f_, cxy_ = signal.coherence(self.vt[:,ind1].flatten(), 
                                 self.vt[:,ind2].flatten(), fs=1.0/self.dt,
                                 window="hann",nperseg=self.N/4)
-                figname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate", 
+                figname = os.path.join(path, 
                             "coh_p" + str(p1) + "_p" + str(p2) + ".svg")
                 plot_coherence(f, cxy, f_, cxy_, figname)
 
-    def correlation_test(self, max_lags=100):
+    def correlation_test(self, max_lags=100, output_dir=None):
+        if output_dir is None:
+            path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        else:
+            path = output_dir
+        if not os.path.exists(path):
+            os.makedirs(path)
+
         for p in self.target_PIDs:
             ind = np.where(self.points[:,0]==p)[0]
             # target, Sw is two-side spectrum, Sf = 2.0 * pi * Sw * 2
@@ -642,11 +667,18 @@ class GustWindField(object):
             corr_ = corr_[self.M//2:3*self.M//2]
 
             # plot correlation
-            figname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate",
+            figname = os.path.join(path,
                         "auto_correlation_p" + str(p) + ".svg")
             plot_correlation(tau, corr.real, tau_, corr_, max_lags,figname)
 
-    def ergodicity_test(self, max_lags=100):
+    def ergodicity_test(self, max_lags=100, output_dir=None):
+        if output_dir is None:
+            path = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate")
+        else:
+            path = output_dir
+        if not os.path.exists(path):
+            os.makedirs(path)
+
         for i in range(len(self.target_PIDs)):
             for j in range(i):
                 p1, p2 = self.target_PIDs[i], self.target_PIDs[j]
@@ -670,12 +702,12 @@ class GustWindField(object):
                 corr_ = corr_[self.M//2:3*self.M//2]
 
                 # plot correlation
-                figname = os.path.join(self.workdir, "fluctuate_wind_simulate/static/wind_speed_generate", 
+                figname = os.path.join(path, 
                             "corr_p" + str(p1) + "_p" + str(p2) + ".svg")
                 plot_correlation(tau, corr.real, tau_, corr_, max_lags, figname)
 
-    def error(self):
-        self.stats_test()
-        self.coherence_test()
-        self.correlation_test()
-        self.ergodicity_test()
+    def error(self, output_dir=None):
+        self.stats_test(output_dir=output_dir)
+        self.coherence_test(output_dir=output_dir)
+        self.correlation_test(output_dir=output_dir)
+        self.ergodicity_test(output_dir=output_dir)

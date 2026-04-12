@@ -1,49 +1,44 @@
-# 此项目用来管理输电塔课题
+# 易损性分析流程
 
-## 此分支用来考虑风荷载作用
+## 此分支进行易损性分析
 
-### 继续细分考虑弹塑性材料在脉动风荷载下的作用
+### 1.考虑风速不确定性
 
+10m/s - 70m/s 每10m/s 取10个样本
 
-1. 定义一种函数关系 load = f(time)  **(这里的load实际只是一种factor乘以后面load内的值才是真正意义上的力)**
-```tcl
-timeSeries Path $tag -dt $dt -filePath $filePath <-factor $cFactor> <-useLast> <-prependZero> <-startTime $tStart>
+<img src="static/PixPin_2026-04-07_13-30-18.png">
+
+### 2.每次模拟均是8000步，后续考虑缩小模拟时间步长，目前取1000步分析
+
+### 3.阈值选取，参考pushover分析结果（暂时以塔顶位移为例完成分析流程，后续进一步考虑节间位移角）
+节间位移角定义存在问题，未消除下层转角对上层影响
+
+<img src="static/PixPin_2026-04-07_13-32-56.png">
+
+塔顶位移为0.5m发生屈服，
+后续以塔顶位移0.5m为阈值计算超越概率
+
+### 4.导地线以重力荷载的形式加到节点上，暂时不考虑风对其作用
+<img src="static/PixPin_2026-04-07_16-21-16.png">
+
+### 5.使用 风速──塔顶最大位移 推导易损性曲线
+
+<img src="static/PixPin_2026-04-07_13-56-46.png">
+
+```python
+
+    # 手动阈值设置区：
+    # 改成数字(如 0.12) -> 使用手动阈值，仅生成一条 DS 曲线
+    manual_threshold = 0.5
+
+    data_df = extract_input_from_opensees(opensees_out_dir, input_csv)
+
+    model = WindFragilityCurve.from_csv(input_csv, wind_col="wind_speed", disp_col="top_disp")
 ```
+<img src="fluctuate_wind_simulate/fragility_curve/output/fragility_curve.png">
 
-2. 将函数关系写入pattern
-```tcl
-pattern Plain $patternTag $tsTag <-fact $cFactor> {
-load...
-eleLoad...
-sp...
-...
-}
-```
-### 使用pushover验证应力应变关系提取正确性
-提取的杆件
 
-<img src="static/PixPin_2026-01-12_10-22-15.png">
+### 6.改进
+#### 参考其它文献，一般是用节间位移角或者塔顶位移（考虑屈服位移和极限位移）作为阈值参考。
+<img src="static/PixPin_2026-04-07_15-01-47.png">
 
-1. 应力应变关系折线图
-```py
-ops.recorder('Element', '-file', 'opstool/.output/Element9_section1.out', '-time', '-ele', 9, 'section', 1, 'fiber', -0.05, 0.15, 'stressStrain')
-```
-<img src="opstool/.output/plot_element9_stress_strain.png">
-
-2. 最后一步应力分布图
-
-<img src="opstool/.output/stress_Distribution.png">
-
-### 脉动风荷载下应力应变曲线提取
-
-1. 正常情况下应力应变关系折线图
-
-<img src="fluctuate_wind_simulate/.output/opensees_simulate/plot_element9_stress_strain_y=-0.05_z=0.15.png">
-
-2. 将荷载扩大20倍
-
-<img src="fluctuate_wind_simulate/.output/opensees_simulate/plot_element9_stress_strain_y=-0.05_z=0.15_force*20.png">
-
-### 全塔应力云图
-...
-寻找薄弱点针对分析
