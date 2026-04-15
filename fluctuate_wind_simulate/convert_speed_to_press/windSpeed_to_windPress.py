@@ -36,7 +36,7 @@ def convert_one_sample(wind_speed_csv: Path, press_output_dir: Path, areas) -> N
 
     for i in range(node_count):
         area = areas[i]
-        wind_speed.iloc[:, i + 1] = 0.5 * AIR_DENSITY * (wind_speed.iloc[:, i + 1] ** 2) * area
+        wind_speed.iloc[:, i + 1] = 0.5 * AIR_DENSITY * (wind_speed.iloc[:, i + 1] ** 2) * area * 3
 
     press_output_dir.mkdir(parents=True, exist_ok=True)
 

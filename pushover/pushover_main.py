@@ -1,9 +1,19 @@
 # This file is created by opstool.tcl2py(), author:: Yexiang Yan
-
+from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
 import openseespy.opensees as ops
 import opstool as opst
+import json
+import csv
+import os
 
 
+
+from model.Area import Area
+from util.floor_drift import CorrectedStoryDriftTracker
 
 ops.wipe()
 print('System')
@@ -1258,10 +1268,10 @@ ops.fix(2511, 1, 1, 1, 1, 1, 1)
 ops.fix(2512, 1, 1, 1, 1, 1, 1)
 ops.fix(2513, 1, 1, 1, 1, 1, 1)
 print('Material')
-ops.uniaxialMaterial('Steel01', 1, 235000000, 210000000000, 0.5)
-ops.uniaxialMaterial('Steel01', 2, 345000000, 210000000000, 0.5)
-ops.uniaxialMaterial('Steel01', 3, 420000000, 210000000000, 0.5)
-ops.uniaxialMaterial('Steel01', 4, 460000000, 210000000000, 0.5)
+ops.uniaxialMaterial('Steel01', 1, 235000000, 210000000000, 0.02)
+ops.uniaxialMaterial('Steel01', 2, 345000000, 210000000000, 0.02)
+ops.uniaxialMaterial('Steel01', 3, 420000000, 210000000000, 0.02)
+ops.uniaxialMaterial('Steel01', 4, 460000000, 210000000000, 0.02)
 print('Section')
 ops.section('Fiber', 1, '-GJ', 100000000.0)
 ops.fiber(-0.0306373398, 0.0978689223, 1.7139e-05, 3)
@@ -9804,8 +9814,24 @@ ops.algorithm('KrylovNewton')
 ops.integrator('DisplacementControl', 350, 2, 0.01)
 ops.analysis('Static')
 ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp = True, fiber_ele_tags = [9])
-for i in range(100):
+tracker = CorrectedStoryDriftTracker("pushover/.config/node_to_record_floor_disp.json")
+with open("pushover/.config/node_to_get_reaction.json", "r", encoding="utf-8") as f:
+    reaction_nodes = json.load(f)
+reaction_sum_history = []
+for i in range(150):
     ops.analyze(1)
+    tracker.capture_step()
+    reaction_sum = sum(float(ops.nodeReaction(int(node_tag), 2)) for node_tag in reaction_nodes)
+    reaction_sum_history.append(reaction_sum)
     ODB.fetch_response_step()
 ODB.save_response()
+# 将tracker得到的correct 和 not_correct 写入drift.out文件和not_correct.out文件
+with open('pushover/.output/no_gravity/drift.out', 'w') as f:
+    for reaction_sum, correct in zip(reaction_sum_history, tracker.get_history()):
+        drift_values = ','.join(str(v) for v in correct)
+        f.write(f"{reaction_sum},{drift_values}\n")
+with open('pushover/.output/no_gravity/not_correct.out', 'w') as f:
+    for reaction_sum, not_correct in zip(reaction_sum_history, tracker.get_not_corrected_history()):
+        drift_values = ','.join(str(v) for v in not_correct)
+        f.write(f"{reaction_sum},{drift_values}\n")
 print('over')

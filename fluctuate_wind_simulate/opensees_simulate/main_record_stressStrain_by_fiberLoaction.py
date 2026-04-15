@@ -1,8 +1,14 @@
 # This file is created by opstool.tcl2py(), author:: Yexiang Yan
 
+from pathlib import Path
+import sys
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+from util import CorrectedStoryDriftTracker
 import openseespy.opensees as ops
 import os
-from pathlib import Path
 import json
 import re
 CWD = os.getcwd()
@@ -9889,13 +9895,13 @@ def remove_wind_load(ts_tags, pattern_tags):
 config_file = Path(CWD) / "fluctuate_wind_simulate" / ".config" / "node_to_add_wind_press.json"
 wind_press_root = Path(CWD) / "fluctuate_wind_simulate" / "static" / "wind_press_generate"
 record_root = Path(CWD) / "fluctuate_wind_simulate" / "static" / ".opensees.output"
+config_drift_record_node = Path(CWD) / "fluctuate_wind_simulate" / ".config" / "node_to_record_floor_disp.json"
 
 with config_file.open("r", encoding="utf-8") as f:
     node_config = json.load(f)
 
 all_samples = get_wind_samples(wind_press_root)
 print(f"total wind samples: {len(all_samples)}")
-
 for sample_id, (speed_name, sample_name, sample_dir) in enumerate(all_samples, start=1):
     print(f"start analysis: {speed_name}/{sample_name}")
 
@@ -9923,15 +9929,29 @@ for sample_id, (speed_name, sample_name, sample_dir) in enumerate(all_samples, s
     ops.integrator('Newmark', 0.5, 0.25)
     ops.analysis('Transient')
 
-    # 暂时注释掉 opst 的后处理逻辑，仅保留重力段 opst 调用
-    # ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp=True, fiber_ele_tags=[9])
-    # for step in range(nsteps):
-    for step in range(50):
-        ok = ops.analyze(1, dt)
-        if ok != 0:
-            raise RuntimeError(f"transient analyze failed at {speed_name}/{sample_name}, step={step}")
-        # ODB.fetch_response_step()
-    # ODB.save_response()
+    tracker = CorrectedStoryDriftTracker(config_drift_record_node)
+    story_labels = tracker.get_story_labels()
+    drift_csv = sample_output_dir / "drift.csv"
+    not_correct_drift_csv = sample_output_dir / "not_correct_drift.csv"
+
+    with drift_csv.open("w", encoding="utf-8") as drift_f, not_correct_drift_csv.open("w", encoding="utf-8") as not_corr_f:
+        drift_f.write("step," + ",".join(story_labels) + "\n")
+        not_corr_f.write("step," + ",".join(story_labels) + "\n")
+
+        # 暂时注释掉 opst 的后处理逻辑，仅保留重力段 opst 调用
+        # ODB = opst.post.CreateODB(odb_tag=1, save_fiber_sec_resp=True, fiber_ele_tags=[9])
+        for step in range(100):
+            ok = ops.analyze(1, dt)
+            if ok != 0:
+                raise RuntimeError(f"transient analyze failed at {speed_name}/{sample_name}, step={step}")
+
+            drift_now = tracker.capture_step()
+            not_corr_now = tracker.get_not_corrected_history()[-1]
+
+            drift_f.write(f"{step}," + ",".join(str(v) for v in drift_now) + "\n")
+            not_corr_f.write(f"{step}," + ",".join(str(v) for v in not_corr_now) + "\n")
+            # ODB.fetch_response_step()
+        # ODB.save_response()
 
     ops.remove('recorders')
     remove_wind_load(ts_tags, pattern_tags)

@@ -2,43 +2,56 @@
 
 ## 此分支进行易损性分析
 
-### 1.考虑风速不确定性
 
-10m/s - 70m/s 每10m/s 取10个样本
+### 1.pushover分析，绘制底部剪力和最大ISDR(节间位移角)的关系
+加载方式参考  风荷载作用下输电塔-线体系抗倒塌研究
+<img src="static/2026_04_15/PixPin_2026-04-15_11-00-26.png">
 
-<img src="static/PixPin_2026-04-07_13-30-18.png">
 
-### 2.每次模拟均是8000步，后续考虑缩小模拟时间步长，目前取1000步分析
+实际结果
+<img src="static/2026_04_15/reaction_vs_max_drift.png">
 
-### 3.阈值选取，参考pushover分析结果（暂时以塔顶位移为例完成分析流程，后续进一步考虑节间位移角）
-节间位移角定义存在问题，未消除下层转角对上层影响
+### 2.阈值的选取参考 风荷载作用下输电塔-线体系抗倒塌研究
+<img src="static/2026_04_15/PixPin_2026-04-12_14-20-34.png">
+<img src="static/2026_04_15/PixPin_2026-04-15_11-04-59.png">
 
-<img src="static/PixPin_2026-04-07_13-32-56.png">
+### 3.使用 风速──最大节间位移角 推导易损性曲线
 
-塔顶位移为0.5m发生屈服，
-后续以塔顶位移0.5m为阈值计算超越概率
-
-### 4.导地线以重力荷载的形式加到节点上，暂时不考虑风对其作用
-<img src="static/PixPin_2026-04-07_16-21-16.png">
-
-### 5.使用 风速──塔顶最大位移 推导易损性曲线
-
-<img src="static/PixPin_2026-04-07_13-56-46.png">
 
 ```python
 
-    # 手动阈值设置区：
+    # 设置节间位移角阈值分别为：
     # 改成数字(如 0.12) -> 使用手动阈值，仅生成一条 DS 曲线
-    manual_threshold = 0.5
+    manual_threshold = [0.00132, 0.00199, 0.00265]
+    manual_threshold = [0.25, 0.375, 0.5]
 
     data_df = extract_input_from_opensees(opensees_out_dir, input_csv)
 
     model = WindFragilityCurve.from_csv(input_csv, wind_col="wind_speed", disp_col="top_disp")
 ```
-<img src="fluctuate_wind_simulate/fragility_curve/output/fragility_curve.png">
+节间位移角阈值参考pushover设定为[0.00132, 0.00199, 0.00265]
+<img src="static/2026_04_15/fragility_curve_drift.png">
+
+和之前使用顶点位移相比较
+<img src="static/2026_04_15/fragility_curve_node_displacement.png">
 
 
-### 6.改进
-#### 参考其它文献，一般是用节间位移角或者塔顶位移（考虑屈服位移和极限位移）作为阈值参考。
-<img src="static/PixPin_2026-04-07_15-01-47.png">
+### 4.别人论文的结果
+#### (1)基于性能的输电塔线体系风灾易损性分析(塔高71.9m)
+参考标准---塔顶位移
 
+<img src="static/2026_04_15/PixPin_2026-04-15_12-46-20.png">
+结果
+
+<img src="static/2026_04_15/PixPin_2026-04-15_12-49-04.png">
+
+#### (2)盐渍土环境下输电塔风灾易损性分析(塔高72m)
+<img src="static/2026_04_15/PixPin_2026-04-15_12-54-07.png">
+其中mo为屈服时塔顶位移，mi为0.8*mo
+
+易损性曲线
+
+<img src="static/2026_04_15/PixPin_2026-04-15_13-06-55.png">
+
+#### (3)风荷载作用下输电塔-线体系抗倒塌研究(塔高204m)
+<img src="static/2026_04_15/PixPin_2026-04-15_13-12-47.png">
