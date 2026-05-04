@@ -1,3 +1,7 @@
 # ignore files
 .vscode/*
 .opstool.*
+.venv
+__pycache__/*
+*output
+*output*

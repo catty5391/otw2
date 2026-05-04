@@ -1,0 +1,12 @@
+{
+    "line1": {
+        "node_to_hang": [111, 222],
+        "material": ["抗拉刚度", "抗弯刚度", "抗扭刚度", "初始stress"],
+        "sepearte": 100
+    },
+    "line2": {
+        "node_to_hang":[333, 444],
+        "material": ["抗拉刚度", "抗弯刚度", "抗扭刚度", "初始stress"],
+        "sepearte": 100
+    }
+}
