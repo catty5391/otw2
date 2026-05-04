@@ -3,5 +3,5 @@
 .opstool.*
 .venv
 __pycache__/*
-*output
-*output*
+*output/
+**/*output*/
