@@ -1,3 +1,3 @@
 from .tower_model import OpenSeesModel
-
-__all__ = ["OpenSeesModel"]
+from .tower_model_with_buckling import OpenSeesModelWithBuckling
+__all__ = ["OpenSeesModel", "OpenSeesModelWithBuckling"]

@@ -6,11 +6,12 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 from model import OpenSeesModel
+from model import OpenSeesModelWithBuckling
 import opstool as opst
 import openseespy.opensees as ops
 
 
-model = OpenSeesModel("/root/otw2/Source/Z30103A6.s2k")
+model = OpenSeesModelWithBuckling("Source/Z30103A6.s2k")
 model.model_tower()
 ops.recorder('Node', '-file', 'pushover/.output/with_gravity/Node_accel.out', '-time', '-node', 350, '-dof', 2, 'accel')
 ops.recorder('Node', '-file', 'pushover/.output/with_gravity/Node_velocity.out', '-time', '-node', 350, '-dof', 2, 'vel')
@@ -33,7 +34,6 @@ ops.integrator('LoadControl', 0.1)
 ops.analysis('Static')
 for i in range(10):
     ops.analyze(1)
-    print(ops.nodeDisp(350, 3))
     ODB.fetch_response_step()
 ops.loadConst('-time', 0.0)
 
@@ -48,7 +48,7 @@ ops.load(350, 0, 1, 0, 0, 0, 0)
 ops.integrator('DisplacementControl', 350, 2, 0.01)
 ops.analysis('Static')
 
-for i in range(10):
+for i in range(120):
     ops.analyze(1)
     ODB.fetch_response_step()
 ODB.save_response()

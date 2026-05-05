@@ -34,7 +34,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def __init__(
         self,
         *args: Any,
-        member_divisions: int = 4,
+        member_divisions: int = 2,
         **kwargs: Any,
     ) -> None:
         if int(member_divisions) < 2:
@@ -81,7 +81,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
 
     def _build_segmented_connectivity(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         if not self.node_map:
             self.node()
         if self.segmented_connectivity_map:
@@ -169,7 +169,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
 
     def material(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
 
         basic_records = {
             self._parse_key_values(line)["Material"]: self._parse_key_values(line)
@@ -218,7 +218,6 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         self._ensure_model_builder()
         if not self.material_tag_map:
             self.material()
-        SecPlain, mesh_geom = self._section_mesh_tools()
 
         section_properties = self._frame_section_properties()
         assignments = self._element_section_assignments()
@@ -236,24 +235,31 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         self.section_tag_map = {}
         self.section_fiber_map = {}
 
-        ops = self._ops()
+        ops = self.ops
         for section_name, material_name in unique_sections:
             section_tag = self.tag_manager.get_next_tag(namespace="section")
             if material_name not in self.material_name_to_tag and "Q" in section_name:
                 material_name = f"Q{section_name.split('Q')[-1]}"
             mat_tag = self.material_name_to_tag[material_name]
             section_prop = section_properties.get(section_name, {})
-            outline = self._l_section_outline(section_name)
-            sec = SecPlain()
-            sec.add_outline(outline)
-            sec.mesh(mesh_size=self.mesh_size)
-            sec.centring()
             gj = self.material_tag_map[mat_tag]["g"] * section_prop.get("tors_const", 0.0)
             ops.section("Fiber", section_tag, "-GJ", gj if gj > 0 else 1.0)
-            fiber_centers, fiber_areas, sec_prop = mesh_geom(sec.mesh_obj)
-            for centers, areas in zip(fiber_centers, fiber_areas):
-                for center, area in zip(centers, areas):
-                    ops.fiber(center[0], center[1], area, mat_tag)
+
+            # 使用 OpenSeesPy 自带 rect patch 划分等边 L 角钢截面。长肢方向使用
+            # long_edge_segments，厚度方向使用 short_edge_segments，并保持
+            # (zJ-zI)/(yJ-yI) 为正以生成正的 fiber area。
+            fibers, sec_prop = self._l_section_rect_patches(section_name, mat_tag)
+            for patch in sec_prop["patches"]:
+                ops.patch(
+                    "rect",
+                    mat_tag,
+                    patch["num_y"],
+                    patch["num_z"],
+                    patch["y_i"],
+                    patch["z_i"],
+                    patch["y_j"],
+                    patch["z_j"],
+                )
 
             section_record = {
                 "section_tag": section_tag,
@@ -261,7 +267,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "material_name": material_name,
                 "mat_tag": mat_tag,
                 "shape": section_prop.get("shape", "Angle"),
-                "mesh_size": self.mesh_size,
+                "long_edge_segments": self.long_edge_segments,
+                "short_edge_segments": self.short_edge_segments,
                 "area": sec_prop["area"],
                 "centroid_y": sec_prop["center"][0],
                 "centroid_z": sec_prop["center"][1],
@@ -273,19 +280,18 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             rows.append(section_record)
 
             fiber_id = 1
-            for centers, areas in zip(fiber_centers, fiber_areas):
-                for center, area in zip(centers, areas):
-                    fiber_record = {
-                        "section_tag": section_tag,
-                        "fiber_id": fiber_id,
-                        "y": center[0],
-                        "z": center[1],
-                        "area": area,
-                        "mat_tag": mat_tag,
-                    }
-                    self.section_fiber_map[section_tag].append(fiber_record)
-                    fiber_rows.append(fiber_record)
-                    fiber_id += 1
+            for fiber in fibers:
+                fiber_record = {
+                    "section_tag": section_tag,
+                    "fiber_id": fiber_id,
+                    "y": fiber["y"],
+                    "z": fiber["z"],
+                    "area": fiber["area"],
+                    "mat_tag": fiber["mat_tag"],
+                }
+                self.section_fiber_map[section_tag].append(fiber_record)
+                fiber_rows.append(fiber_record)
+                fiber_id += 1
 
         self._write_csv(
             self.output_dir / "sections.csv",
@@ -296,7 +302,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "material_name",
                 "mat_tag",
                 "shape",
-                "mesh_size",
+                "long_edge_segments",
+                "short_edge_segments",
                 "area",
                 "centroid_y",
                 "centroid_z",
@@ -312,7 +319,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
 
     def geomtransf(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         connectivity = self._build_segmented_connectivity()
 
         rows: list[dict[str, Any]] = []
@@ -351,7 +358,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
 
     def element(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         if not self.section_name_to_tag:
             self.section()
         if not self.transf_map:

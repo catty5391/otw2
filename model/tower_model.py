@@ -14,8 +14,9 @@ class OpenSeesModel:
         self,
         s2k_path: str | Path,
         num_intgr_pts: int = 8,
-        mesh_size: float = 0.006,
-        steel01_b: float = 0.5,
+        long_edge_segments: int = 8,
+        short_edge_segments: int = 2,
+        steel01_b: float = 0.05,
         beam_integration_type: str = "Legendre",
         output_dir: str | Path | None = None,
         node_to_fix_path: str | Path | None = None,
@@ -30,7 +31,8 @@ class OpenSeesModel:
             else self.base_dir / ".config" / "node_to_fix.json"
         )
         self.num_intgr_pts = num_intgr_pts
-        self.mesh_size = mesh_size
+        self.long_edge_segments = self._positive_segment_count(long_edge_segments, "long_edge_segments")
+        self.short_edge_segments = self._positive_segment_count(short_edge_segments, "short_edge_segments")
         self.steel01_b = steel01_b
         self.beam_integration_type = beam_integration_type
         self._lines = self.s2k_path.read_text(encoding="utf-8").splitlines()
@@ -49,14 +51,14 @@ class OpenSeesModel:
         self.element_map: dict[int, dict[str, Any]] = {}
         self.transf_map: dict[int, dict[str, Any]] = {}
 
-    def _ops(self):
+
         try:
             import openseespy.opensees as ops
         except ImportError as exc:  # pragma: no cover
             raise ImportError(
                 "当前环境未安装 openseespy，无法执行建模命令。请先安装 openseespy 后再调用建模函数。"
             ) from exc
-        return ops
+        self.ops = ops
 
     @staticmethod
     def _section_mesh_tools():
@@ -74,7 +76,7 @@ class OpenSeesModel:
     def _ensure_model_builder(self, ndm: int = 3, ndf: int = 6) -> None:
         if self._model_built:
             return
-        ops = self._ops()
+        ops = self.ops
         ops.model("basic", "-ndm", ndm, "-ndf", ndf)
         self._model_built = True
 
@@ -139,7 +141,7 @@ class OpenSeesModel:
 
     def node(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         rows: list[dict[str, Any]] = []
         self.node_map = {}
         for line in self._table_lines("JOINT COORDINATES"):
@@ -170,7 +172,7 @@ class OpenSeesModel:
 
     def fix(self, node_tags: list[int] | None = None, dofs: list[int] | tuple[int, ...] | None = None) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         if not self.node_map:
             self.node()
         default_fix_map = self._load_node_to_fix()
@@ -208,7 +210,7 @@ class OpenSeesModel:
 
     def mass(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         rows: list[dict[str, Any]] = []
         self.mass_map = {}
         for line in self._table_lines("ASSEMBLED JOINT MASSES"):
@@ -238,7 +240,7 @@ class OpenSeesModel:
 
     def material(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
 
         # SAP 把钢材基本力学参数和屈服信息拆在两张表里，这里合并后再生成 OpenSees 材料。
         basic_records = {
@@ -284,12 +286,17 @@ class OpenSeesModel:
         return self.material_tag_map
 
     @staticmethod
-    def _l_section_outline(section_name: str) -> list[tuple[float, float]]:
+    def _l_section_dimensions(section_name: str) -> tuple[float, float]:
         match = re.fullmatch(r"L(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)Q[\w.-]+", section_name)
         if not match:
             raise ValueError(f"当前仅支持角钢截面，无法识别截面名: {section_name}")
         length = float(match.group(1)) * 0.001
         thickness = float(match.group(2)) * 0.001
+        return length, thickness
+
+    @classmethod
+    def _l_section_outline(cls, section_name: str) -> list[tuple[float, float]]:
+        length, thickness = cls._l_section_dimensions(section_name)
         return [
             (0.0, 0.0),
             (length, 0.0),
@@ -298,6 +305,102 @@ class OpenSeesModel:
             (thickness, length),
             (0.0, length),
         ]
+
+    @staticmethod
+    def _l_section_centroid(length: float, thickness: float) -> tuple[float, float]:
+        area = 2 * length * thickness - thickness**2
+        centroid = (
+            length * thickness * (length / 2)
+            + thickness * (length - thickness) * (thickness / 2)
+        ) / area
+        return centroid, centroid
+
+    @staticmethod
+    def _positive_segment_count(value: int, name: str) -> int:
+        segments = int(value)
+        if segments <= 0:
+            raise ValueError(f"{name} 必须为正整数")
+        return segments
+
+    @staticmethod
+    def _rect_patch_fibers(
+        y_i: float,
+        z_i: float,
+        y_j: float,
+        z_j: float,
+        num_y: int,
+        num_z: int,
+        mat_tag: int,
+    ) -> list[dict[str, Any]]:
+        dy = (y_j - y_i) / num_y
+        dz = (z_j - z_i) / num_z
+        area = dy * dz
+        fibers: list[dict[str, Any]] = []
+        for i in range(num_y):
+            y = y_i + (i + 0.5) * dy
+            for j in range(num_z):
+                z = z_i + (j + 0.5) * dz
+                fibers.append({"y": y, "z": z, "area": area, "mat_tag": mat_tag})
+        return fibers
+
+    def _l_section_rect_patches(
+        self,
+        section_name: str,
+        mat_tag: int,
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        length, thickness = self._l_section_dimensions(section_name)
+        centroid_y, centroid_z = self._l_section_centroid(length, thickness)
+        long_div = self.long_edge_segments
+        short_div = self.short_edge_segments
+
+        # 角钢截面由角部方块、水平肢、竖直肢三个矩形 patch 组成。
+        # 长肢方向使用 long_edge_segments，厚度方向使用 short_edge_segments；
+        # 角部方块为短边区域，两个方向均使用 short_edge_segments。
+        # OpenSees 的 rect patch 要求 (zJ-zI)/(yJ-yI) 为正；这里所有坐标均按
+        # yI < yJ 且 zI < zJ 传入，保证生成正的 fiber area。
+        patches = [
+            {
+                "num_y": short_div,
+                "num_z": short_div,
+                "y_i": -centroid_y,
+                "z_i": -centroid_z,
+                "y_j": thickness - centroid_y,
+                "z_j": thickness - centroid_z,
+            },
+            {
+                "num_y": long_div,
+                "num_z": short_div,
+                "y_i": thickness - centroid_y,
+                "z_i": -centroid_z,
+                "y_j": length - centroid_y,
+                "z_j": thickness - centroid_z,
+            },
+            {
+                "num_y": short_div,
+                "num_z": long_div,
+                "y_i": -centroid_y,
+                "z_i": thickness - centroid_z,
+                "y_j": thickness - centroid_y,
+                "z_j": length - centroid_z,
+            },
+        ]
+
+        area = 2 * length * thickness - thickness**2
+        fibers: list[dict[str, Any]] = []
+        for patch in patches:
+            fibers.extend(
+                self._rect_patch_fibers(
+                    patch["y_i"],
+                    patch["z_i"],
+                    patch["y_j"],
+                    patch["z_j"],
+                    patch["num_y"],
+                    patch["num_z"],
+                    mat_tag,
+                )
+            )
+        sec_prop = {"area": area, "center": (0.0, 0.0, 0.0), "patches": patches}
+        return fibers, sec_prop
 
     def _frame_section_properties(self) -> dict[str, dict[str, Any]]:
         properties: dict[str, dict[str, Any]] = {}
@@ -335,7 +438,6 @@ class OpenSeesModel:
         self._ensure_model_builder()
         if not self.material_tag_map:
             self.material()
-        SecPlain, mesh_geom = self._section_mesh_tools()
 
         section_properties = self._frame_section_properties()
         assignments = self._element_section_assignments()
@@ -358,18 +460,23 @@ class OpenSeesModel:
                 material_name = f"Q{section_name.split('Q')[-1]}"
             mat_tag = self.material_name_to_tag[material_name]
             section_prop = section_properties.get(section_name, {})
-            outline = self._l_section_outline(section_name)
-            sec = SecPlain()
-            sec.add_outline(outline)
-            sec.mesh(mesh_size=self.mesh_size)
-            sec.centring()
-            # 这里沿用原来的 L 角钢纤维划分思路，只是把 Tcl 输出换成了直接调用 OpenSeesPy。
             gj = self.material_tag_map[mat_tag]["g"] * section_prop.get("tors_const", 0.0)
-            self._ops().section("Fiber", sec_tag, "-GJ", gj if gj > 0 else 1.0)
-            fiber_centers, fiber_areas, sec_prop = mesh_geom(sec.mesh_obj)
-            for centers, areas in zip(fiber_centers, fiber_areas):
-                for center, area in zip(centers, areas):
-                    self._ops().fiber(center[0], center[1], area, mat_tag)
+            self.ops.section("Fiber", sec_tag, "-GJ", gj if gj > 0 else 1.0)
+
+            # 使用 OpenSeesPy 自带 rect patch 划分等边 L 角钢截面。几何先从外角点
+            # 平移到形心坐标系，再拆为角部方块、水平肢、竖直肢三个不重叠矩形。
+            fibers, sec_prop = self._l_section_rect_patches(section_name, mat_tag)
+            for patch in sec_prop["patches"]:
+                self.ops.patch(
+                    "rect",
+                    mat_tag,
+                    patch["num_y"],
+                    patch["num_z"],
+                    patch["y_i"],
+                    patch["z_i"],
+                    patch["y_j"],
+                    patch["z_j"],
+                )
 
             section_record = {
                 "section_tag": sec_tag,
@@ -377,7 +484,8 @@ class OpenSeesModel:
                 "material_name": material_name,
                 "mat_tag": mat_tag,
                 "shape": section_prop.get("shape", "Angle"),
-                "mesh_size": self.mesh_size,
+                "long_edge_segments": self.long_edge_segments,
+                "short_edge_segments": self.short_edge_segments,
                 "area": sec_prop["area"],
                 "centroid_y": sec_prop["center"][0],
                 "centroid_z": sec_prop["center"][1],
@@ -390,19 +498,18 @@ class OpenSeesModel:
 
             fiber_id = 1
             # 单独导出纤维坐标和面积，后续截面响应提取时可直接按 section_tag 查询。
-            for centers, areas in zip(fiber_centers, fiber_areas):
-                for center, area in zip(centers, areas):
-                    fiber_record = {
-                        "section_tag": sec_tag,
-                        "fiber_id": fiber_id,
-                        "y": center[0],
-                        "z": center[1],
-                        "area": area,
-                        "mat_tag": mat_tag,
-                    }
-                    self.section_fiber_map[sec_tag].append(fiber_record)
-                    fiber_rows.append(fiber_record)
-                    fiber_id += 1
+            for fiber in fibers:
+                fiber_record = {
+                    "section_tag": sec_tag,
+                    "fiber_id": fiber_id,
+                    "y": fiber["y"],
+                    "z": fiber["z"],
+                    "area": fiber["area"],
+                    "mat_tag": fiber["mat_tag"],
+                }
+                self.section_fiber_map[sec_tag].append(fiber_record)
+                fiber_rows.append(fiber_record)
+                fiber_id += 1
 
         self._write_csv(
             self.output_dir / "sections.csv",
@@ -413,7 +520,8 @@ class OpenSeesModel:
                 "material_name",
                 "mat_tag",
                 "shape",
-                "mesh_size",
+                "long_edge_segments",
+                "short_edge_segments",
                 "area",
                 "centroid_y",
                 "centroid_z",
@@ -462,7 +570,7 @@ class OpenSeesModel:
 
     def geomtransf(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         if not self.node_map:
             self.node()
         if not self.element_map:
@@ -510,7 +618,7 @@ class OpenSeesModel:
 
     def element(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
-        ops = self._ops()
+        ops = self.ops
         if not self.section_name_to_tag:
             self.section()
         if not self.transf_map:
@@ -624,7 +732,7 @@ class OpenSeesModel:
         if prefer_ops:
             try:
                 # 如果模型还在 OpenSees 内存中，优先直接从 ops 里取实时坐标。
-                coord = self._ops().nodeCoord(int(node_tag))
+                coord = self.ops.nodeCoord(int(node_tag))
                 return float(coord[0]), float(coord[1]), float(coord[2])
             except Exception:
                 pass
@@ -681,7 +789,8 @@ class OpenSeesModel:
                     "material_name": row["material_name"],
                     "mat_tag": int(row["mat_tag"]),
                     "shape": row["shape"],
-                    "mesh_size": float(row["mesh_size"]),
+                    "long_edge_segments": int(row.get("long_edge_segments", self.long_edge_segments)),
+                    "short_edge_segments": int(row.get("short_edge_segments", self.short_edge_segments)),
                     "area": float(row["area"]),
                     "centroid_y": float(row["centroid_y"]),
                     "centroid_z": float(row["centroid_z"]),
@@ -694,7 +803,8 @@ class OpenSeesModel:
                     "material_name": row["material_name"],
                     "mat_tag": int(row["mat_tag"]),
                     "shape": row["shape"],
-                    "mesh_size": float(row["mesh_size"]),
+                    "long_edge_segments": int(row.get("long_edge_segments", self.long_edge_segments)),
+                    "short_edge_segments": int(row.get("short_edge_segments", self.short_edge_segments)),
                     "area": float(row["area"]),
                     "centroid_y": float(row["centroid_y"]),
                     "centroid_z": float(row["centroid_z"]),

@@ -1,0 +1,12 @@
+[project]
+name = "otw2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "openseespy==3.7.1.2",
+    "opstool==1.0.25",
+    "pygmsh>=7.1.17",
+    "shapely>=2.1.2",
+]
