@@ -5,7 +5,8 @@ import os
 import opstool as opst
 
 # 应力 应变 折线图
-df = pd.read_csv("pushover/.output/with_gravity/Node_disp.out", header = None, sep = " ")
+df = pd.read_csv("pushover/.output/no_gravity/Node_disp.out", header = None, sep = " ")
+
 
 stress = df.iloc[:, 0].values
 strain = df.iloc[:, 1].values
@@ -18,4 +19,4 @@ plt.xlabel("strain", fontsize = 10)
 plt.ylabel("stress", fontsize = 10)
 
 
-plt.savefig("pushover/.output/with_gravity/plot_node_disp.png")
+plt.savefig("pushover/.output/no_gravity/plot_node_disp.png")

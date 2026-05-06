@@ -36,6 +36,8 @@ def read_reaction_and_max_drift(drift_file):
 
     with open(drift_file, "r", encoding="utf-8") as f:
         for line_idx, raw in enumerate(f, start=1):
+            if line_idx == 1:
+                continue  # Skip header
             line = raw.strip()
             if not line:
                 continue

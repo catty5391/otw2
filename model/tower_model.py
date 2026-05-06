@@ -587,7 +587,7 @@ class OpenSeesModel:
             node_i = self.node_map[item["node_i"]]
             node_j = self.node_map[item["node_j"]]
             vec_x, vec_y, vec_z = self._geom_transf_vector(node_i, node_j)
-            ops.geomTransf("Linear", ele_tag, vec_x, vec_y, vec_z)
+            ops.geomTransf("Corotational", ele_tag, vec_x, vec_y, vec_z)
             record = {
                 "transf_tag": ele_tag,
                 "element_tag": ele_tag,

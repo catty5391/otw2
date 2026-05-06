@@ -329,7 +329,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             node_j = self.node_map[item["node_j"]]
             vec_x, vec_y, vec_z = self._geom_transf_vector(node_i, node_j)
             transf_tag = self.tag_manager.get_next_tag(namespace="transf")
-            ops.geomTransf("Linear", transf_tag, vec_x, vec_y, vec_z)
+            ops.geomTransf("Corotational", transf_tag, vec_x, vec_y, vec_z)
             record = {
                 "transf_tag": transf_tag,
                 "element_tag": element_tag,
