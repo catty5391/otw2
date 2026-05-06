@@ -216,7 +216,7 @@ class PlotModel:
         title: str = "OpenSees Model",
         show_nodes: bool = True,
         show_elements: bool = True,
-        element_hover: str = "line",
+        element_hover: str = "midpoint",
         node_size: int = 3,
         element_width: int = 3,
         width: int = 1000,
@@ -224,9 +224,10 @@ class PlotModel:
     ) -> dict[str, Any]:
         """Return a Plotly-compatible figure dictionary.
 
-        ``element_hover="line"`` gives direct hover on each element line.
-        ``element_hover="midpoint"`` batches element lines and uses midpoint
-        markers for hover, which is faster for very large models.
+        ``element_hover="midpoint"`` batches all element lines into one trace
+        and uses midpoint markers for hover, which is much faster for large
+        models. Use ``element_hover="line"`` only when direct line hover is
+        more important than browser performance.
         """
         if element_hover not in {"line", "midpoint"}:
             raise ValueError('element_hover 只能是 "line" 或 "midpoint"。')
@@ -363,6 +364,7 @@ class PlotModel:
         )
 
     def show(self, **figure_kwargs: Any) -> Any:
+        """Show the same figure content as ``write_html()`` via Plotly."""
         fig = self.figure(**figure_kwargs)
         fig.show()
         return fig
