@@ -22,6 +22,21 @@ except ImportError:  # pragma: no cover
 class OpenSeesModel:
     """Parse SAP2000 `.s2k` data and build an OpenSeesPy model with queryable mappings."""
 
+    _WIND_AREA_BANDS: tuple[dict[str, Any], ...] = (
+        {"z_min": 0.0, "z_max": 3.2, "boundary_pair": (3.2, 3.2), "y_limit": -3.2, "y_inclusive": False},
+        {"z_min": 3.2, "z_max": 6.8, "boundary_pair": (6.8, 6.8), "y_limit": -2.9, "y_inclusive": False},
+        {"z_min": 6.8, "z_max": 9.0, "boundary_pair": (9.0, 9.0), "y_limit": -2.7, "y_inclusive": True},
+        {"z_min": 9.0, "z_max": 13.2, "boundary_pair": (13.2, 13.2), "y_limit": -2.49, "y_inclusive": True},
+        {"z_min": 13.2, "z_max": 17.4, "boundary_pair": (17.4, 17.4), "y_limit": -2.28, "y_inclusive": True},
+        {"z_min": 17.4, "z_max": 21.6, "boundary_pair": (21.6, 21.6), "y_limit": -2.07, "y_inclusive": True},
+        {"z_min": 21.6, "z_max": 24.0, "boundary_pair": (24.0, 24.0), "y_limit": -1.95, "y_inclusive": True},
+        {"z_min": 24.0, "z_max": 27.0, "boundary_pair": (27.0, 27.0), "y_limit": -1.95, "y_inclusive": True},
+        {"z_min": 27.0, "z_max": 30.0, "boundary_pair": (27.0, 30.0), "y_limit": -1.95, "y_inclusive": True},
+        {"z_min": 30.0, "z_max": 33.0, "boundary_pair": (33.0, 33.0), "y_limit": -1.95, "y_inclusive": True},
+        {"z_min": 33.0, "z_max": 36.4, "boundary_pair": (36.4, 36.4), "y_limit": -0.85, "y_inclusive": True},
+        {"z_min": 37.0, "z_max": 39.6, "boundary_pair": (39.6, 39.6), "y_limit": -0.5, "y_inclusive": True},
+    )
+
     def __init__(
         self,
         s2k_path: str | Path,
@@ -65,6 +80,8 @@ class OpenSeesModel:
         self.integration_map: dict[int, dict[str, Any]] = {}
         self.element_map: dict[int, dict[str, Any]] = {}
         self.transf_map: dict[int, dict[str, Any]] = {}
+        self.wind_projected_area_map: dict[int, dict[str, Any]] = {}
+        self.wind_area_by_band: dict[int, float] = {}
         self.frame_name_to_element_tag: dict[str, int] = {}
         self.element_tag_to_frame_name: dict[int, str] = {}
 
@@ -224,19 +241,29 @@ class OpenSeesModel:
     def initialize_model(self, ndm: int = 3, ndf: int = 6) -> None:
         self._ensure_model_builder(ndm=ndm, ndf=ndf)
 
+    def _parse_node_coordinates(self) -> dict[int, dict[str, Any]]:
+        node_records: dict[int, dict[str, Any]] = {}
+        for line in self._table_lines("JOINT COORDINATES"):
+            data = self._parse_key_values(line)
+            node_tag = int(data["Joint"])
+            node_records[node_tag] = {
+                "node_tag": node_tag,
+                "x": float(data["GlobalX"]),
+                "y": float(data["GlobalY"]),
+                "z": float(data["GlobalZ"]),
+            }
+        return node_records
+
     def node(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
         ops = self.ops
         rows: list[dict[str, Any]] = []
         self.node_map = {}
-        for line in self._table_lines("JOINT COORDINATES"):
-            data = self._parse_key_values(line)
-            node_tag = int(data["Joint"])
-            x = float(data["GlobalX"])
-            y = float(data["GlobalY"])
-            z = float(data["GlobalZ"])
+        for node_tag, record in self._parse_node_coordinates().items():
+            x = float(record["x"])
+            y = float(record["y"])
+            z = float(record["z"])
             ops.node(node_tag, x, y, z)
-            record = {"node_tag": node_tag, "x": x, "y": y, "z": z}
             self.node_map[node_tag] = record
             rows.append(record)
         # 保留一份节点坐标映射，后续几何变换和结果查询都会用到。
@@ -697,6 +724,136 @@ class OpenSeesModel:
         )
         return self.transf_map
 
+    @staticmethod
+    def _vector_dot(first: tuple[float, float, float], second: tuple[float, float, float]) -> float:
+        return sum(first[index] * second[index] for index in range(3))
+
+    @staticmethod
+    def _vector_cross(first: tuple[float, float, float], second: tuple[float, float, float]) -> tuple[float, float, float]:
+        return (
+            first[1] * second[2] - first[2] * second[1],
+            first[2] * second[0] - first[0] * second[2],
+            first[0] * second[1] - first[1] * second[0],
+        )
+
+    @staticmethod
+    def _vector_norm(vector: tuple[float, float, float]) -> float:
+        from math import sqrt
+
+        return sqrt(sum(component * component for component in vector))
+
+    @classmethod
+    def _absolute_cosine(cls, first: tuple[float, float, float], second: tuple[float, float, float]) -> float:
+        denominator = cls._vector_norm(first) * cls._vector_norm(second)
+        if denominator == 0.0:
+            return 0.0
+        return abs(cls._vector_dot(first, second) / denominator)
+
+    @staticmethod
+    def _close(value: float, target: float, tolerance: float = 1e-9) -> bool:
+        return abs(value - target) <= tolerance
+
+    @classmethod
+    def _matches_boundary_pair(cls, z_i: float, z_j: float, pair: tuple[float, float]) -> bool:
+        return (
+            cls._close(z_i, pair[0]) and cls._close(z_j, pair[1])
+        ) or (
+            cls._close(z_i, pair[1]) and cls._close(z_j, pair[0])
+        )
+
+    @classmethod
+    def _is_in_wind_area_band(
+        cls,
+        node_i: dict[str, Any],
+        node_j: dict[str, Any],
+        band: dict[str, Any],
+    ) -> bool:
+        z_i = float(node_i["z"])
+        z_j = float(node_j["z"])
+        y_i = float(node_i["y"])
+        y_j = float(node_j["y"])
+        z_min = float(band["z_min"])
+        z_max = float(band["z_max"])
+        y_limit = float(band["y_limit"])
+        boundary_pair = band["boundary_pair"]
+
+        has_node_inside_band = z_min < z_i < z_max or z_min < z_j < z_max
+        has_boundary_pair = cls._matches_boundary_pair(z_i, z_j, boundary_pair)
+        if not (has_node_inside_band or has_boundary_pair):
+            return False
+
+        if bool(band["y_inclusive"]):
+            return y_i <= y_limit and y_j <= y_limit
+        return y_i < y_limit and y_j < y_limit
+
+    def _l_section_projected_area(
+        self,
+        node_i: dict[str, Any],
+        node_j: dict[str, Any],
+        section_name: str,
+        theta: float,
+    ) -> float:
+        from math import cos, sin
+
+        x_i, y_i, z_i = float(node_i["x"]), float(node_i["y"]), float(node_i["z"])
+        x_j, y_j, z_j = float(node_j["x"]), float(node_j["y"]), float(node_j["z"])
+        member_vector = (x_j - x_i, y_j - y_i, z_j - z_i)
+        member_length = self._vector_norm(member_vector)
+        leg_width, _ = self._l_section_dimensions(section_name)
+        local_z_vector = self._geom_transf_vector(node_i, node_j)
+        wind_vector = (sin(theta), cos(theta), 0.0)
+        second_face_vector = self._vector_cross(local_z_vector, member_vector)
+        projected_width = (
+            self._absolute_cosine(wind_vector, local_z_vector)
+            + self._absolute_cosine(wind_vector, second_face_vector)
+        )
+        return member_length * leg_width * projected_width
+
+    def element_wind_projected_areas(self, theta: float = 0.0) -> dict[int, dict[str, Any]]:
+        """Return projected wind areas for original SAP frame members.
+
+        The calculation intentionally uses the original S2K frame connectivity
+        instead of ``self.element_map`` so buckling-model segment elements do
+        not multiply the exposed area.
+        """
+
+        node_records = self.node_map if self.node_map else self._parse_node_coordinates()
+
+        connectivity = self._parse_element_connectivity()
+        assignments = self._element_section_assignments()
+        area_map: dict[int, dict[str, Any]] = {}
+
+        for ele_tag, item in connectivity.items():
+            node_i = node_records[int(item["node_i"])]
+            node_j = node_records[int(item["node_j"])]
+            section_name = assignments[ele_tag]["section_name"]
+            projected_area = self._l_section_projected_area(node_i, node_j, section_name, theta)
+            band_indices = [
+                index
+                for index, band in enumerate(self._WIND_AREA_BANDS)
+                if self._is_in_wind_area_band(node_i, node_j, band)
+            ]
+            area_map[ele_tag] = {
+                "element_tag": ele_tag,
+                "frame_name": item.get("frame_name", assignments[ele_tag].get("frame_name", "")),
+                "node_i": int(item["node_i"]),
+                "node_j": int(item["node_j"]),
+                "section_name": section_name,
+                "projected_area": projected_area,
+                "band_indices": band_indices,
+            }
+
+        self.wind_projected_area_map = area_map
+        return area_map
+
+    def get_area(self, theta: float = 0.0) -> dict[int, float]:
+        area_by_band = {index: 0.0 for index in range(len(self._WIND_AREA_BANDS))}
+        for area_record in self.element_wind_projected_areas(theta=theta).values():
+            for band_index in area_record["band_indices"]:
+                area_by_band[int(band_index)] += float(area_record["projected_area"])
+        self.wind_area_by_band = area_by_band
+        return area_by_band
+
     def _parse_element_connectivity(self) -> dict[int, dict[str, Any]]:
         connectivity: dict[int, dict[str, Any]] = {}
         for line in self._table_lines("CONNECTIVITY - FRAME"):
@@ -968,3 +1125,8 @@ class OpenSeesModel:
                 }
         key = mat_tag if mat_tag is not None else material_name
         raise KeyError(f"未找到材料 {key}")
+if __name__ == "__main__":
+    
+    model = OpenSeesModel("Source/Z30103A6.s2k")
+    model.model_tower()
+    print(model.get_area())

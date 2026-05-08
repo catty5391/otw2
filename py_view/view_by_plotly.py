@@ -7,7 +7,7 @@ from model import OpenSeesModelWithBuckling, OpenSeesModel
 from util.postprocess import PlotModel
 
 
-model = OpenSeesModelWithBuckling(PROJECT_ROOT / "Source" / "Z33101B_54.s2k")
+model = OpenSeesModelWithBuckling(PROJECT_ROOT / "Source" / "Z30103A6.s2k")
 model.model_tower()
 viewer = PlotModel(model)
 viewer.show(    
