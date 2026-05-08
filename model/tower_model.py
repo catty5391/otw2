@@ -1,10 +1,22 @@
 from __future__ import annotations
 
 import csv
+import importlib.util
 import json
 import re
 from pathlib import Path
 from typing import Any
+
+try:
+    from util.preprocess.tag_manager import TagManager
+except ImportError:  # pragma: no cover
+    tag_manager_path = Path(__file__).resolve().parents[1] / "util" / "preprocess" / "tag_manager.py"
+    spec = importlib.util.spec_from_file_location("otw_preprocess_tag_manager", tag_manager_path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"无法加载 TagManager: {tag_manager_path}")
+    tag_manager_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tag_manager_module)
+    TagManager = tag_manager_module.TagManager
 
 
 class OpenSeesModel:
@@ -13,10 +25,10 @@ class OpenSeesModel:
     def __init__(
         self,
         s2k_path: str | Path,
-        num_intgr_pts: int = 8,
+        num_intgr_pts: int = 6,
         long_edge_segments: int = 8,
-        short_edge_segments: int = 2,
-        steel01_b: float = 0.05,
+        short_edge_segments: int = 1,
+        steel01_b: float = 0.03,
         beam_integration_type: str = "Legendre",
         output_dir: str | Path | None = None,
         node_to_fix_path: str | Path | None = None,
@@ -35,8 +47,11 @@ class OpenSeesModel:
         self.short_edge_segments = self._positive_segment_count(short_edge_segments, "short_edge_segments")
         self.steel01_b = steel01_b
         self.beam_integration_type = beam_integration_type
-        self._lines = self.s2k_path.read_text(encoding="utf-8").splitlines()
+        self._lines = self.s2k_path.read_text(encoding="gbk").splitlines()
         self._model_built = False
+        self.tag_manager = TagManager(start_tag={"element": 1})
+        self._frame_element_tag_namespace = "element"
+        self._element_tags_initialized = False
 
         # 这些映射既服务当前建模，也会被落盘后供后续分析阶段直接复用。
         self.node_map: dict[int, dict[str, Any]] = {}
@@ -50,6 +65,8 @@ class OpenSeesModel:
         self.integration_map: dict[int, dict[str, Any]] = {}
         self.element_map: dict[int, dict[str, Any]] = {}
         self.transf_map: dict[int, dict[str, Any]] = {}
+        self.frame_name_to_element_tag: dict[str, int] = {}
+        self.element_tag_to_frame_name: dict[int, str] = {}
 
 
         try:
@@ -135,6 +152,74 @@ class OpenSeesModel:
             return []
         with path.open("r", newline="", encoding="utf-8") as file:
             return list(csv.DictReader(file))
+
+    @staticmethod
+    def _numeric_frame_tag(frame_name: str) -> int | None:
+        frame_name = str(frame_name).strip()
+        if frame_name.lstrip("+-").isdigit():
+            return int(frame_name)
+        return None
+
+    def _frame_names_from_table(self, table_name: str) -> list[str]:
+        try:
+            lines = self._table_lines(table_name)
+        except ValueError:
+            return []
+        frame_names: list[str] = []
+        for line in lines:
+            data = self._parse_key_values(line)
+            if "Frame" in data:
+                frame_names.append(str(data["Frame"]))
+        return frame_names
+
+    def _register_frame_element_tag(self, frame_name: str) -> int:
+        frame_name = str(frame_name)
+        if frame_name in self.frame_name_to_element_tag:
+            return self.frame_name_to_element_tag[frame_name]
+
+        namespace = self._frame_element_tag_namespace
+        numeric_tag = self._numeric_frame_tag(frame_name)
+        if numeric_tag is None:
+            element_tag = self.tag_manager.get_next_tag(namespace=namespace)
+        else:
+            try:
+                element_tag = self.tag_manager.register(numeric_tag, namespace=namespace)
+            except ValueError as exc:
+                existing_frame = self.element_tag_to_frame_name.get(numeric_tag, "<unknown>")
+                raise ValueError(
+                    f"Frame {frame_name} 解析得到的 {namespace} tag {numeric_tag} 已被 Frame {existing_frame} 使用。"
+                ) from exc
+
+        if element_tag in self.element_tag_to_frame_name:
+            existing_frame = self.element_tag_to_frame_name[element_tag]
+            raise ValueError(
+                f"Frame {frame_name} 分配得到的 {namespace} tag {element_tag} 已被 Frame {existing_frame} 使用。"
+            )
+        self.frame_name_to_element_tag[frame_name] = element_tag
+        self.element_tag_to_frame_name[element_tag] = frame_name
+        return element_tag
+
+    def _initialize_element_tags(self) -> None:
+        if self._element_tags_initialized:
+            return
+
+        frame_names: list[str] = []
+        seen: set[str] = set()
+        for table_name in ("CONNECTIVITY - FRAME", "FRAME SECTION ASSIGNMENTS"):
+            for frame_name in self._frame_names_from_table(table_name):
+                if frame_name not in seen:
+                    frame_names.append(frame_name)
+                    seen.add(frame_name)
+
+        numeric_frames = [frame_name for frame_name in frame_names if self._numeric_frame_tag(frame_name) is not None]
+        named_frames = [frame_name for frame_name in frame_names if self._numeric_frame_tag(frame_name) is None]
+        for frame_name in numeric_frames + named_frames:
+            self._register_frame_element_tag(frame_name)
+        self._element_tags_initialized = True
+
+    def _element_tag_for_frame(self, frame_name: str) -> int:
+        self._initialize_element_tags()
+        return self._register_frame_element_tag(frame_name)
 
     def initialize_model(self, ndm: int = 3, ndf: int = 6) -> None:
         self._ensure_model_builder(ndm=ndm, ndf=ndf)
@@ -422,13 +507,15 @@ class OpenSeesModel:
         assignments: dict[int, dict[str, Any]] = {}
         for line in self._table_lines("FRAME SECTION ASSIGNMENTS"):
             data = self._parse_key_values(line)
-            ele_tag = int(data["Frame"])
+            frame_name = str(data["Frame"])
+            ele_tag = self._element_tag_for_frame(frame_name)
             section_name = data.get("AnalSect", "")
             material_name = self._parse_key_values(line).get("MatProp", "")
             if not material_name and "Q" in section_name:
                 material_name = f"Q{section_name.split('Q')[-1]}"
             assignments[ele_tag] = {
                 "element_tag": ele_tag,
+                "frame_name": frame_name,
                 "section_name": section_name,
                 "material_name": material_name,
             }
@@ -577,7 +664,12 @@ class OpenSeesModel:
             raw_elements = self._parse_element_connectivity()
         else:
             raw_elements = {
-                tag: {"element_tag": tag, "node_i": item["node_i"], "node_j": item["node_j"]}
+                tag: {
+                    "element_tag": tag,
+                    "frame_name": item.get("frame_name", self.element_tag_to_frame_name.get(tag, "")),
+                    "node_i": item["node_i"],
+                    "node_j": item["node_j"],
+                }
                 for tag, item in self.element_map.items()
             }
 
@@ -587,10 +679,11 @@ class OpenSeesModel:
             node_i = self.node_map[item["node_i"]]
             node_j = self.node_map[item["node_j"]]
             vec_x, vec_y, vec_z = self._geom_transf_vector(node_i, node_j)
-            ops.geomTransf("Corotational", ele_tag, vec_x, vec_y, vec_z)
+            ops.geomTransf("Linear", ele_tag, vec_x, vec_y, vec_z)
             record = {
                 "transf_tag": ele_tag,
                 "element_tag": ele_tag,
+                "frame_name": item.get("frame_name", self.element_tag_to_frame_name.get(ele_tag, "")),
                 "vec_x": vec_x,
                 "vec_y": vec_y,
                 "vec_z": vec_z,
@@ -600,7 +693,7 @@ class OpenSeesModel:
         self._write_csv(
             self.output_dir / "geomtransf.csv",
             rows,
-            ["transf_tag", "element_tag", "vec_x", "vec_y", "vec_z"],
+            ["transf_tag", "element_tag", "frame_name", "vec_x", "vec_y", "vec_z"],
         )
         return self.transf_map
 
@@ -608,9 +701,11 @@ class OpenSeesModel:
         connectivity: dict[int, dict[str, Any]] = {}
         for line in self._table_lines("CONNECTIVITY - FRAME"):
             data = self._parse_key_values(line)
-            ele_tag = int(data["Frame"])
+            frame_name = str(data["Frame"])
+            ele_tag = self._element_tag_for_frame(frame_name)
             connectivity[ele_tag] = {
                 "element_tag": ele_tag,
+                "frame_name": frame_name,
                 "node_i": int(data["JointI"]),
                 "node_j": int(data["JointJ"]),
             }
@@ -654,6 +749,7 @@ class OpenSeesModel:
             integration_record = {
                 "integration_tag": integration_tag,
                 "element_tag": ele_tag,
+                "frame_name": item.get("frame_name", assign.get("frame_name", "")),
                 "integration_type": self.beam_integration_type,
                 "section_tag": section_tag,
                 "num_intgr_pts": self.num_intgr_pts,
@@ -662,6 +758,7 @@ class OpenSeesModel:
             integration_rows.append(integration_record)
             record = {
                 "element_tag": ele_tag,
+                "frame_name": item.get("frame_name", assign.get("frame_name", "")),
                 "node_i": item["node_i"],
                 "node_j": item["node_j"],
                 "num_intgr_pts": self.num_intgr_pts,
@@ -682,6 +779,7 @@ class OpenSeesModel:
             [
                 "integration_tag",
                 "element_tag",
+                "frame_name",
                 "integration_type",
                 "section_tag",
                 "num_intgr_pts",
@@ -692,6 +790,7 @@ class OpenSeesModel:
             rows,
             [
                 "element_tag",
+                "frame_name",
                 "node_i",
                 "node_j",
                 "num_intgr_pts",
@@ -723,6 +822,8 @@ class OpenSeesModel:
             "geomtransf": self.transf_map,
             "integrations": self.integration_map,
             "elements": self.element_map,
+            "frame_tags": self.frame_name_to_element_tag,
+            "tag_summary": self.tag_manager.summary(),
         }
 
     def modeltower(self) -> dict[str, Any]:
@@ -761,6 +862,7 @@ class OpenSeesModel:
             if int(row["element_tag"]) == int(element_tag):
                 return {
                     "element_tag": int(row["element_tag"]),
+                    "frame_name": row.get("frame_name", self.element_tag_to_frame_name.get(int(row["element_tag"]), "")),
                     "node_i": int(row["node_i"]),
                     "node_j": int(row["node_j"]),
                     "num_intgr_pts": int(row["num_intgr_pts"]),

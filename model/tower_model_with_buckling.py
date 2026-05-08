@@ -1,26 +1,11 @@
 from __future__ import annotations
 
-import importlib.util
-from pathlib import Path
 from typing import Any
 
 try:
-    from .tower_model import OpenSeesModel
+    from .tower_model import OpenSeesModel, TagManager
 except ImportError:  # pragma: no cover
-    from tower_model import OpenSeesModel
-
-
-def _load_tag_manager() -> Any:
-    tag_manager_path = Path(__file__).resolve().parents[1] / "util" / "preprocess" / "tag_manager.py"
-    spec = importlib.util.spec_from_file_location("otw_preprocess_tag_manager", tag_manager_path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"无法加载 TagManager: {tag_manager_path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.TagManager
-
-
-TagManager = _load_tag_manager()
+    from tower_model import OpenSeesModel, TagManager
 
 
 class OpenSeesModelWithBuckling(OpenSeesModel):
@@ -34,7 +19,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def __init__(
         self,
         *args: Any,
-        member_divisions: int = 2,
+        member_divisions: int = 4,
         **kwargs: Any,
     ) -> None:
         if int(member_divisions) < 2:
@@ -48,8 +33,10 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "transf": 1,
                 "integration": 1,
                 "element": 1,
+                "source_element": 1,
             }
         )
+        self._frame_element_tag_namespace = "source_element"
         self.split_node_map: dict[int, dict[str, Any]] = {}
         self.segmented_connectivity_map: dict[int, dict[str, Any]] = {}
         self.element_segment_map: dict[int, list[int]] = {}
@@ -113,6 +100,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                     "y": y,
                     "z": z,
                     "original_element_tag": original_ele_tag,
+                    "original_frame_name": item.get("frame_name", ""),
                     "station_index": station_index,
                     "station_ratio": ratio,
                 }
@@ -128,6 +116,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 segment_record = {
                     "element_tag": element_tag,
                     "original_element_tag": original_ele_tag,
+                    "original_frame_name": item.get("frame_name", ""),
                     "segment_index": segment_index,
                     "node_i": segment_nodes[segment_index - 1],
                     "node_j": segment_nodes[segment_index],
@@ -148,6 +137,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "y",
                 "z",
                 "original_element_tag",
+                "original_frame_name",
                 "station_index",
                 "station_ratio",
             ],
@@ -158,6 +148,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             [
                 "element_tag",
                 "original_element_tag",
+                "original_frame_name",
                 "segment_index",
                 "node_i",
                 "node_j",
@@ -192,7 +183,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             g = float(basic.get("G12", e0 / (2 * (1 + float(basic.get("U12", 0.3))))))
             nu = float(basic.get("U12", 0.3))
             density = float(basic.get("UnitMass", 0.0))
-            ops.uniaxialMaterial("Steel01", tag, fy, e0, self.steel01_b)
+            ops.uniaxialMaterial("Steel02", tag, fy, e0, self.steel01_b, 20, 0.925, 0.15, 0.0005, 0.01, 0.0005, 0.01)
             record = {
                 "mat_tag": tag,
                 "material_name": name,
@@ -202,7 +193,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "nu": nu,
                 "density": density,
                 "b": self.steel01_b,
-                "ops_type": "Steel01",
+                "ops_type": "Steel02",
             }
             self.material_name_to_tag[name] = tag
             self.material_tag_map[tag] = record
@@ -334,6 +325,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "transf_tag": transf_tag,
                 "element_tag": element_tag,
                 "original_element_tag": item["original_element_tag"],
+                "original_frame_name": item.get("original_frame_name", ""),
                 "segment_index": item["segment_index"],
                 "vec_x": vec_x,
                 "vec_y": vec_y,
@@ -348,6 +340,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "transf_tag",
                 "element_tag",
                 "original_element_tag",
+                "original_frame_name",
                 "segment_index",
                 "vec_x",
                 "vec_y",
@@ -374,6 +367,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         for element_tag, item in connectivity.items():
             original_ele_tag = int(item["original_element_tag"])
             assign = assignments[original_ele_tag]
+            original_frame_name = item.get("original_frame_name", assign.get("frame_name", ""))
             section_tag = self.section_name_to_tag[assign["section_name"]]
             transf_tag = self.transf_map[element_tag]["transf_tag"]
             integration_tag = self.tag_manager.get_next_tag(namespace="integration")
@@ -395,6 +389,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "integration_tag": integration_tag,
                 "element_tag": element_tag,
                 "original_element_tag": original_ele_tag,
+                "original_frame_name": original_frame_name,
                 "segment_index": item["segment_index"],
                 "integration_type": self.beam_integration_type,
                 "section_tag": section_tag,
@@ -405,6 +400,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             record = {
                 "element_tag": element_tag,
                 "original_element_tag": original_ele_tag,
+                "original_frame_name": original_frame_name,
                 "segment_index": item["segment_index"],
                 "node_i": item["node_i"],
                 "node_j": item["node_j"],
@@ -429,6 +425,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "integration_tag",
                 "element_tag",
                 "original_element_tag",
+                "original_frame_name",
                 "segment_index",
                 "integration_type",
                 "section_tag",
@@ -441,6 +438,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             [
                 "element_tag",
                 "original_element_tag",
+                "original_frame_name",
                 "segment_index",
                 "node_i",
                 "node_j",
@@ -461,7 +459,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def model_tower(self) -> dict[str, Any]:
         self.node()
         self.fix()
-        self.mass()
+        # self.mass()
         self.material()
         self.section()
         self.geomtransf()
@@ -477,6 +475,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             "integrations": self.integration_map,
             "elements": self.element_map,
             "element_segments": self.element_segment_map,
+            "frame_tags": self.frame_name_to_element_tag,
             "tag_summary": self.tag_manager.summary(),
         }
 
@@ -489,6 +488,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 return {
                     "element_tag": int(row["element_tag"]),
                     "original_element_tag": int(row.get("original_element_tag", row["element_tag"])),
+                    "original_frame_name": row.get("original_frame_name", ""),
                     "segment_index": int(row.get("segment_index", 1)),
                     "node_i": int(row["node_i"]),
                     "node_j": int(row["node_j"]),

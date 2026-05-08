@@ -24,10 +24,10 @@ ops.timeSeries("Linear", 1)
 ops.pattern("Plain", 1, 1)
 node_loads = opst.pre.create_gravity_load(direction="Z", factor=-9.81)  # Create gravity loads in the pattern tag=1
 
-ops.constraints('Plain')
+ops.constraints('Transformation')
 ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.test('NormDispIncr', 0.01, 80, 2)
+ops.system('UmfPack')
+ops.test('NormDispIncr', 0.000001, 80, 2)
 ops.algorithm('KrylovNewton')
 ops.integrator('LoadControl', 0.1)
 ops.analysis('Static')
@@ -46,8 +46,8 @@ ops.pattern('Plain', 2, 2)
 ops.load(350, 0, 1, 0, 0, 0, 0)
 # ops.constraints('Plain')
 # ops.numberer('RCM')
-# ops.system('BandGeneral')
-# ops.test('NormDispIncr', 0.01, 40, 2)
+# ops.system('SparseSYM')
+# ops.test('NormDispIncr', 0.0001, 40, 2)
 # ops.algorithm('KrylovNewton')
 ops.integrator('DisplacementControl', 350, 2, 0.01)
 ops.analysis('Static')
@@ -67,3 +67,6 @@ with drift_out_dir.open('w', encoding='utf-8') as f:
         reactions_sum = sum(reactions.values())
         f.write(f"{reactions_sum}," + ",".join(str(v) for v in drift_now) + '\n')
 print('over')
+
+
+
