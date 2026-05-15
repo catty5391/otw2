@@ -66,6 +66,82 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         ]
         self._write_csv(self.output_dir / "nodes.csv", rows, ["node_tag", "x", "y", "z"])
 
+    # 计算element上分割点坐标
+    def _get_breakpoint_coord(self, node_i: dict[str, Any], node_j: dict[str, Any], num: int):
+        node_i_x = node_i["x"]
+        node_i_y = node_i["y"]
+        node_i_z = node_i["z"]
+        node_j_x = node_j["x"]
+        node_j_y = node_j["y"]
+        node_j_z = node_j["z"]
+        ratio = num / self.member_divisions
+        x = float(node_i_x) + (float(node_j_x) - float(node_i_x)) * ratio
+        y = float(node_i_y) + (float(node_j_y) - float(node_i_y)) * ratio
+        z = float(node_i_z) + (float(node_j_z) - float(node_i_z)) * ratio
+        if(num == 2):
+            dealt_x, delta_y, delta_z = self._add_rand_disp(x, y, z, node_i_x, node_i_y, node_i_z, node_j_x, node_j_y, node_j_z)
+            x += dealt_x
+            y += delta_y
+            z += delta_z
+        return x, y, z
+    
+    def _add_rand_disp(
+        self,
+        x, y, z,
+        node_i_x, node_i_y, node_i_z,
+        node_j_x, node_j_y, node_j_z,
+        disp=0
+    ):
+        import random
+        import math
+
+        # 杆件方向向量
+        vx = node_j_x - node_i_x
+        vy = node_j_y - node_i_y
+        vz = node_j_z - node_i_z
+
+        length = math.sqrt(vx ** 2 + vy ** 2 + vz ** 2)
+
+        if length == 0:
+            raise ValueError("杆件两端节点重合，无法确定杆件方向。")
+
+        # 杆件方向单位向量
+        ux = vx / length
+        uy = vy / length
+        uz = vz / length
+
+        # 选一个不与杆件方向平行的辅助向量
+        # 如果杆件不接近 z 轴，就用 z 轴作为辅助向量
+        if abs(uz) < 0.9:
+            ax, ay, az = 0.0, 0.0, 1.0
+        else:
+            ax, ay, az = 1.0, 0.0, 0.0
+
+        # e1 = u × a
+        e1x = uy * az - uz * ay
+        e1y = uz * ax - ux * az
+        e1z = ux * ay - uy * ax
+
+        e1_len = math.sqrt(e1x ** 2 + e1y ** 2 + e1z ** 2)
+
+        e1x /= e1_len
+        e1y /= e1_len
+        e1z /= e1_len
+
+        # e2 = u × e1
+        e2x = uy * e1z - uz * e1y
+        e2y = uz * e1x - ux * e1z
+        e2z = ux * e1y - uy * e1x
+
+        # 在垂直于杆件的平面内随机取一个方向
+        theta = random.uniform(0, 2 * math.pi)
+
+        disp_x = disp * (math.cos(theta) * e1x + math.sin(theta) * e2x)
+        disp_y = disp * (math.cos(theta) * e1y + math.sin(theta) * e2y)
+        disp_z = disp * (math.cos(theta) * e1z + math.sin(theta) * e2z)
+
+        return disp_x, disp_y, disp_z
+
     def _build_segmented_connectivity(self) -> dict[int, dict[str, Any]]:
         self._ensure_model_builder()
         ops = self.ops
@@ -90,9 +166,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             for station_index in range(1, self.member_divisions):
                 ratio = station_index / self.member_divisions
                 node_tag = self._allocate_node_tag()
-                x = float(node_i["x"]) + (float(node_j["x"]) - float(node_i["x"])) * ratio
-                y = float(node_i["y"]) + (float(node_j["y"]) - float(node_i["y"])) * ratio
-                z = float(node_i["z"]) + (float(node_j["z"]) - float(node_i["z"])) * ratio
+                x, y, z = self._get_breakpoint_coord(node_i, node_j, station_index)
                 ops.node(node_tag, x, y, z)
                 node_record = {
                     "node_tag": node_tag,
@@ -518,3 +592,4 @@ TowerModelWithBuckling = OpenSeesModelWithBuckling
 if __name__ == "__main__":
     model = TowerModelWithBuckling("Source/Z30103A6.s2k")
     model.model_tower()
+    

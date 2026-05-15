@@ -39,7 +39,7 @@ gravity_result = gravity.apply_from_model(model)
 ops.constraints('Transformation')
 ops.numberer('RCM')
 ops.system('UmfPack')
-ops.test('NormDispIncr', 0.000001, 80, 2)
+ops.test('NormDispIncr', 0.00001, 80, 2)
 ops.algorithm('KrylovNewton')
 ops.integrator('LoadControl', 0.1)
 
@@ -67,7 +67,7 @@ wind = PushoverWindLoadApplier(
 )
 result = wind.apply_from_model(model)
 
-ops.integrator('DisplacementControl', 350, 2, 0.01)
+ops.integrator('DisplacementControl', 350, 2, 0.0025)
 ops.analysis('Static')
 track = CorrectedStoryDriftTracker(config_drift_tracker_node)
 story_label = track.get_story_labels()
@@ -76,7 +76,7 @@ with drift_out_dir.open('w', encoding='utf-8') as f:
     f.write('reaction,' + ','.join(story_label) + '\n')
     f.flush()
     os.fsync(f.fileno())
-    for step in range(120):
+    for step in range(400):
         ok = ops.analyze(1)
         if ok != 0:
             raise RuntimeError(f"分析失败，step={step}")
