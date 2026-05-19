@@ -19,12 +19,14 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def __init__(
         self,
         *args: Any,
+        random_disp_ratio: float = 0.01,
         member_divisions: int = 4,
         **kwargs: Any,
     ) -> None:
         if int(member_divisions) < 2:
             raise ValueError("member_divisions 必须大于等于 2。")
         super().__init__(*args, **kwargs)
+        self.random_disp_ratio = float(random_disp_ratio)
         self.member_divisions = int(member_divisions)
         self.tag_manager = TagManager(
             start_tag={
@@ -90,18 +92,18 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         x, y, z,
         node_i_x, node_i_y, node_i_z,
         node_j_x, node_j_y, node_j_z,
-        disp=0
     ):
         import random
         import math
 
+        
         # 杆件方向向量
         vx = node_j_x - node_i_x
         vy = node_j_y - node_i_y
         vz = node_j_z - node_i_z
 
         length = math.sqrt(vx ** 2 + vy ** 2 + vz ** 2)
-
+        disp = length * self.random_disp_ratio
         if length == 0:
             raise ValueError("杆件两端节点重合，无法确定杆件方向。")
 
