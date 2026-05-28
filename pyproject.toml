@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "nbformat>=5.10.4",
     "openseespy==3.7.1.2",
     "opstool==1.0.25",
     "pygmsh>=7.1.17",
