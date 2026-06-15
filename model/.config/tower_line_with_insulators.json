@@ -1,0 +1,93 @@
+{
+  "description": "Two towers with one V-shaped insulator string on each line side. The modeled span connects tower_1 next_span_v to tower_2 previous_span_v.",
+  "towers": {
+    "tower_1": {
+      "model": "normal",
+      "s2k_path": "Source/Z30103A6.s2k",
+      "origin": [0.0, 0.0, 0.0]
+    },
+    "tower_2": {
+      "model": "normal",
+      "s2k_path": "Source/Z30103A6.s2k",
+      "origin": [0.0, 300.0, 0.0]
+    }
+  },
+  "insulators": {
+    "tower_1_span_v_1": {
+      "tower_id": "tower_1",
+      "side": "previous_span",
+      "upper_points": [
+        {"tower_id": "tower_1", "local_node": 820},
+        {"tower_id": "tower_1", "local_node": 520}
+      ],
+      "lower_point": {"offset_from_upper_midpoint": [0.0, 0, -4.0]},
+      "material": {"EA": 1.0e8, "area": 1.0, "mass": 50.0}
+    },
+    "tower_1_span_v_2": {
+      "tower_id": "tower_1",
+      "side": "next_span",
+      "upper_points": [
+        {"tower_id": "tower_1", "local_node": 521},
+        {"tower_id": "tower_1", "local_node": 821}
+      ],
+      "lower_point": {"offset_from_upper_midpoint": [0.0, 0, -4.0]},
+      "material": {"EA": 1.0e8, "area": 1.0, "mass": 50.0}
+    },
+    "tower_2_span_v_1": {
+      "tower_id": "tower_2",
+      "side": "previous_span",
+      "upper_points": [
+        {"tower_id": "tower_2", "local_node": 820},
+        {"tower_id": "tower_2", "local_node": 520}
+      ],
+      "lower_point": {"offset_from_upper_midpoint": [0.0, 0, -4.0]},
+      "material": {"EA": 1.0e8, "area": 1.0, "mass": 50.0}
+    },
+    "tower_2_span_v_2": {
+      "tower_id": "tower_2",
+      "side": "next_span",
+      "upper_points": [
+        {"tower_id": "tower_2", "local_node": 821},
+        {"tower_id": "tower_2", "local_node": 521}
+      ],
+      "lower_point": {"offset_from_upper_midpoint": [0.0, 0, -4.0]},
+      "material": {"EA": 1.0e8, "area": 1.0, "mass": 50.0}
+    }
+  },
+  "transmission_lines": {
+    "span_tower_1_to_tower_2_transmission1": {
+      "node_to_hang": [
+        {"insulator": "tower_1_span_v_1", "point": "lower"},
+        {"insulator": "tower_2_span_v_1", "point": "lower"}
+      ],
+      "material": {
+        "EA": 2.8e7,
+        "EI": 1.0e-2,
+        "GJ": 1.0e-2,
+        "area": 4.0e-4,
+        "initial_force": 2.0e4
+      },
+      "n_seg": 60,
+      "initial_sag": 8.0,
+      "q_g": 15.0,
+      "gravity": 9.81
+    },
+    "span_tower_1_to_tower_2_transmission2": {
+      "node_to_hang": [
+        {"insulator": "tower_1_span_v_2", "point": "lower"},
+        {"insulator": "tower_2_span_v_2", "point": "lower"}
+      ],
+      "material": {
+        "EA": 2.8e7,
+        "EI": 1.0e-2,
+        "GJ": 1.0e-2,
+        "area": 4.0e-4,
+        "initial_force": 2.0e4
+      },
+      "n_seg": 60,
+      "initial_sag": 8.0,
+      "q_g": 15.0,
+      "gravity": 9.81
+    }
+  }
+}

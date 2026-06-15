@@ -47,8 +47,13 @@ class OpenSeesModel:
         beam_integration_type: str = "Legendre",
         output_dir: str | Path | None = None,
         node_to_fix_path: str | Path | None = None,
+        tower_id: str | None = None,
+        origin: tuple[float, float, float] | list[float] | None = None,
+        tag_manager: TagManager | None = None,
     ) -> None:
         self.s2k_path = Path(s2k_path)
+        self.tower_id = str(tower_id) if tower_id is not None else self.s2k_path.stem
+        self.origin = self._coerce_origin(origin)
         self.base_dir = Path(__file__).resolve().parent
         self.output_dir = Path(output_dir) if output_dir else self.base_dir / ".output"
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -64,7 +69,17 @@ class OpenSeesModel:
         self.beam_integration_type = beam_integration_type
         self._lines = self.s2k_path.read_text(encoding="gbk").splitlines()
         self._model_built = False
-        self.tag_manager = TagManager(start_tag={"element": 1})
+        self.tag_manager = tag_manager if tag_manager is not None else TagManager(
+            start_tag={
+                "node": 1,
+                "material": 1,
+                "section": 1,
+                "transf": 1,
+                "integration": 1,
+                "element": 1,
+                "source_element": 1,
+            }
+        )
         self._frame_element_tag_namespace = "element"
         self._element_tags_initialized = False
 
@@ -84,6 +99,14 @@ class OpenSeesModel:
         self.wind_area_by_band: dict[int, float] = {}
         self.frame_name_to_element_tag: dict[str, int] = {}
         self.element_tag_to_frame_name: dict[int, str] = {}
+        self.node_local_to_global_tag: dict[int, int] = {}
+        self.node_global_to_local_tag: dict[int, int] = {}
+        self.material_local_to_global_tag: dict[int, int] = {}
+        self.material_global_to_local_tag: dict[int, int] = {}
+        self.section_local_to_global_tag: dict[int, int] = {}
+        self.section_global_to_local_tag: dict[int, int] = {}
+        self.element_local_to_global_tag: dict[int, int] = {}
+        self.element_global_to_local_tag: dict[int, int] = {}
 
 
         try:
@@ -106,6 +129,90 @@ class OpenSeesModel:
                     "截面纤维划分依赖 SecMesh 及其相关库，请确认 matplotlib、pygmsh、shapely 等依赖已安装。"
                 ) from exc
         return SecPlain, mesh_geom
+
+    @staticmethod
+    def _coerce_origin(origin: tuple[float, float, float] | list[float] | None) -> tuple[float, float, float]:
+        if origin is None:
+            return 0.0, 0.0, 0.0
+        if len(origin) != 3:
+            raise ValueError("origin 必须为三维坐标 (x, y, z)。")
+        return float(origin[0]), float(origin[1]), float(origin[2])
+
+    def _apply_origin(self, x: float, y: float, z: float) -> tuple[float, float, float]:
+        ox, oy, oz = self.origin
+        return float(x) + ox, float(y) + oy, float(z) + oz
+
+    def _global_source_tag(
+        self,
+        local_tag: int,
+        namespace: str,
+        local_to_global: dict[int, int],
+        global_to_local: dict[int, int],
+    ) -> int:
+        local_tag = int(local_tag)
+        if local_tag in local_to_global:
+            return local_to_global[local_tag]
+        if self.tag_manager.has_tag(local_tag, namespace=namespace):
+            global_tag = self.tag_manager.get_next_tag(namespace=namespace)
+        else:
+            global_tag = self.tag_manager.register(local_tag, namespace=namespace)
+        local_to_global[local_tag] = global_tag
+        global_to_local[global_tag] = local_tag
+        return global_tag
+
+    def _preferred_tag(self, preferred_tag: int, namespace: str) -> int:
+        preferred_tag = int(preferred_tag)
+        if self.tag_manager.has_tag(preferred_tag, namespace=namespace):
+            return self.tag_manager.get_next_tag(namespace=namespace)
+        return self.tag_manager.register(preferred_tag, namespace=namespace)
+
+    def _global_node_tag(self, local_node_tag: int) -> int:
+        return self._global_source_tag(
+            local_node_tag,
+            "node",
+            self.node_local_to_global_tag,
+            self.node_global_to_local_tag,
+        )
+
+    def _global_material_tag(self, local_mat_tag: int) -> int:
+        return self._global_source_tag(
+            local_mat_tag,
+            "material",
+            self.material_local_to_global_tag,
+            self.material_global_to_local_tag,
+        )
+
+    def _global_section_tag(self, local_section_tag: int) -> int:
+        return self._global_source_tag(
+            local_section_tag,
+            "section",
+            self.section_local_to_global_tag,
+            self.section_global_to_local_tag,
+        )
+
+    def _global_element_tag(self, local_element_tag: int, namespace: str | None = None) -> int:
+        return self._global_source_tag(
+            local_element_tag,
+            namespace or self._frame_element_tag_namespace,
+            self.element_local_to_global_tag,
+            self.element_global_to_local_tag,
+        )
+
+    def resolve_node_tag(self, node_tag: int) -> int:
+        node_tag = int(node_tag)
+        return self.node_local_to_global_tag.get(node_tag, node_tag)
+
+    def resolve_element_tag(self, element_tag: int) -> int:
+        element_tag = int(element_tag)
+        return self.element_local_to_global_tag.get(element_tag, element_tag)
+
+    def tag_maps(self) -> dict[str, dict[int, int]]:
+        return {
+            "nodes": dict(self.node_local_to_global_tag),
+            "materials": dict(self.material_local_to_global_tag),
+            "sections": dict(self.section_local_to_global_tag),
+            "elements": dict(self.element_local_to_global_tag),
+        }
 
     def _ensure_model_builder(self, ndm: int = 3, ndf: int = 6) -> None:
         if self._model_built:
@@ -199,13 +306,7 @@ class OpenSeesModel:
         if numeric_tag is None:
             element_tag = self.tag_manager.get_next_tag(namespace=namespace)
         else:
-            try:
-                element_tag = self.tag_manager.register(numeric_tag, namespace=namespace)
-            except ValueError as exc:
-                existing_frame = self.element_tag_to_frame_name.get(numeric_tag, "<unknown>")
-                raise ValueError(
-                    f"Frame {frame_name} 解析得到的 {namespace} tag {numeric_tag} 已被 Frame {existing_frame} 使用。"
-                ) from exc
+            element_tag = self._global_element_tag(numeric_tag, namespace=namespace)
 
         if element_tag in self.element_tag_to_frame_name:
             existing_frame = self.element_tag_to_frame_name[element_tag]
@@ -245,12 +346,20 @@ class OpenSeesModel:
         node_records: dict[int, dict[str, Any]] = {}
         for line in self._table_lines("JOINT COORDINATES"):
             data = self._parse_key_values(line)
-            node_tag = int(data["Joint"])
+            local_node_tag = int(data["Joint"])
+            node_tag = self._global_node_tag(local_node_tag)
+            x, y, z = self._apply_origin(
+                float(data["GlobalX"]),
+                float(data["GlobalY"]),
+                float(data["GlobalZ"]),
+            )
             node_records[node_tag] = {
+                "tower_id": self.tower_id,
                 "node_tag": node_tag,
-                "x": float(data["GlobalX"]),
-                "y": float(data["GlobalY"]),
-                "z": float(data["GlobalZ"]),
+                "local_node_tag": local_node_tag,
+                "x": x,
+                "y": y,
+                "z": z,
             }
         return node_records
 
@@ -267,7 +376,11 @@ class OpenSeesModel:
             self.node_map[node_tag] = record
             rows.append(record)
         # 保留一份节点坐标映射，后续几何变换和结果查询都会用到。
-        self._write_csv(self.output_dir / "nodes.csv", rows, ["node_tag", "x", "y", "z"])
+        self._write_csv(
+            self.output_dir / "nodes.csv",
+            rows,
+            ["tower_id", "node_tag", "local_node_tag", "x", "y", "z"],
+        )
         return self.node_map
 
     def _load_node_to_fix(self) -> dict[int, list[int]]:
@@ -300,10 +413,13 @@ class OpenSeesModel:
         else:
             fix_assignments = default_fix_map
 
-        for node_tag, fixity in fix_assignments.items():
-            ops.fix(int(node_tag), *fixity)
+        for input_node_tag, fixity in fix_assignments.items():
+            node_tag = self.resolve_node_tag(input_node_tag)
+            ops.fix(node_tag, *fixity)
             record = {
-                "node_tag": int(node_tag),
+                "tower_id": self.tower_id,
+                "node_tag": node_tag,
+                "local_node_tag": self.node_global_to_local_tag.get(node_tag, int(input_node_tag)),
                 "ux": fixity[0],
                 "uy": fixity[1],
                 "uz": fixity[2],
@@ -311,12 +427,12 @@ class OpenSeesModel:
                 "ry": fixity[4],
                 "rz": fixity[5],
             }
-            self.fix_map[int(node_tag)] = record
+            self.fix_map[node_tag] = record
             rows.append(record)
         self._write_csv(
             self.output_dir / "fixes.csv",
             rows,
-            ["node_tag", "ux", "uy", "uz", "rx", "ry", "rz"],
+            ["tower_id", "node_tag", "local_node_tag", "ux", "uy", "uz", "rx", "ry", "rz"],
         )
         return self.fix_map
 
@@ -327,13 +443,16 @@ class OpenSeesModel:
         self.mass_map = {}
         for line in self._table_lines("ASSEMBLED JOINT MASSES"):
             data = self._parse_key_values(line)
-            node_tag = int(data["Joint"])
+            local_node_tag = int(data["Joint"])
+            node_tag = self.resolve_node_tag(local_node_tag)
             mx = float(data["U1"])
             my = float(data["U2"])
             mz = float(data["U3"])
             ops.mass(node_tag, mx, my, mz, 0.0, 0.0, 0.0)
             record = {
+                "tower_id": self.tower_id,
                 "node_tag": node_tag,
+                "local_node_tag": local_node_tag,
                 "mx": mx,
                 "my": my,
                 "mz": mz,
@@ -346,7 +465,7 @@ class OpenSeesModel:
         self._write_csv(
             self.output_dir / "masses.csv",
             rows,
-            ["node_tag", "mx", "my", "mz", "mrx", "mry", "mrz"],
+            ["tower_id", "node_tag", "local_node_tag", "mx", "my", "mz", "mrx", "mry", "mrz"],
         )
         return self.mass_map
 
@@ -367,7 +486,8 @@ class OpenSeesModel:
         rows: list[dict[str, Any]] = []
         self.material_name_to_tag = {}
         self.material_tag_map = {}
-        for tag, steel_data in enumerate(steel_records, start=1):
+        for local_mat_tag, steel_data in enumerate(steel_records, start=1):
+            tag = self._global_material_tag(local_mat_tag)
             name = steel_data["Material"]
             basic = basic_records.get(name, {})
             fy = float(steel_data["Fy"]) * 1e6
@@ -377,7 +497,9 @@ class OpenSeesModel:
             density = float(basic.get("UnitMass", 0.0))
             ops.uniaxialMaterial("Steel01", tag, fy, e0, self.steel01_b)
             record = {
+                "tower_id": self.tower_id,
                 "mat_tag": tag,
+                "local_mat_tag": local_mat_tag,
                 "material_name": name,
                 "fy": fy,
                 "e0": e0,
@@ -393,7 +515,7 @@ class OpenSeesModel:
         self._write_csv(
             self.output_dir / "materials.csv",
             rows,
-            ["mat_tag", "material_name", "fy", "e0", "g", "nu", "density", "b", "ops_type"],
+            ["tower_id", "mat_tag", "local_mat_tag", "material_name", "fy", "e0", "g", "nu", "density", "b", "ops_type"],
         )
         return self.material_tag_map
 
@@ -569,7 +691,8 @@ class OpenSeesModel:
         self.section_tag_map = {}
         self.section_fiber_map = {}
 
-        for sec_tag, (section_name, material_name) in enumerate(unique_sections, start=1):
+        for local_section_tag, (section_name, material_name) in enumerate(unique_sections, start=1):
+            sec_tag = self._global_section_tag(local_section_tag)
             if material_name not in self.material_name_to_tag and "Q" in section_name:
                 material_name = f"Q{section_name.split('Q')[-1]}"
             mat_tag = self.material_name_to_tag[material_name]
@@ -593,7 +716,9 @@ class OpenSeesModel:
                 )
 
             section_record = {
+                "tower_id": self.tower_id,
                 "section_tag": sec_tag,
+                "local_section_tag": local_section_tag,
                 "section_name": section_name,
                 "material_name": material_name,
                 "mat_tag": mat_tag,
@@ -629,7 +754,9 @@ class OpenSeesModel:
             self.output_dir / "sections.csv",
             rows,
             [
+                "tower_id",
                 "section_tag",
+                "local_section_tag",
                 "section_name",
                 "material_name",
                 "mat_tag",
@@ -706,9 +833,11 @@ class OpenSeesModel:
             node_i = self.node_map[item["node_i"]]
             node_j = self.node_map[item["node_j"]]
             vec_x, vec_y, vec_z = self._geom_transf_vector(node_i, node_j)
-            ops.geomTransf("Linear", ele_tag, vec_x, vec_y, vec_z)
+            transf_tag = self._preferred_tag(ele_tag, "transf")
+            ops.geomTransf("Linear", transf_tag, vec_x, vec_y, vec_z)
             record = {
-                "transf_tag": ele_tag,
+                "tower_id": self.tower_id,
+                "transf_tag": transf_tag,
                 "element_tag": ele_tag,
                 "frame_name": item.get("frame_name", self.element_tag_to_frame_name.get(ele_tag, "")),
                 "vec_x": vec_x,
@@ -720,7 +849,7 @@ class OpenSeesModel:
         self._write_csv(
             self.output_dir / "geomtransf.csv",
             rows,
-            ["transf_tag", "element_tag", "frame_name", "vec_x", "vec_y", "vec_z"],
+            ["tower_id", "transf_tag", "element_tag", "frame_name", "vec_x", "vec_y", "vec_z"],
         )
         return self.transf_map
 
@@ -860,11 +989,17 @@ class OpenSeesModel:
             data = self._parse_key_values(line)
             frame_name = str(data["Frame"])
             ele_tag = self._element_tag_for_frame(frame_name)
+            local_node_i = int(data["JointI"])
+            local_node_j = int(data["JointJ"])
             connectivity[ele_tag] = {
+                "tower_id": self.tower_id,
                 "element_tag": ele_tag,
+                "local_element_tag": self.element_global_to_local_tag.get(ele_tag),
                 "frame_name": frame_name,
-                "node_i": int(data["JointI"]),
-                "node_j": int(data["JointJ"]),
+                "node_i": self._global_node_tag(local_node_i),
+                "node_j": self._global_node_tag(local_node_j),
+                "local_node_i": local_node_i,
+                "local_node_j": local_node_j,
             }
         return connectivity
 
@@ -886,9 +1021,8 @@ class OpenSeesModel:
         for ele_tag, item in connectivity.items():
             assign = assignments[ele_tag]
             section_tag = self.section_name_to_tag[assign["section_name"]]
-            transf_tag = ele_tag
-            integration_tag = ele_tag
-            # 这里保持与原 Tcl 流程一致：单元号同时复用为几何变换号和积分号，便于追踪。
+            transf_tag = self.transf_map[ele_tag]["transf_tag"]
+            integration_tag = self._preferred_tag(ele_tag, "integration")
             ops.beamIntegration(
                 self.beam_integration_type,
                 integration_tag,
@@ -914,10 +1048,14 @@ class OpenSeesModel:
             self.integration_map[integration_tag] = integration_record
             integration_rows.append(integration_record)
             record = {
+                "tower_id": self.tower_id,
                 "element_tag": ele_tag,
+                "local_element_tag": item.get("local_element_tag"),
                 "frame_name": item.get("frame_name", assign.get("frame_name", "")),
                 "node_i": item["node_i"],
                 "node_j": item["node_j"],
+                "local_node_i": item.get("local_node_i"),
+                "local_node_j": item.get("local_node_j"),
                 "num_intgr_pts": self.num_intgr_pts,
                 "section_tag": section_tag,
                 "section_name": assign["section_name"],
@@ -946,10 +1084,14 @@ class OpenSeesModel:
             self.output_dir / "elements.csv",
             rows,
             [
+                "tower_id",
                 "element_tag",
+                "local_element_tag",
                 "frame_name",
                 "node_i",
                 "node_j",
+                "local_node_i",
+                "local_node_j",
                 "num_intgr_pts",
                 "section_tag",
                 "section_name",
@@ -980,6 +1122,9 @@ class OpenSeesModel:
             "integrations": self.integration_map,
             "elements": self.element_map,
             "frame_tags": self.frame_name_to_element_tag,
+            "tag_maps": self.tag_maps(),
+            "tower_id": self.tower_id,
+            "origin": self.origin,
             "tag_summary": self.tag_manager.summary(),
         }
 
@@ -987,10 +1132,11 @@ class OpenSeesModel:
         return self.model_tower()
 
     def get_node_coord(self, node_tag: int, prefer_ops: bool = False) -> tuple[float, float, float]:
+        resolved_tag = self.resolve_node_tag(node_tag)
         if prefer_ops:
             try:
                 # 如果模型还在 OpenSees 内存中，优先直接从 ops 里取实时坐标。
-                coord = self.ops.nodeCoord(int(node_tag))
+                coord = self.ops.nodeCoord(resolved_tag)
                 return float(coord[0]), float(coord[1]), float(coord[2])
             except Exception:
                 pass
@@ -998,13 +1144,16 @@ class OpenSeesModel:
         return float(record["x"]), float(record["y"]), float(record["z"])
 
     def get_node_record(self, node_tag: int) -> dict[str, Any]:
-        if int(node_tag) in self.node_map:
-            return self.node_map[int(node_tag)]
+        resolved_tag = self.resolve_node_tag(node_tag)
+        if resolved_tag in self.node_map:
+            return self.node_map[resolved_tag]
         rows = self._read_csv_rows(self.output_dir / "nodes.csv")
         for row in rows:
-            if int(row["node_tag"]) == int(node_tag):
+            if int(row["node_tag"]) == resolved_tag or int(row.get("local_node_tag", row["node_tag"])) == int(node_tag):
                 return {
+                    "tower_id": row.get("tower_id", self.tower_id),
                     "node_tag": int(row["node_tag"]),
+                    "local_node_tag": int(row.get("local_node_tag", row["node_tag"])),
                     "x": float(row["x"]),
                     "y": float(row["y"]),
                     "z": float(row["z"]),
@@ -1012,16 +1161,21 @@ class OpenSeesModel:
         raise KeyError(f"未找到节点 {node_tag}")
 
     def get_element_record(self, element_tag: int) -> dict[str, Any]:
-        if int(element_tag) in self.element_map:
-            return self.element_map[int(element_tag)]
+        resolved_tag = self.resolve_element_tag(element_tag)
+        if resolved_tag in self.element_map:
+            return self.element_map[resolved_tag]
         rows = self._read_csv_rows(self.output_dir / "elements.csv")
         for row in rows:
-            if int(row["element_tag"]) == int(element_tag):
+            if int(row["element_tag"]) == resolved_tag or int(row.get("local_element_tag") or row["element_tag"]) == int(element_tag):
                 return {
+                    "tower_id": row.get("tower_id", self.tower_id),
                     "element_tag": int(row["element_tag"]),
+                    "local_element_tag": int(row.get("local_element_tag") or row["element_tag"]),
                     "frame_name": row.get("frame_name", self.element_tag_to_frame_name.get(int(row["element_tag"]), "")),
                     "node_i": int(row["node_i"]),
                     "node_j": int(row["node_j"]),
+                    "local_node_i": int(row.get("local_node_i") or row["node_i"]),
+                    "local_node_j": int(row.get("local_node_j") or row["node_j"]),
                     "num_intgr_pts": int(row["num_intgr_pts"]),
                     "section_tag": int(row["section_tag"]),
                     "section_name": row["section_name"],

@@ -9,11 +9,11 @@ except ImportError:  # pragma: no cover
 
 
 class OpenSeesModelWithBuckling(OpenSeesModel):
-    """Tower model variant that splits every frame member into four segments.
+    """Tower model variant that splits every frame member into segments.
 
-    Original SAP node tags are preserved. Generated intermediate node tags use
-    the next available node number, while all other OpenSees tags are allocated
-    through :class:`TagManager`.
+    The original SAP ids are kept as local ids. Actual OpenSees tags are
+    allocated through the shared :class:`TagManager`, so multiple tower instances
+    can be placed in one domain without node/element/material collisions.
     """
 
     def __init__(
@@ -28,45 +28,34 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         super().__init__(*args, **kwargs)
         self.random_disp_ratio = float(random_disp_ratio)
         self.member_divisions = int(member_divisions)
-        self.tag_manager = TagManager(
-            start_tag={
-                "material": 1,
-                "section": 1,
-                "transf": 1,
-                "integration": 1,
-                "element": 1,
-                "source_element": 1,
-            }
-        )
         self._frame_element_tag_namespace = "source_element"
         self.split_node_map: dict[int, dict[str, Any]] = {}
         self.segmented_connectivity_map: dict[int, dict[str, Any]] = {}
         self.element_segment_map: dict[int, list[int]] = {}
-        self._next_generated_node_tag: int | None = None
 
     def _allocate_node_tag(self) -> int:
-        # Node tags are intentionally kept outside TagManager per buckling model
-        # convention: SAP node ids remain stable and generated nodes continue
-        # after the largest existing node id.
-        if self._next_generated_node_tag is None:
-            self._next_generated_node_tag = max(self.node_map, default=0) + 1
-        while self._next_generated_node_tag in self.node_map:
-            self._next_generated_node_tag += 1
-        node_tag = self._next_generated_node_tag
-        self._next_generated_node_tag += 1
+        node_tag = self.tag_manager.get_next_tag(namespace="node")
+        while node_tag in self.node_map:
+            node_tag = self.tag_manager.get_next_tag(namespace="node")
         return node_tag
 
     def _write_current_nodes(self) -> None:
         rows = [
             {
+                "tower_id": record.get("tower_id", self.tower_id),
                 "node_tag": int(node_tag),
+                "local_node_tag": record.get("local_node_tag", ""),
                 "x": float(record["x"]),
                 "y": float(record["y"]),
                 "z": float(record["z"]),
             }
             for node_tag, record in sorted(self.node_map.items())
         ]
-        self._write_csv(self.output_dir / "nodes.csv", rows, ["node_tag", "x", "y", "z"])
+        self._write_csv(
+            self.output_dir / "nodes.csv",
+            rows,
+            ["tower_id", "node_tag", "local_node_tag", "x", "y", "z"],
+        )
 
     # 计算element上分割点坐标
     def _get_breakpoint_coord(self, node_i: dict[str, Any], node_j: dict[str, Any], num: int):
@@ -171,7 +160,9 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 x, y, z = self._get_breakpoint_coord(node_i, node_j, station_index)
                 ops.node(node_tag, x, y, z)
                 node_record = {
+                    "tower_id": self.tower_id,
                     "node_tag": node_tag,
+                    "local_node_tag": "",
                     "x": x,
                     "y": y,
                     "z": z,
@@ -190,6 +181,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             for segment_index in range(1, self.member_divisions + 1):
                 element_tag = self.tag_manager.get_next_tag(namespace="element")
                 segment_record = {
+                    "tower_id": self.tower_id,
                     "element_tag": element_tag,
                     "original_element_tag": original_ele_tag,
                     "original_frame_name": item.get("frame_name", ""),
@@ -208,7 +200,9 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.output_dir / "split_nodes.csv",
             split_node_rows,
             [
+                "tower_id",
                 "node_tag",
+                "local_node_tag",
                 "x",
                 "y",
                 "z",
@@ -222,6 +216,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.output_dir / "element_segments.csv",
             segment_rows,
             [
+                "tower_id",
                 "element_tag",
                 "original_element_tag",
                 "original_frame_name",
@@ -398,6 +393,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             transf_tag = self.tag_manager.get_next_tag(namespace="transf")
             ops.geomTransf("Corotational", transf_tag, vec_x, vec_y, vec_z)
             record = {
+                "tower_id": self.tower_id,
                 "transf_tag": transf_tag,
                 "element_tag": element_tag,
                 "original_element_tag": item["original_element_tag"],
@@ -413,6 +409,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.output_dir / "geomtransf.csv",
             rows,
             [
+                "tower_id",
                 "transf_tag",
                 "element_tag",
                 "original_element_tag",
@@ -462,6 +459,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 integration_tag,
             )
             integration_record = {
+                "tower_id": self.tower_id,
                 "integration_tag": integration_tag,
                 "element_tag": element_tag,
                 "original_element_tag": original_ele_tag,
@@ -474,6 +472,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.integration_map[integration_tag] = integration_record
             integration_rows.append(integration_record)
             record = {
+                "tower_id": self.tower_id,
                 "element_tag": element_tag,
                 "original_element_tag": original_ele_tag,
                 "original_frame_name": original_frame_name,
@@ -498,6 +497,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.output_dir / "beam_integrations.csv",
             integration_rows,
             [
+                "tower_id",
                 "integration_tag",
                 "element_tag",
                 "original_element_tag",
@@ -512,6 +512,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             self.output_dir / "elements.csv",
             rows,
             [
+                "tower_id",
                 "element_tag",
                 "original_element_tag",
                 "original_frame_name",
@@ -552,6 +553,9 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             "elements": self.element_map,
             "element_segments": self.element_segment_map,
             "frame_tags": self.frame_name_to_element_tag,
+            "tag_maps": self.tag_maps(),
+            "tower_id": self.tower_id,
+            "origin": self.origin,
             "tag_summary": self.tag_manager.summary(),
         }
 
@@ -584,7 +588,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def get_original_element_segments(self, original_element_tag: int) -> list[dict[str, Any]]:
         if not self.element_map:
             self.element()
-        segment_tags = self.element_segment_map.get(int(original_element_tag), [])
+        resolved_tag = self.resolve_element_tag(original_element_tag)
+        segment_tags = self.element_segment_map.get(resolved_tag, [])
         return [self.element_map[tag] for tag in segment_tags]
 
 

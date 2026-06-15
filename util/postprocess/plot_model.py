@@ -419,9 +419,26 @@ class PlotModel:
             encoding="utf-8",
         )
         if auto_open:
+            import shutil
+            import subprocess
             import webbrowser
 
-            webbrowser.open(output_path.resolve().as_uri())
+            uri = output_path.resolve().as_uri()
+            opened = webbrowser.open_new_tab(uri)
+            if not opened:
+                for command in (("xdg-open", uri), ("gio", "open", uri), ("open", uri)):
+                    if shutil.which(command[0]) is None:
+                        continue
+                    try:
+                        subprocess.Popen(
+                            command,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                        )
+                        opened = True
+                        break
+                    except OSError:
+                        continue
         return output_path
 
 
