@@ -23,8 +23,17 @@
 ####  (2) ISDR
 <img src="/home/panqiheng/otw2/static/2026_05_27/plot_reaction_drift.png">
 
+### 3.等效初始缺陷材料单杆试验
 
-### 2.输电线建模
+在不改动上述四分段模型的前提下，新增了
+[`initial_imperfection_material`](initial_imperfection_material/README.md) 实验模块。
+该模块以 Z30103A6 的 `L125x8Q345` 为试件，对比四分段几何缺陷杆、单单元
+等效 `HystereticSM` 材料和无缺陷 `Steel02` 直杆，并输出推覆曲线、材料骨架、
+缺陷敏感性和误差指标。详细方法及首轮结果见
+[`initial_imperfection_material/REPORT.md`](initial_imperfection_material/REPORT.md)。
+
+
+### 4.输电线建模
 
 使用聚合截面命令定义输电线截面，赋予其较大轴向刚度
 

@@ -1,0 +1,219 @@
+{
+  "member": {
+    "name": "Z30103A6-L125x8Q345",
+    "length": 3.0,
+    "area": 0.001936,
+    "inertia_weak": 1.1939431019283698e-06,
+    "extreme_fiber_distance": 0.048390063649712454,
+    "elastic_modulus": 206000000000.0,
+    "yield_strength": 345000000.0,
+    "effective_length_factor": 1.0,
+    "leg_width": 0.125,
+    "thickness": 0.008,
+    "radius_of_gyration": 0.024833568968037473,
+    "slenderness_ratio": 120.80422285903441,
+    "euler_load": 269716.8550276843,
+    "squash_load": 667920.0,
+    "non_dimensional_slenderness": 1.5736501247102077
+  },
+  "experiment": {
+    "imperfection_ratio": 0.001,
+    "imperfection_amplitude": 0.003,
+    "maximum_shortening": 0.09,
+    "steps": 400
+  },
+  "theory": {
+    "gb50017_curve_a_factor": 0.3539865314186477,
+    "gb50017_curve_a_load": 236434.6840651432,
+    "ec3_curve_b_factor": 0.3164886105530351,
+    "ec3_curve_b_load": 211389.07276058322,
+    "perry_first_yield_load": 235206.06558911497
+  },
+  "metrics": {
+    "equivalent_calibrated": {
+      "peak_force": 250519.53730369886,
+      "peak_shortening": 0.0024749999999999998,
+      "initial_stiffness": 131226248.12875365,
+      "initial_stiffness_error_percent": -0.5187958917784181,
+      "peak_force_error_percent": 0.0,
+      "peak_shortening_error_percent": 0.0,
+      "normalized_rmse_percent": 2.242968998453999,
+      "curve_area_error_percent": 5.260074945826457,
+      "force_error_at_2x_peak_shortening_percent": 0.0,
+      "force_error_at_4x_peak_shortening_percent": 8.579659128562513,
+      "force_error_at_6x_peak_shortening_percent": 5.202980387682212
+    },
+    "equivalent_perry": {
+      "peak_force": 235133.75350223872,
+      "peak_shortening": 0.00225,
+      "initial_stiffness": 131702827.56056814,
+      "initial_stiffness_error_percent": -0.157506161970702,
+      "peak_force_error_percent": -6.141550462313175,
+      "peak_shortening_error_percent": -9.090909090909088,
+      "normalized_rmse_percent": 29.945335311741577,
+      "curve_area_error_percent": 85.94867749502286,
+      "force_error_at_2x_peak_shortening_percent": 15.4965978008426,
+      "force_error_at_4x_peak_shortening_percent": 63.50878644519108,
+      "force_error_at_6x_peak_shortening_percent": 92.88724778664978
+    },
+    "perfect_steel_truss": {
+      "peak_force": 724402.8000000005,
+      "peak_shortening": 0.09000000000000073,
+      "initial_stiffness": 132938666.66666666,
+      "initial_stiffness_error_percent": 0.7793701422126083,
+      "peak_force_error_percent": 189.16020195336077,
+      "peak_shortening_error_percent": 3536.363636363666,
+      "normalized_rmse_percent": 243.4926903181202,
+      "curve_area_error_percent": 756.7709322198331,
+      "force_error_at_2x_peak_shortening_percent": 221.84959984487674,
+      "force_error_at_4x_peak_shortening_percent": 399.3633619280162,
+      "force_error_at_6x_peak_shortening_percent": 520.0389818227842
+    }
+  },
+  "runtime_seconds": {
+    "four_segment_reference": 0.561349384021014,
+    "equivalent_calibrated": 0.0015702778473496437,
+    "equivalent_perry": 0.0013728057965636253,
+    "perfect_steel_truss": 0.002087729051709175
+  },
+  "materials": {
+    "equivalent_calibrated": {
+      "source": "calibrated from four-segment geometric-imperfection model",
+      "imperfection_ratio": 0.001,
+      "peak_compressive_load": 250519.53730369886,
+      "peak_compressive_stress": 129400587.45025767,
+      "compression_envelope": [
+        {
+          "strain": -0.00024749999999999994,
+          "stress": -50328248.57210722
+        },
+        {
+          "strain": -0.0005362499999999999,
+          "stress": -104778969.56328358
+        },
+        {
+          "strain": -0.0008249999999999999,
+          "stress": -129400587.45025767
+        },
+        {
+          "strain": -0.0016499999999999998,
+          "stress": -102731079.72484867
+        },
+        {
+          "strain": -0.004124999999999999,
+          "stress": -61703655.510952145
+        },
+        {
+          "strain": -0.012374999999999999,
+          "stress": -35757847.30330396
+        },
+        {
+          "strain": -0.030000000000000245,
+          "stress": -23633761.185525168
+        }
+      ],
+      "tension_envelope": [
+        {
+          "strain": 0.0013398058252427185,
+          "stress": 276000000.0
+        },
+        {
+          "strain": 0.001674757281553398,
+          "stress": 345000000.0
+        },
+        {
+          "strain": 0.02,
+          "stress": 351900000.0
+        }
+      ]
+    },
+    "equivalent_perry": {
+      "source": "Perry sinusoidal-imperfection trial envelope",
+      "imperfection_ratio": 0.001,
+      "peak_compressive_load": 235206.06558911497,
+      "peak_compressive_stress": 121490736.35801393,
+      "compression_envelope": [
+        {
+          "strain": -5.947005719641231e-05,
+          "stress": -12149073.635801394
+        },
+        {
+          "strain": -0.0001789864263417866,
+          "stress": -36447220.90740418
+        },
+        {
+          "strain": -0.0003001704695352479,
+          "stress": -60745368.179006964
+        },
+        {
+          "strain": -0.00042662356413755844,
+          "stress": -85043515.45060974
+        },
+        {
+          "strain": -0.0005356802506873753,
+          "stress": -103267125.90431184
+        },
+        {
+          "strain": -0.0007380048675395018,
+          "stress": -121490736.35801393
+        },
+        {
+          "strain": -0.03,
+          "stress": -30372684.089503482
+        }
+      ],
+      "tension_envelope": [
+        {
+          "strain": 0.0013398058252427185,
+          "stress": 276000000.0
+        },
+        {
+          "strain": 0.001674757281553398,
+          "stress": 345000000.0
+        },
+        {
+          "strain": 0.02,
+          "stress": 351900000.0
+        }
+      ]
+    }
+  },
+  "sensitivity": [
+    {
+      "imperfection_ratio": 0.0005,
+      "imperfection_denominator": 2000.0,
+      "peak_load": 250648.0921831787,
+      "peak_ratio_to_squash": 0.3752666369972133
+    },
+    {
+      "imperfection_ratio": 0.001,
+      "imperfection_denominator": 1000.0,
+      "peak_load": 235206.06558911497,
+      "peak_ratio_to_squash": 0.35214706190728673
+    },
+    {
+      "imperfection_ratio": 0.002,
+      "imperfection_denominator": 500.0,
+      "peak_load": 211056.03560222313,
+      "peak_ratio_to_squash": 0.3159899922179649
+    },
+    {
+      "imperfection_ratio": 0.002857142857142857,
+      "imperfection_denominator": 350.0,
+      "peak_load": 194947.794992798,
+      "peak_ratio_to_squash": 0.2918729713031471
+    },
+    {
+      "imperfection_ratio": 0.004,
+      "imperfection_denominator": 250.0,
+      "peak_load": 177675.61664049845,
+      "peak_ratio_to_squash": 0.2660133199192994
+    },
+    {
+      "imperfection_ratio": 0.01,
+      "imperfection_denominator": 100.0,
+      "peak_load": 124400.53333578096,
+      "peak_ratio_to_squash": 0.18625064878395758
+    }
+  ]
+}
