@@ -1313,6 +1313,7 @@ name = "otw2"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "matplotlib" },
     { name = "nbformat" },
     { name = "openseespy" },
     { name = "opstool" },
@@ -1322,6 +1323,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "nbformat", specifier = ">=5.10.4" },
     { name = "openseespy", specifier = "==3.7.1.2" },
     { name = "opstool", specifier = "==1.0.25" },
