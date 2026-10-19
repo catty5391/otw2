@@ -14,6 +14,8 @@ __all__ = [
 	"PushoverWindLoadResult",
 	"GravityLoadApplier",
 	"GravityLoadResult",
+	"TowerInternalForceRecorder",
+	"TowerInternalForceHistory",
 ]
 
 _LAZY_IMPORTS = {
@@ -30,6 +32,8 @@ _LAZY_IMPORTS = {
 	"PushoverWindLoadResult": ("processing.pushover_wind_load", "PushoverWindLoadResult"),
 	"GravityLoadApplier": ("processing.gravity_load", "GravityLoadApplier"),
 	"GravityLoadResult": ("processing.gravity_load", "GravityLoadResult"),
+	"TowerInternalForceRecorder": ("processing.internal_force_recorder", "TowerInternalForceRecorder"),
+	"TowerInternalForceHistory": ("processing.internal_force_recorder", "TowerInternalForceHistory"),
 }
 
 

@@ -1,5 +1,5 @@
 {
-  "description": "Two towers with one V-shaped insulator string on each line side. The modeled span connects tower_1 next_span_v to tower_2 previous_span_v.",
+  "description": "Two towers with one V-shaped insulator string on each line side. Each modeled line currently represents one physical JL/G1A-400/50 subconductor.",
   "towers": {
     "tower_1": {
       "model": "normal",
@@ -69,7 +69,19 @@
       },
       "n_seg": 60,
       "initial_sag": 8.0,
-      "q_g": 15.0,
+      "formfinding": {
+        "enabled": true,
+        "target_sag": 8.0,
+        "force_lower": 40.0,
+        "force_upper": 80000.0,
+        "tolerance": 0.001,
+        "max_iterations": 30,
+        "load_steps": 100
+      },
+      "conductor": {
+        "model": "JL/G1A-400/50",
+        "bundle_count": 1
+      },
       "gravity": 9.81
     },
     "span_tower_1_to_tower_2_transmission2": {
@@ -86,7 +98,19 @@
       },
       "n_seg": 60,
       "initial_sag": 8.0,
-      "q_g": 15.0,
+      "formfinding": {
+        "enabled": true,
+        "target_sag": 8.0,
+        "force_lower": 40.0,
+        "force_upper": 80000.0,
+        "tolerance": 0.001,
+        "max_iterations": 30,
+        "load_steps": 100
+      },
+      "conductor": {
+        "model": "JL/G1A-400/50",
+        "bundle_count": 1
+      },
       "gravity": 9.81
     }
   }

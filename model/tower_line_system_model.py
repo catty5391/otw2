@@ -11,6 +11,9 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
+from model.conductor_properties import resolve_conductor_mass, tributary_lengths
+from model.transmission_line_formfinding import TransmissionLineFormFinder
+
 try:
     import openseespy.opensees as ops
 except ImportError as exc:  # pragma: no cover
@@ -68,6 +71,8 @@ class TowerLineSystemModel:
         self.section_tag_map: dict[int, dict[str, Any]] = {}
         self.fix_map: dict[int, dict[str, Any]] = {}
         self.mass_map: dict[int, dict[str, Any]] = {}
+        self.formfinding_map: dict[str, dict[str, Any]] = {}
+        self.formfinding_detail_map: dict[str, dict[str, Any]] = {}
 
     def _read_config(self) -> dict[str, Any]:
         if not self.config_path.exists():
@@ -137,6 +142,15 @@ class TowerLineSystemModel:
         self.mass_map.update(tower.mass_map)
 
     def build(self) -> dict[str, Any]:
+        if self._has_enabled_formfinding():
+            # Build only enough geometry to resolve the actual insulator hanging
+            # points. Form-finding uses isolated OpenSees domains, so the final
+            # coupled model is rebuilt afterwards with the solved initial force.
+            self.build_towers()
+            self.build_insulators()
+            self.form_find_transmission_lines()
+            self._reset_domain_maps()
+
         self.build_towers()
         self.build_insulators()
         self.build_transmission_lines()
@@ -149,8 +163,106 @@ class TowerLineSystemModel:
             "elements": self.element_map,
             "materials": self.material_tag_map,
             "sections": self.section_tag_map,
+            "formfinding": self.formfinding_map,
+            "formfinding_details": self.formfinding_detail_map,
             "tag_summary": self.tag_manager.summary(),
         }
+
+    def _has_enabled_formfinding(self) -> bool:
+        for _, line_config in self._items(
+            self.config.get("transmission_lines", self.config.get("lines"))
+        ):
+            settings = line_config.get("formfinding", {})
+            if isinstance(settings, dict) and bool(settings.get("enabled", False)):
+                return True
+        return False
+
+    def _reset_domain_maps(self) -> None:
+        self.ops.wipe()
+        self.tag_manager = self._make_tag_manager()
+        self.towers = {}
+        self.insulator_map = {}
+        self.transmission_line_map = {}
+        self.node_map = {}
+        self.element_map = {}
+        self.material_tag_map = {}
+        self.section_tag_map = {}
+        self.fix_map = {}
+        self.mass_map = {}
+
+    def form_find_transmission_lines(self) -> dict[str, dict[str, Any]]:
+        """Solve initial conductor forces before the coupled model is built."""
+
+        self.formfinding_map = {}
+        self.formfinding_detail_map = {}
+        for line_id, line_config in self._items(
+            self.config.get("transmission_lines", self.config.get("lines"))
+        ):
+            settings = line_config.get("formfinding", {})
+            if not isinstance(settings, dict) or not bool(settings.get("enabled", False)):
+                continue
+            points = line_config.get("node_to_hang", line_config.get("endpoints"))
+            if not isinstance(points, list) or len(points) != 2:
+                raise ValueError(f"{line_id}.node_to_hang/endpoints 必须配置两个端点")
+            _, start, _, _ = self._resolve_point(points[0], f"{line_id}.endpoints[0]")
+            _, end, _, _ = self._resolve_point(points[1], f"{line_id}.endpoints[1]")
+            horizontal_span = float(np.linalg.norm((end - start)[:2]))
+            if horizontal_span <= 0.0:
+                raise ValueError(f"{line_id} 的水平档距必须大于 0。")
+
+            gravity = self._as_float(line_config.get("gravity", 9.81), f"{line_id}.gravity")
+            conductor_mass = resolve_conductor_mass(line_config, gravity=gravity)
+            material_config = line_config.get("material", {})
+            if not isinstance(material_config, dict):
+                raise ValueError(f"{line_id}.material 必须是 JSON object。")
+            axial_stiffness = self._as_float(
+                material_config.get("EA", material_config.get("ea", 2.8e7)),
+                f"{line_id}.material.EA",
+            )
+            n_seg = int(line_config.get("n_seg", line_config.get("segments", 60)))
+            initial_sag = self._as_float(
+                settings.get("initial_sag", line_config.get("initial_sag", line_config.get("sag", 0.2))),
+                f"{line_id}.formfinding.initial_sag",
+            )
+            target_sag = self._as_float(
+                settings.get("target_sag", line_config.get("target_sag", initial_sag)),
+                f"{line_id}.formfinding.target_sag",
+            )
+            finder = TransmissionLineFormFinder(
+                horizontal_span=horizontal_span,
+                start_elevation=float(start[2]),
+                end_elevation=float(end[2]),
+                axial_stiffness=axial_stiffness,
+                mass_per_length=conductor_mass.mass_per_length,
+                gravity=gravity,
+                n_seg=n_seg,
+                initial_sag=initial_sag,
+                nonaxial_stiffness_ratio=float(settings.get("nonaxial_stiffness_ratio", 1.0e-8)),
+                load_steps=int(settings.get("load_steps", 100)),
+            )
+            result = finder.solve(
+                target_sag=target_sag,
+                force_lower=float(settings.get("force_lower", 40.0)),
+                force_upper=float(settings.get("force_upper", 8.0e4)),
+                tolerance=float(settings.get("tolerance", 1.0e-3)),
+                max_iterations=int(settings.get("max_iterations", 40)),
+            )
+            material_config["initial_force"] = result.initial_force
+            material_config.pop("initial_stress", None)
+            record = {
+                "line_id": line_id,
+                **result.summary(),
+                "horizontal_span": horizontal_span,
+                "start_elevation": float(start[2]),
+                "end_elevation": float(end[2]),
+                "history": [dict(item) for item in result.history],
+            }
+            self.formfinding_map[line_id] = record
+            self.formfinding_detail_map[line_id] = {
+                "final_coords": result.final_coords.tolist(),
+                "axial_forces": result.axial_forces.tolist(),
+            }
+        return self.formfinding_map
 
     def build_towers(self) -> dict[str, OpenSeesModel]:
         for tower_id, tower_config in self._items(self.config.get("towers")):
@@ -306,6 +418,30 @@ class TowerLineSystemModel:
                 "mrz": 0.0,
             }
         return node_tag
+
+    def _add_node_mass(self, node_tag: int, translational_mass: float) -> None:
+        """Accumulate conductor mass without overwriting tower/insulator mass."""
+
+        if translational_mass == 0.0:
+            return
+        old = self.mass_map.get(int(node_tag), {})
+        mx = float(old.get("mx", 0.0)) + translational_mass
+        my = float(old.get("my", 0.0)) + translational_mass
+        mz = float(old.get("mz", 0.0)) + translational_mass
+        mrx = float(old.get("mrx", 0.0))
+        mry = float(old.get("mry", 0.0))
+        mrz = float(old.get("mrz", 0.0))
+        self.ops.mass(int(node_tag), mx, my, mz, mrx, mry, mrz)
+        self.mass_map[int(node_tag)] = {
+            **old,
+            "node_tag": int(node_tag),
+            "mx": mx,
+            "my": my,
+            "mz": mz,
+            "mrx": mrx,
+            "mry": mry,
+            "mrz": mrz,
+        }
 
     def build_insulators(self) -> dict[str, dict[str, Any]]:
         for insulator_id, insulator_config in self._items(self.config.get("insulators")):
@@ -472,8 +608,10 @@ class TowerLineSystemModel:
             if n_seg < 1:
                 raise ValueError(f"{line_id}.n_seg 必须大于 0")
             initial_sag = self._as_float(line_config.get("initial_sag", line_config.get("sag", 0.0)), f"{line_id}.initial_sag")
-            q_g = self._as_float(line_config.get("q_g", line_config.get("weight_per_length", 0.0)), f"{line_id}.q_g")
             gravity = self._as_float(line_config.get("gravity", 9.81), f"{line_id}.gravity")
+            conductor_mass = resolve_conductor_mass(line_config, gravity=gravity)
+            mass_per_length = conductor_mass.mass_per_length
+            q_g = conductor_mass.weight_per_length
             span = float(np.linalg.norm(end - start))
             if span <= 0.0:
                 raise ValueError(f"{line_id} 两端点重合")
@@ -512,28 +650,22 @@ class TowerLineSystemModel:
                 self.element_map[element_tag] = record
                 element_tags.append(element_tag)
 
+            time_series_tag = None
+            pattern_tag = None
             if q_g != 0.0:
                 time_series_tag = self.tag_manager.get_next_tag(namespace="timeSeries")
                 pattern_tag = self.tag_manager.get_next_tag(namespace="pattern")
                 self.ops.timeSeries("Linear", time_series_tag)
                 self.ops.pattern("Plain", pattern_tag, time_series_tag)
-                dx = span / n_seg
-                for index, node_tag in enumerate(node_tags):
-                    trib_length = dx / 2.0 if index in (0, n_seg) else dx
+
+            node_tributary_lengths = tributary_lengths(coords)
+            for node_tag, trib_length in zip(node_tags, node_tributary_lengths):
+                nodal_mass = mass_per_length * trib_length
+                if nodal_mass != 0.0:
+                    self._add_node_mass(node_tag, nodal_mass)
+                if pattern_tag is not None:
                     weight = q_g * trib_length
                     self.ops.load(node_tag, 0.0, 0.0, -weight, 0.0, 0.0, 0.0)
-                    mass = weight / gravity if gravity != 0.0 else 0.0
-                    if mass != 0.0 and node_tag not in self.mass_map:
-                        self.ops.mass(node_tag, mass, mass, mass, 0.0, 0.0, 0.0)
-                        self.mass_map[node_tag] = {
-                            "node_tag": node_tag,
-                            "mx": mass,
-                            "my": mass,
-                            "mz": mass,
-                            "mrx": 0.0,
-                            "mry": 0.0,
-                            "mrz": 0.0,
-                        }
 
             self.transmission_line_map[line_id] = {
                 "line_id": line_id,
@@ -544,9 +676,16 @@ class TowerLineSystemModel:
                 "n_seg": n_seg,
                 "initial_sag": initial_sag,
                 "q_g": q_g,
+                "mass_per_length": mass_per_length,
+                "conductor": conductor_mass.to_dict(),
+                "conductor_length": sum(node_tributary_lengths),
+                "total_conductor_mass": mass_per_length * sum(node_tributary_lengths),
+                "time_series_tag": time_series_tag,
+                "pattern_tag": pattern_tag,
                 "left_ref": left_ref,
                 "right_ref": right_ref,
                 "material": material,
+                "formfinding": self.formfinding_map.get(line_id),
             }
         return self.transmission_line_map
 
@@ -570,6 +709,57 @@ class TowerLineSystemModel:
             self.output_dir / "transmission_lines.csv",
             list(self.transmission_line_map.values()),
             sorted({key for row in self.transmission_line_map.values() for key in row}) if self.transmission_line_map else ["line_id"],
+        )
+        formfinding_summary = [
+            {key: value for key, value in record.items() if key != "history"}
+            for record in self.formfinding_map.values()
+        ]
+        self._write_csv(
+            self.output_dir / "formfinding_summary.csv",
+            formfinding_summary,
+            sorted({key for row in formfinding_summary for key in row})
+            if formfinding_summary
+            else ["line_id"],
+        )
+        formfinding_history = [
+            {"line_id": line_id, **step}
+            for line_id, record in self.formfinding_map.items()
+            for step in record.get("history", [])
+        ]
+        self._write_csv(
+            self.output_dir / "formfinding_history.csv",
+            formfinding_history,
+            ["line_id", "iteration", "boundary", "initial_force", "sag", "error"],
+        )
+        formfinding_shape = [
+            {
+                "line_id": line_id,
+                "node_index": index,
+                "span_x": coord[0],
+                "transverse_y": coord[1],
+                "elevation_z": coord[2],
+            }
+            for line_id, detail in self.formfinding_detail_map.items()
+            for index, coord in enumerate(detail["final_coords"])
+        ]
+        self._write_csv(
+            self.output_dir / "formfinding_shape.csv",
+            formfinding_shape,
+            ["line_id", "node_index", "span_x", "transverse_y", "elevation_z"],
+        )
+        formfinding_axial_forces = [
+            {
+                "line_id": line_id,
+                "segment_index": index,
+                "axial_force": force,
+            }
+            for line_id, detail in self.formfinding_detail_map.items()
+            for index, force in enumerate(detail["axial_forces"], start=1)
+        ]
+        self._write_csv(
+            self.output_dir / "formfinding_axial_forces.csv",
+            formfinding_axial_forces,
+            ["line_id", "segment_index", "axial_force"],
         )
 
     def write_plot_html(self, path: str | Path | None = None, *, auto_open: bool = False) -> Path:

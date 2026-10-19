@@ -10,6 +10,8 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+from model.conductor_properties import resolve_conductor_mass, tributary_lengths
+
 try:
     from model import OpenSeesModel
 except ImportError:  # pragma: no cover
@@ -281,6 +283,7 @@ class TransmissionLineModel(OpenSeesModel):
         mrz = float(old.get("mrz", 0.0))
         self.ops.mass(int(node_tag), mx, my, mz, mrx, mry, mrz)
         self.mass_map[int(node_tag)] = {
+            **old,
             "node_tag": int(node_tag),
             "mx": mx,
             "my": my,
@@ -417,11 +420,10 @@ class TransmissionLineModel(OpenSeesModel):
             self._first_value(line_config, "initial_sag", "sag_guess", "sag", default=0.0),
             f"{name}.initial_sag",
         )
-        q_g = self._as_float(
-            self._first_value(line_config, "q_g", "weight_per_length", "gravity_per_length", default=0.0),
-            f"{name}.q_g",
-        )
         gravity = self._as_float(line_config.get("gravity", 9.81), f"{name}.gravity")
+        conductor_mass = resolve_conductor_mass(line_config, gravity=gravity)
+        mass_per_length = conductor_mass.mass_per_length
+        q_g = conductor_mass.weight_per_length
         span = float(np.linalg.norm(end - start))
         if span <= 0.0:
             raise ValueError(f"{name} 两个挂点重合，无法建立导线。")
@@ -480,10 +482,8 @@ class TransmissionLineModel(OpenSeesModel):
             self.ops.timeSeries("Linear", time_series_tag)
             self.ops.pattern("Plain", pattern_tag, time_series_tag)
 
-        dx = span / n_seg
-        mass_per_length = q_g / gravity if gravity != 0.0 else 0.0
-        for index, node_tag in enumerate(line_node_tags):
-            trib_length = dx / 2.0 if index in (0, n_seg) else dx
+        node_tributary_lengths = tributary_lengths(coords)
+        for node_tag, trib_length in zip(line_node_tags, node_tributary_lengths):
             if add_mass and mass_per_length != 0.0:
                 self._add_node_mass(node_tag, mass_per_length * trib_length)
             if pattern_tag is not None and time_series_tag is not None:
@@ -512,6 +512,10 @@ class TransmissionLineModel(OpenSeesModel):
             "n_seg": n_seg,
             "initial_sag": initial_sag,
             "q_g": q_g,
+            "mass_per_length": mass_per_length,
+            "conductor": conductor_mass.to_dict(),
+            "conductor_length": sum(node_tributary_lengths),
+            "total_conductor_mass": mass_per_length * sum(node_tributary_lengths),
             "material": material,
             "pattern_tag": pattern_tag,
             "time_series_tag": time_series_tag,
@@ -590,6 +594,7 @@ class TransmissionLineModel(OpenSeesModel):
         nonaxial_stiffness_ratio: float = 1.0e-8,
         n_steps: int = 100,
         verbose: bool = False,
+        mass_per_length: float | None = None,
     ) -> tuple[float, np.ndarray, np.ndarray, bool]:
         """Standalone notebook form-finding routine.
 
@@ -614,19 +619,28 @@ class TransmissionLineModel(OpenSeesModel):
         ops.uniaxialMaterial("InitStressMaterial", 4, 1, init_force)
         ops.section("Aggregator", 1, 4, "P", 2, "Mz", 3, "My", 5, "T")
 
+        initial_coords = []
         for index in range(n_node):
             xi = index / n_seg
             x = L * xi
             z_linear = H1 + (H2 - H1) * xi
             z = z_linear - 4.0 * initial_sag * xi * (1.0 - xi)
             ops.node(index + 1, x, 0.0, z)
+            initial_coords.append((x, 0.0, z))
 
-        dx = L / n_seg
-        mass_per_length = q_g / g
-        for index in range(n_node):
+        if g <= 0.0:
+            raise ValueError("g 必须大于 0。")
+        if mass_per_length is None:
+            resolved_mass_per_length = q_g / g
+        else:
+            resolved_mass_per_length = float(mass_per_length)
+            if resolved_mass_per_length < 0.0 or not math.isfinite(resolved_mass_per_length):
+                raise ValueError("mass_per_length 必须是非负有限数值。")
+            q_g = resolved_mass_per_length * g
+        node_tributary_lengths = tributary_lengths(initial_coords)
+        for index, trib_length in enumerate(node_tributary_lengths):
             node_tag = index + 1
-            trib_length = dx / 2.0 if index in (0, n_node - 1) else dx
-            node_mass = mass_per_length * trib_length
+            node_mass = resolved_mass_per_length * trib_length
             ops.mass(node_tag, node_mass, node_mass, node_mass, 0.0, 0.0, 0.0)
 
         for node in range(1, n_node + 1):
@@ -640,9 +654,8 @@ class TransmissionLineModel(OpenSeesModel):
 
         ops.timeSeries("Linear", 1)
         ops.pattern("Plain", 1, 1)
-        for index in range(n_node):
+        for index, trib_length in enumerate(node_tributary_lengths):
             node_tag = index + 1
-            trib_length = dx / 2.0 if index in (0, n_node - 1) else dx
             ops.load(node_tag, 0.0, 0.0, -q_g * trib_length, 0.0, 0.0, 0.0)
 
         ops.constraints("Plain")
