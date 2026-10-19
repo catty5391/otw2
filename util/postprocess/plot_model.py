@@ -419,10 +419,40 @@ class PlotModel:
             encoding="utf-8",
         )
         if auto_open:
+            import shutil
+            import subprocess
             import webbrowser
 
-            webbrowser.open(output_path.resolve().as_uri())
+            uri = output_path.resolve().as_uri()
+            opened = webbrowser.open_new_tab(uri)
+            if not opened:
+                for command in (("xdg-open", uri), ("gio", "open", uri), ("open", uri)):
+                    if shutil.which(command[0]) is None:
+                        continue
+                    try:
+                        subprocess.Popen(
+                            command,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                        )
+                        opened = True
+                        break
+                    except OSError:
+                        continue
         return output_path
 
 
 plot_model = PlotModel
+
+
+if __name__ == "__main__":
+    from pathlib import Path
+    import sys
+    import os
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.append(str(PROJECT_ROOT))
+    from model import OpenSeesModelWithBuckling
+    model_with_buckling = OpenSeesModelWithBuckling("Source/Z30103A6.s2k")
+    model_with_buckling.model_tower()
+    PlotModel(model_with_buckling).show()

@@ -1,241 +1,256 @@
-# -*- coding: utf-8 -*-
-import math
 import openseespy.opensees as ops
-import matplotlib.pyplot as plt
+import math
+import numpy as np
 
 
-def _safe_scalar(x):
-    """把 eleResponse 之类的返回值统一转成标量"""
-    if isinstance(x, (list, tuple)):
-        return float(x[0])
-    return float(x)
-
-
-def run_form_finding(
-    init_stress,          # 初始应力，单位 Pa
-    L=300.0,              # 档距，m
-    n_seg=20,             # 单元数
-    A=3.0e-4,             # 导线截面积，m^2
-    E=1.60e11,            # 弹性模量，Pa
-    w=12.0,               # 导线自重线荷载，N/m
-    y_left=0.0,           # 左挂点标高
-    y_right=0.0           # 右挂点标高
-):
-    """
-    单次找形：
-    给定一个初始应力 init_stress，施加自重后求平衡形态。
-    返回：
-        sag        : 中跨弧垂（相对于两端连线），m
-        avg_N      : 平均轴力，N
-        xs, ys     : 平衡后节点坐标
-    """
+def build_transmission_line_formfinding():
     ops.wipe()
-    ops.model('basic', '-ndm', 2, '-ndf', 2)
 
-    dx = L / n_seg
+    # ============================================================
+    # 1. 基本参数
+    # ============================================================
+    L = 300.0          # 档距，m
+    H1 = 30.0          # 左侧挂点高度，m
+    H2 = 30.0          # 右侧挂点高度，m
 
-    # -----------------------------
-    # 1) 建立节点：初始几何先取两端直线
-    # -----------------------------
-    for i in range(n_seg + 1):
-        x = i * dx
-        y = y_left + (y_right - y_left) * x / L
-        ops.node(i + 1, x, y)
+    n_seg = 60         # 导线离散段数
+    n_node = n_seg + 1
 
+    A = 4.0e-4         # 导线截面面积，m2
+    E = 7.0e10         # 弹性模量，Pa
+    rho = 2700.0       # 材料密度，kg/m3
+    g = 9.81           # 重力加速度，m/s2
+
+    T0 = 20000.0       # 初始水平张力，N
+    init_stress = T0 / A
+
+    # 给初始几何一个很小的下挠扰动，避免完全直线构型数值上过于理想
+    initial_sag = 0.1  # m
+
+    # ============================================================
+    # 2. 建立三维模型
+    # ============================================================
+    ops.model("basic", "-ndm", 3, "-ndf", 3)
+
+    # ============================================================
+    # 3. 定义材料
+    # ============================================================
+    # 基础弹性材料
+    ops.uniaxialMaterial("Elastic", 1, E)
+
+    # 带初始应力的材料
+    # 注意：这里的 init_stress 是初始应力，不是初始张力
+    ops.uniaxialMaterial("InitStressMaterial", 2, 1, init_stress)
+
+    # ============================================================
+    # 4. 建立节点
+    # ============================================================
+    node_tags = []
+
+    for i in range(n_node):
+        x = L * i / n_seg
+        y = 0.0
+
+        # 两端高度线性插值
+        z_linear = H1 + (H2 - H1) * i / n_seg
+
+        # 初始给一个很小的抛物线下挠
+        xi = i / n_seg
+        z = z_linear - 4.0 * initial_sag * xi * (1.0 - xi)
+
+        tag = i + 1
+        ops.node(tag, x, y, z)
+        node_tags.append(tag)
+
+    # ============================================================
+    # 5. 边界条件
+    # ============================================================
     # 两端挂点固定
-    ops.fix(1, 1, 1)
-    ops.fix(n_seg + 1, 1, 1)
+    ops.fix(1, 1, 1, 1)
+    ops.fix(n_node, 1, 1, 1)
 
-    # -----------------------------
-    # 2) 材料：Elastic + InitStressMaterial
-    # -----------------------------
-    mat_elastic = 1
-    mat_init = 2
-    ops.uniaxialMaterial('Elastic', mat_elastic, E)
-    ops.uniaxialMaterial('InitStressMaterial', mat_init, mat_elastic, init_stress)
+    # ============================================================
+    # 6. 建立 corotTruss 单元
+    # ============================================================
+    # corotTruss 适合大位移、小应变的索 / 杆问题
+    ele_tags = []
 
-    # -----------------------------
-    # 3) 单元：corotTruss
-    # -----------------------------
-    for e in range(1, n_seg + 1):
-        ops.element('corotTruss', e, e, e + 1, A, mat_init)
+    for i in range(n_seg):
+        ele_tag = i + 1
+        i_node = i + 1
+        j_node = i + 2
 
-    # -----------------------------
-    # 4) 自重：等效成节点竖向荷载
-    #    每个内部节点承担一段左半 + 一段右半 => w*dx
-    #    两端节点承担半段 => w*dx/2
-    # -----------------------------
-    ops.timeSeries('Linear', 1)
-    ops.pattern('Plain', 1, 1)
-
-    for i in range(1, n_seg + 2):
-        tributary = dx if (1 < i < n_seg + 1) else dx / 2.0
-        p = -w * tributary
-        ops.load(i, 0.0, p)
-
-    # -----------------------------
-    # 5) 静力分析
-    # -----------------------------
-    ops.constraints('Plain')
-    ops.numberer('RCM')
-    ops.system('BandGeneral')
-    ops.test('NormDispIncr', 1.0e-10, 100, 0)
-    ops.algorithm('Newton')
-    ops.integrator('LoadControl', 0.05)   # 20步加载完成
-    ops.analysis('Static')
-
-    ok = 0
-    for _ in range(20):
-        ok = ops.analyze(1)
-        if ok != 0:
-            # 简单回退策略
-            ops.test('NormDispIncr', 1.0e-8, 200, 0)
-            ops.algorithm('ModifiedNewton')
-            ok = ops.analyze(1)
-            ops.algorithm('Newton')
-            if ok != 0:
-                raise RuntimeError("分析未收敛，请调整初始应力、分段数或步长。")
-
-    # -----------------------------
-    # 6) 读取平衡后坐标
-    # -----------------------------
-    xs, ys = [], []
-    for nd in range(1, n_seg + 2):
-        x0, y0 = ops.nodeCoord(nd)
-        ux, uy = ops.nodeDisp(nd)
-        xs.append(x0 + ux)
-        ys.append(y0 + uy)
-
-    # -----------------------------
-    # 7) 计算弧垂（相对两端连线）
-    #    这里取中点节点，也可改成全节点最大下挠
-    # -----------------------------
-    mid_node = n_seg // 2 + 1
-    x_mid = xs[mid_node - 1]
-    y_mid = ys[mid_node - 1]
-
-    # 两端连线在 mid 处的标高
-    y_chord_mid = ys[0] + (ys[-1] - ys[0]) * (x_mid - xs[0]) / (xs[-1] - xs[0])
-
-    # 弧垂取向下为正
-    sag = y_chord_mid - y_mid
-
-    # -----------------------------
-    # 8) 读取平均轴力
-    # -----------------------------
-    Ns = []
-    for e in range(1, n_seg + 1):
-        N = _safe_scalar(ops.eleResponse(e, 'axialForce'))
-        Ns.append(N)
-    avg_N = sum(Ns) / len(Ns)
-
-    return sag, avg_N, xs, ys
-
-
-def find_init_stress_by_target_sag(
-    target_sag,           # 目标弧垂，m
-    sigma_lo=1.0e6,       # 初始应力下界，Pa
-    sigma_hi=3.0e8,       # 初始应力上界，Pa
-    tol=1.0e-3,           # 弧垂容差，m
-    max_iter=40,
-    **kwargs
-):
-    """
-    用二分法寻找满足目标弧垂的初始应力
-    规律：初始应力越大，导线越紧，弧垂越小
-    """
-
-    # 先自动扩展区间，保证把 target_sag 夹在中间
-    sag_lo, _, _, _ = run_form_finding(sigma_lo, **kwargs)
-    sag_hi, _, _, _ = run_form_finding(sigma_hi, **kwargs)
-
-    # 希望 sag_lo > target_sag > sag_hi
-    # 若不满足，自动扩展
-    count = 0
-    while sag_lo < target_sag and count < 20:
-        sigma_lo *= 0.5
-        sag_lo, _, _, _ = run_form_finding(sigma_lo, **kwargs)
-        count += 1
-
-    count = 0
-    while sag_hi > target_sag and count < 20:
-        sigma_hi *= 2.0
-        sag_hi, _, _, _ = run_form_finding(sigma_hi, **kwargs)
-        count += 1
-
-    if not (sag_lo >= target_sag >= sag_hi):
-        raise RuntimeError(
-            f"未能找到合适的初始应力包络区间：\n"
-            f"sigma_lo={sigma_lo:.3e}, sag_lo={sag_lo:.6f}\n"
-            f"sigma_hi={sigma_hi:.3e}, sag_hi={sag_hi:.6f}\n"
-            f"请手动调整上下界。"
+        ops.element(
+            "corotTruss",
+            ele_tag,
+            i_node,
+            j_node,
+            A,
+            2,
+            "-rho",
+            rho,
+            "-cMass",
+            1
         )
 
-    best = None
-    for it in range(1, max_iter + 1):
-        sigma_mid = 0.5 * (sigma_lo + sigma_hi)
-        sag_mid, avg_N, xs, ys = run_form_finding(sigma_mid, **kwargs)
+        ele_tags.append(ele_tag)
 
-        best = (sigma_mid, sag_mid, avg_N, xs, ys)
+    # ============================================================
+    # 7. 设置节点质量
+    # ============================================================
+    # 动态松弛法需要质量。这里按导线线密度等效到节点。
+    # 线密度 = rho * A
+    mass_per_length = rho * A
 
-        err = sag_mid - target_sag
-        print(
-            f"iter={it:02d}, sigma0={sigma_mid:.6e} Pa, "
-            f"sag={sag_mid:.6f} m, err={err:+.6f} m, avgN={avg_N:.3f} N"
-        )
-
-        if abs(err) <= tol:
-            break
-
-        # sag_mid 偏大 -> 线太松 -> 需要增大初始应力
-        if sag_mid > target_sag:
-            sigma_lo = sigma_mid
+    for i in range(n_node):
+        if i == 0:
+            trib_length = L / n_seg / 2.0
+        elif i == n_node - 1:
+            trib_length = L / n_seg / 2.0
         else:
-            sigma_hi = sigma_mid
+            trib_length = L / n_seg
 
-    return best
+        m = mass_per_length * trib_length
+        ops.mass(i + 1, m, m, m)
+
+    # ============================================================
+    # 8. 施加重力荷载
+    # ============================================================
+    ops.timeSeries("Linear", 1)
+    ops.pattern("Plain", 1, 1)
+
+    for i in range(n_node):
+        node_tag = i + 1
+
+        if i == 0:
+            trib_length = L / n_seg / 2.0
+        elif i == n_node - 1:
+            trib_length = L / n_seg / 2.0
+        else:
+            trib_length = L / n_seg
+
+        weight = mass_per_length * trib_length * g
+
+        # 全局 Z 方向向下
+        ops.load(node_tag, 0.0, 0.0, -weight)
+
+    # ============================================================
+    # 9. 动态松弛分析设置
+    # ============================================================
+    ops.constraints("Plain")
+    ops.numberer("RCM")
+    ops.system("BandGeneral")
+
+    # 收敛测试
+    ops.test("NormDispIncr", 1.0e-8, 50)
+
+    # 非线性算法
+    ops.algorithm("Newton")
+
+    # Newmark 平均加速度法
+    ops.integrator("Newmark", 0.5, 0.25)
+
+    ops.analysis("Transient")
+
+    # Rayleigh 阻尼
+    # 动态松弛的关键是较大的阻尼，使振动逐渐衰减到平衡位置
+    alpha_m = 1.0
+    beta_k = 0.0
+    beta_k_init = 0.0
+    beta_k_comm = 0.0
+    ops.rayleigh(alpha_m, beta_k, beta_k_init, beta_k_comm)
+
+    # ============================================================
+    # 10. 开始动态松弛迭代
+    # ============================================================
+    dt = 0.02
+    max_steps = 20000
+
+    tol_vel = 1.0e-5
+    tol_disp_change = 1.0e-7
+
+    last_coords = {}
+
+    for node in node_tags:
+        last_coords[node] = np.array(ops.nodeCoord(node), dtype=float) + np.array(ops.nodeDisp(node), dtype=float)
+
+    converged = False
+
+    for step in range(max_steps):
+        ok = ops.analyze(1, dt)
+
+        if ok != 0:
+            print(f"分析在 step = {step} 不收敛，尝试减小时间步长。")
+            ok = ops.analyze(1, dt * 0.5)
+
+            if ok != 0:
+                print("减小时间步后仍不收敛，分析终止。")
+                break
+
+        # 每隔一定步数检查一次速度和位移变化
+        if step % 100 == 0:
+            max_vel = 0.0
+            max_disp_change = 0.0
+
+            for node in node_tags:
+                vel = np.array(ops.nodeVel(node), dtype=float)
+                max_vel = max(max_vel, np.linalg.norm(vel))
+
+                current_coord = np.array(ops.nodeCoord(node), dtype=float) + np.array(ops.nodeDisp(node), dtype=float)
+                disp_change = np.linalg.norm(current_coord - last_coords[node])
+                max_disp_change = max(max_disp_change, disp_change)
+
+                last_coords[node] = current_coord
+
+            print(
+                f"step = {step:6d}, "
+                f"max_vel = {max_vel:.4e}, "
+                f"max_coord_change = {max_disp_change:.4e}"
+            )
+
+            if max_vel < tol_vel and max_disp_change < tol_disp_change:
+                converged = True
+                print("动态松弛找形收敛。")
+                break
+
+    if not converged:
+        print("达到最大步数，未完全满足收敛准则。")
+
+    # ============================================================
+    # 11. 输出找形后的节点坐标
+    # ============================================================
+    final_coords = []
+
+    print("\n找形后的导线节点坐标：")
+    print("nodeTag, X, Y, Z")
+
+    for node in node_tags:
+        coord = np.array(ops.nodeCoord(node), dtype=float)
+        disp = np.array(ops.nodeDisp(node), dtype=float)
+        final_coord = coord + disp
+
+        final_coords.append(final_coord)
+
+        print(
+            f"{node:4d}, "
+            f"{final_coord[0]:12.6f}, "
+            f"{final_coord[1]:12.6f}, "
+            f"{final_coord[2]:12.6f}"
+        )
+
+    # ============================================================
+    # 12. 计算最终弧垂
+    # ============================================================
+    z_values = [p[2] for p in final_coords]
+    min_z = min(z_values)
+
+    support_z_min = min(H1, H2)
+    sag = support_z_min - min_z
+
+    print(f"\n最终最大弧垂约为：{sag:.6f} m")
+
+    return final_coords
 
 
 if __name__ == "__main__":
-    # -----------------------------
-    # 示例参数
-    # -----------------------------
-    L = 300.0          # 档距 m
-    n_seg = 24
-    A = 3.0e-4         # 截面积 m^2
-    E = 1.60e11        # 弹模 Pa
-    w = 12.0           # 自重 N/m
-    target_sag = 8.0   # 目标弧垂 m
-
-    sigma0, sag, avg_N, xs, ys = find_init_stress_by_target_sag(
-        target_sag=target_sag,
-        sigma_lo=5.0e6,
-        sigma_hi=2.0e8,
-        tol=1.0e-4,
-        max_iter=30,
-        L=L,
-        n_seg=n_seg,
-        A=A,
-        E=E,
-        w=w,
-        y_left=0.0,
-        y_right=0.0
-    )
-
-    print("\n====== 最终结果 ======")
-    print(f"初始应力 sigma0 = {sigma0:.6e} Pa")
-    print(f"对应初始张力 T0 = sigma0 * A = {sigma0 * A:.3f} N")
-    print(f"平衡弧垂 sag = {sag:.6f} m")
-    print(f"平均轴力 avgN = {avg_N:.3f} N")
-
-    # 绘图
-    plt.figure(figsize=(9, 4))
-    plt.plot(xs, ys, '-o', ms=4, label='equilibrium shape')
-    plt.plot([xs[0], xs[-1]], [ys[0], ys[-1]], '--', label='support chord')
-    plt.xlabel('x (m)')
-    plt.ylabel('y (m)')
-    plt.title('Conductor Form Finding by Initial Stress Method')
-    plt.grid(True, ls='--', alpha=0.4)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    final_shape = build_transmission_line_formfinding()

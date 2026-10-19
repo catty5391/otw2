@@ -145,11 +145,14 @@ def run_one_sample(
     sample_name: str,
     sample_dir: Path,
     node_config: dict[str, list[int]],
+    model: OpenSeesModel | None = None,
 ) -> dict[str, Any]:
-    from util import CorrectedStoryDriftTracker, ForceControl
+    from util import CorrectedStoryDriftTracker, ForceControl, TowerInternalForceRecorder
 
     sample_label = f"{speed_name}/{sample_name}"
     pid = os.getpid()
+    if model is None:
+        model = build_base_model()
     ops.reset()
     ops.setTime(0.0)
 
@@ -178,6 +181,13 @@ def run_one_sample(
     ops.recorder("Node", "-file", str(sample_output_dir / "Node_velocity.out"), "-time", "-node", 370, "-dof", 2, "vel")
     ops.recorder("Node", "-file", str(sample_output_dir / "Node_displacement.out"), "-time", "-node", 370, "-dof", 2, "disp")
     ops.recorder("Element", "-file", str(sample_output_dir / "Element_all_section_1.out"), "-time", "-ele", *ops.getEleTags(), "section", 1, "fiber", -0.05, 1, "stress")
+    internal_force_recorder = TowerInternalForceRecorder(
+        model,
+        sample_output_dir / "tower_internal_forces.sqlite",
+        overwrite=True,
+        record_every=1,
+        commit_every=10,
+    )
 
     ops.constraints("Plain")
     ops.numberer("RCM")
@@ -193,17 +203,19 @@ def run_one_sample(
     not_correct_drift_csv = sample_output_dir / "not_correct_drift.csv"
 
     try:
+        internal_force_recorder.capture(step=0, time=ops.getTime())
         with drift_csv.open("w", encoding="utf-8") as drift_file, not_correct_drift_csv.open("w", encoding="utf-8") as not_corr_file:
             drift_file.write("step," + ",".join(story_labels) + "\n")
             not_corr_file.write("step," + ",".join(story_labels) + "\n")
 
-            for step in range(1000):
+            for step in range(nsteps):
                 step_start = perf_counter()
                 ok = ops.analyze(1, dt)
                 if ok != 0:
                     raise RuntimeError(f"transient analyze failed at {speed_name}/{sample_name}, step={step}")
 
                 drift_now = tracker.capture_step()
+                internal_force_recorder.capture(step=step + 1, time=ops.getTime())
                 not_corr_now = tracker.get_not_corrected_history()[-1]
                 drift_file.write(f"{step}," + ",".join(str(value) for value in drift_now) + "\n")
                 not_corr_file.write(f"{step}," + ",".join(str(value) for value in not_corr_now) + "\n")
@@ -220,6 +232,7 @@ def run_one_sample(
         log_progress(progress_log, f"analysis failed: {exc}")
         raise
     finally:
+        internal_force_recorder.close()
         ops.remove("recorders")
         remove_wind_load(ts_tags, pattern_tags)
 
@@ -231,12 +244,13 @@ def run_one_sample(
         "sample_name": sample_name,
         "dt": dt,
         "nsteps": nsteps,
+        "internal_force_database": str(sample_output_dir / "tower_internal_forces.sqlite"),
         "status": "ok",
     }
 
 
 def run_sample_batch(batch_samples: list[tuple[int, str, str, Path]]) -> list[dict[str, Any]]:
-    build_base_model()
+    model = build_base_model()
     node_config = load_node_config()
     results: list[dict[str, Any]] = []
     for sample_id, speed_name, sample_name, sample_dir in batch_samples:
@@ -247,6 +261,7 @@ def run_sample_batch(batch_samples: list[tuple[int, str, str, Path]]) -> list[di
                 sample_name=sample_name,
                 sample_dir=sample_dir,
                 node_config=node_config,
+                model=model,
             )
         )
     return results
