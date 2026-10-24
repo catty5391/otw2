@@ -1,0 +1,18 @@
+{
+  "schema": "otw2.cyclic_reference_bindings.v1",
+  "package_sha256": "cef191cf7111125dcfd2ec461c8bbc206a3050089ac068bae24d724b5d647e7a",
+  "status": "template_only_no_reference_results",
+  "gates": {
+    "G1": {"status": "pending", "evidence_ids": []},
+    "T09": {"status": "pending", "evidence_ids": []}
+  },
+  "evidence": {},
+  "references": {},
+  "histories": {},
+  "usage": {
+    "fit_case_ids": [],
+    "model_selection_case_ids": [],
+    "response_fingerprints": []
+  },
+  "warning": "No amplitudes, nominal-yield classifications, full histories or validation outcomes are supplied. Bind only accepted actual G1/T09 evidence in a new case file; do not overwrite this template."
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/health",
+    "status": 200,
+    "bytes": 95
+  },
+  {
+    "path": "/tmq/followup_results/B1_20261024/index.html",
+    "status": 200,
+    "bytes": 11692
+  },
+  {
+    "path": "/tmq/wind_speed_results/index.html",
+    "status": 200,
+    "bytes": 17390
+  }
+]

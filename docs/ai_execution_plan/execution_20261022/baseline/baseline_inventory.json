@@ -1,0 +1,1239 @@
+{
+  "schema": "otw2.source_snapshot.v1",
+  "created_at": "2026-10-22T12:55:52.490167+00:00",
+  "root": "/home/panqiheng/otw2",
+  "branch": "redevelop",
+  "head": "aa3272ce71b002b30b8a8062ed35bcfa2482ae60",
+  "git_status": " M fluctuate_wind_simulate/fragility_curve/__pycache__/wind_fragility.cpython-312.pyc\n M fluctuate_wind_simulate/fragility_curve/main.py\n M fluctuate_wind_simulate/opensees_simulate/wind_refactor_common.py\n M initial_imperfection_material/README.md\n M initial_imperfection_material/REPORT.md\n M initial_imperfection_material/experiment.py\n M initial_imperfection_material/material.py\n M initial_imperfection_material/results/imperfection_sensitivity.csv\n M initial_imperfection_material/results/imperfection_sensitivity.png\n M initial_imperfection_material/results/material_backbones.csv\n M initial_imperfection_material/results/material_backbones.png\n M initial_imperfection_material/results/normalized_pushover.png\n M initial_imperfection_material/results/pushover_comparison.png\n M initial_imperfection_material/results/pushover_curves.csv\n M initial_imperfection_material/results/summary.json\n M initial_imperfection_material/run_experiment.py\n M initial_imperfection_material/visualization.py\n M model/__init__.py\n M model/__pycache__/__init__.cpython-312.pyc\n M model/__pycache__/tower_model.cpython-312.pyc\n M model/__pycache__/tower_model_with_buckling.cpython-312.pyc\n M model/tower_model.py\n M model/tower_model_with_buckling.py\n M py_view/README.md\n M readme.md\n M tests/test_equivalent_imperfection_material.py\n M tests/test_internal_force_recorder.py\n M util/postprocess/__init__.py\n M util/postprocess/__pycache__/__init__.cpython-312.pyc\n M util/postprocess/__pycache__/drift_peak.cpython-312.pyc\n M util/postprocess/__pycache__/plot_model.cpython-312.pyc\n M util/preprocess/__pycache__/force_control.cpython-312.pyc\n M util/processing/__pycache__/pushover_wind_load.cpython-312.pyc\n M util/processing/internal_force_recorder.py\n?? docs/\n?? initial_imperfection_material/CONVERGENCE_DIAGNOSIS.md\n?? initial_imperfection_material/FULL_TOWER_CYCLIC_REPORT.md\n?? initial_imperfection_material/diagnose_tower_convergence.py\n?? initial_imperfection_material/full_tower_cyclic.py\n?? initial_imperfection_material/results/actual_l125x8_members.csv\n?? initial_imperfection_material/results/actual_member_validation.csv\n?? initial_imperfection_material/results/actual_member_validation.png\n?? initial_imperfection_material/results/convergence_diagnosis/\n?? initial_imperfection_material/results/convergence_study.csv\n?? initial_imperfection_material/results/convergence_study.png\n?? initial_imperfection_material/results/full_tower_cyclic/\n?? initial_imperfection_material/results/pre_yield_unloading.csv\n?? initial_imperfection_material/results/pre_yield_unloading.png\n?? initial_imperfection_material/summarize_convergence_diagnosis.py\n?? model/tower_model_with_equivalent_imperfection.py\n?? py_view/results_dashboard/\n?? tests/test_analysis_common.py\n?? tests/test_analysis_workflows.py\n?? tests/test_results_dashboard.py\n?? tests/test_tower_imperfection_shape.py\n?? util/analysis/\n?? util/postprocess/response_metrics.py\n",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "executable": "/home/panqiheng/otw2/.venv/bin/python",
+  "engine_version": "3.8.0",
+  "package_version": "3.7.1.2",
+  "archive": "source_snapshot.tar.gz",
+  "archive_sha256": "d580085ff33b35dcac50a6dd1709b192e6b31fbc5aa71161a50f212a168ac195",
+  "source_files": [
+    {
+      "path": ".gitignore",
+      "size_bytes": 104,
+      "sha256": "a255c3bc097c1b953a9a5474076e6fce95c3cf1d868ad772227e273cc309b74b"
+    },
+    {
+      "path": "Source/Z30103A6.s2k",
+      "size_bytes": 5323157,
+      "sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16"
+    },
+    {
+      "path": "Source/Z33101B_54.s2k",
+      "size_bytes": 648868,
+      "sha256": "13ce552bdf532a89bfb8fff3532830d06d2e957bbd0af133fb028e3368ebb7b9"
+    },
+    {
+      "path": "Source/ZK3010A.s2k",
+      "size_bytes": 4772584,
+      "sha256": "8bc68b35707991ceebecd3da429034e4fcaef49b8d260085a323f77a68bac66a"
+    },
+    {
+      "path": "__init__.py",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/ai_execution_plan/BASELINE.json",
+      "size_bytes": 3754,
+      "sha256": "ae640f384f52ab05e929e2b196842f17796d1290ce675608f0e560d7631e7531"
+    },
+    {
+      "path": "docs/ai_execution_plan/HANDOFF.md",
+      "size_bytes": 5903,
+      "sha256": "7b9b40eb1289d388c84139eb6b680546707686a450b1788b73cc5515e21eab54"
+    },
+    {
+      "path": "docs/ai_execution_plan/PLAN.md",
+      "size_bytes": 59718,
+      "sha256": "e400aa407949e4e78a899f8fe5c45900425bb83e0f726275bb6990a3fff503a5"
+    },
+    {
+      "path": "docs/ai_execution_plan/README.md",
+      "size_bytes": 1913,
+      "sha256": "ecd9a34b666fca2e9b69e006739f1dd3cd6d828e5085bf24c2ed94410644b48e"
+    },
+    {
+      "path": "docs/ai_execution_plan/TASKS.json",
+      "size_bytes": 33120,
+      "sha256": "9c0027c1ba4585a13fd3e4a6e297777f435aa680aa60e73d5943c52090e86fcd"
+    },
+    {
+      "path": "docs/ai_execution_plan/execution_20261022/acceptance_profile.json",
+      "size_bytes": 1052,
+      "sha256": "a7aefd986749a36afdf8788cacda404e42fe2b472ef76444e2a09dd390b73608"
+    },
+    {
+      "path": "docs/ai_execution_plan/execution_20261022/decisions.md",
+      "size_bytes": 516,
+      "sha256": "ac9426d6c10e4ae56c8fbf7b4e5b5d55cbf1c964969549e8c95cfaa8e5896f78"
+    },
+    {
+      "path": "docs/ai_execution_plan/execution_20261022/execution_log.md",
+      "size_bytes": 1150,
+      "sha256": "01dfb44aa8bafac6777fc848452bae73aaf6d846d25cdbb510c1322defb5076d"
+    },
+    {
+      "path": "example/ex-02-eigen-pyvista.py",
+      "size_bytes": 3650,
+      "sha256": "8de22c852354f91d367652b7d311ceb23579f989bddb8e6e14d05c2a4a74ecb8"
+    },
+    {
+      "path": "example/openseespy_常用查询命令速查.md",
+      "size_bytes": 4024,
+      "sha256": "6faa036033e2338cbe35a3b2a5e4e8a1d67316e0fab75399a713bf66aaf72951"
+    },
+    {
+      "path": "fluctuate_wind_simulate/.config/node_to_add_wind_press.json",
+      "size_bytes": 492,
+      "sha256": "8aee8428ad928a48006d421b08e8552d98d87157819b103a491f5700be9b1555"
+    },
+    {
+      "path": "fluctuate_wind_simulate/.config/node_to_record_floor_disp.json",
+      "size_bytes": 456,
+      "sha256": "8a5c6c6d9339b62b27158cfaf3bd149ec58d32845c42a92ff8a8eeb296af3153"
+    },
+    {
+      "path": "fluctuate_wind_simulate/.config/wind_speed_generate_config.ini",
+      "size_bytes": 2260,
+      "sha256": "a7eaaa7ba1d6d78120330bbf35c324bec603d2aa3b88d70b64011df567ea2ec2"
+    },
+    {
+      "path": "fluctuate_wind_simulate/A_S.txt",
+      "size_bytes": 11972,
+      "sha256": "7a9dbcbf8c244c33e316ff498cb208db9e4432bbb4f89c29345e2d78f4b41c45"
+    },
+    {
+      "path": "fluctuate_wind_simulate/README.md",
+      "size_bytes": 1934,
+      "sha256": "57a83e3f9ec932744cf535b9c67cb38a79c306772aebda8cd40d450c9df51ad1"
+    },
+    {
+      "path": "fluctuate_wind_simulate/__init__.py",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fluctuate_wind_simulate/after_cal/plot_stressStrain.py",
+      "size_bytes": 609,
+      "sha256": "c72faf2ad7d265001e6a8a61084a1ef7ab91cae2afb01ef7eda4e24e3142cb67"
+    },
+    {
+      "path": "fluctuate_wind_simulate/after_cal/plot_stress_distribution.py",
+      "size_bytes": 1213,
+      "sha256": "5e10d6b7f7880c592cb332cd4b38086d6445227fe75de6db30f0349c8d9d7253"
+    },
+    {
+      "path": "fluctuate_wind_simulate/after_cal/plot_stress_plotly.py",
+      "size_bytes": 11292,
+      "sha256": "4bf4e07562a304bf5cffcdb74b241fbb3c7d09ad7b8600a4d74f6d93a45e7ed6"
+    },
+    {
+      "path": "fluctuate_wind_simulate/convert_speed_to_press/windSpeed_to_windPress.py",
+      "size_bytes": 2267,
+      "sha256": "ab60f95f9da70fcb6a9eb1942fbfa0684fca6597a57d8f25dea644570598f723"
+    },
+    {
+      "path": "fluctuate_wind_simulate/fragility_curve/__init__.py",
+      "size_bytes": 80,
+      "sha256": "bd386da5c0a025290568305cee79da90468ed5546ce1f36d834472031dd9d3af"
+    },
+    {
+      "path": "fluctuate_wind_simulate/fragility_curve/main.py",
+      "size_bytes": 6010,
+      "sha256": "90f61afb5701e6bf2f2c9d4881590f0ef0930b5c8d915b99c3f1f653721d77ae"
+    },
+    {
+      "path": "fluctuate_wind_simulate/fragility_curve/wind_fragility.py",
+      "size_bytes": 7717,
+      "sha256": "ac9945d2cb7d0698276e4b2491147ea6a1cdb9166319725f991332a102b86291"
+    },
+    {
+      "path": "fluctuate_wind_simulate/opensees_simulate/main_record_stressStrain_by_fiberLoaction.py",
+      "size_bytes": 554276,
+      "sha256": "8abc7e109567536ce6779649d77134ca9a35a68df04443fe90de1acc963d65d8"
+    },
+    {
+      "path": "fluctuate_wind_simulate/opensees_simulate/wind_parallel_main.py",
+      "size_bytes": 806,
+      "sha256": "9f0d7211e874e7bc678c0771cb295214145a1259624863df03e60537576127ee"
+    },
+    {
+      "path": "fluctuate_wind_simulate/opensees_simulate/wind_refactor_common.py",
+      "size_bytes": 14182,
+      "sha256": "72f8dc78c69081869e98b6c08a7beff2849f97d2fa2057683e03678fbedd6d5e"
+    },
+    {
+      "path": "fluctuate_wind_simulate/opensees_simulate/wind_sample_batch_runner.py",
+      "size_bytes": 609,
+      "sha256": "4899c01dbfbf698de496acc0d1b9b015c7215b97f60627fda7c0aea3eff313eb"
+    },
+    {
+      "path": "fluctuate_wind_simulate/tutorials.md",
+      "size_bytes": 32156,
+      "sha256": "fb521241004b4cc43b91ddf3137b6fb760050f04f8be45054c116ebe6a04bdbc"
+    },
+    {
+      "path": "fluctuate_wind_simulate/wind_speed_generate/draw_wind_press.py",
+      "size_bytes": 503,
+      "sha256": "950646144dfab0fd530e78bf482017a9f0edf7d5ba0ae624e7eeb47d66398cbe"
+    },
+    {
+      "path": "fluctuate_wind_simulate/wind_speed_generate/main.py",
+      "size_bytes": 1402,
+      "sha256": "6c743dfaab6d1f62850e64414e6b11dd7bb5ac3a3608e52827428a899a50887f"
+    },
+    {
+      "path": "fluctuate_wind_simulate/wind_speed_generate/waws.py",
+      "size_bytes": 26453,
+      "sha256": "ef533cd6c562e122cd4b418719f39c5fe3e6273a8ae0e8051d937a07838200f4"
+    },
+    {
+      "path": "initial_imperfection_material/CONVERGENCE_DIAGNOSIS.md",
+      "size_bytes": 11404,
+      "sha256": "84ec6f4b07a2946a54be479475b91b26e6ff72b1761fef588c96c5705d1004fe"
+    },
+    {
+      "path": "initial_imperfection_material/FULL_TOWER_CYCLIC_REPORT.md",
+      "size_bytes": 7402,
+      "sha256": "d88bc221e494b7137a753654163d3d33f2339345095d6aab12da3f6e8038bf14"
+    },
+    {
+      "path": "initial_imperfection_material/README.md",
+      "size_bytes": 2206,
+      "sha256": "9209c9fe41836993e6283994492c3efb647302a644ce311cc0a017e3699fc006"
+    },
+    {
+      "path": "initial_imperfection_material/REPORT.md",
+      "size_bytes": 11588,
+      "sha256": "c9dbdfa5fe303ea7694bb837171bec3cdc549e334958a5ac8e3827f579ae252b"
+    },
+    {
+      "path": "initial_imperfection_material/__init__.py",
+      "size_bytes": 438,
+      "sha256": "4a81444a570be04ce29527b7177b7a8804248763d25e5b42bb65c2435c22f120"
+    },
+    {
+      "path": "initial_imperfection_material/diagnose_tower_convergence.py",
+      "size_bytes": 13169,
+      "sha256": "7517e97660bf9b8c06e70b3519da525e36f118b7c8c2b913a3c469d3ac80c496"
+    },
+    {
+      "path": "initial_imperfection_material/experiment.py",
+      "size_bytes": 35128,
+      "sha256": "770d06ddbbfcf5e8c64d38e3f245667abda5b3a5cd324fe1fb5354b133045efd"
+    },
+    {
+      "path": "initial_imperfection_material/full_tower_cyclic.py",
+      "size_bytes": 27007,
+      "sha256": "6e4843f2e5329a8c0a7867a03e9a8a433d0321becd3740c9841c1d759bc914c2"
+    },
+    {
+      "path": "initial_imperfection_material/material.py",
+      "size_bytes": 17340,
+      "sha256": "2de92a7374ceb0f89f5249ddefdbd2a6b882c737f4f2eb4b506eb597f5a6b70a"
+    },
+    {
+      "path": "initial_imperfection_material/results/imperfection_sensitivity.csv",
+      "size_bytes": 399,
+      "sha256": "da1ee9d7014b5bce12c68fb6c4d80b33071b025240e3e55d59ab2693b8b2695c"
+    },
+    {
+      "path": "initial_imperfection_material/results/imperfection_sensitivity.png",
+      "size_bytes": 77054,
+      "sha256": "01fc7e021aae0315e5fa354e058b19d9b86b00597062e91837c4ce9fd72880a8"
+    },
+    {
+      "path": "initial_imperfection_material/results/material_backbones.csv",
+      "size_bytes": 1438,
+      "sha256": "e18f0ba5422266457d4c34174f60bc1ddde7c536163dc681bf27fcfe51298785"
+    },
+    {
+      "path": "initial_imperfection_material/results/material_backbones.png",
+      "size_bytes": 80422,
+      "sha256": "0b55b7b861f2687ecf1fc30aff31c7cfee84319555a6577bcc11b0a60074f7ca"
+    },
+    {
+      "path": "initial_imperfection_material/results/normalized_pushover.png",
+      "size_bytes": 93347,
+      "sha256": "1e0c12bcaa7bec26256c9f4cbeb3f40a0d895985a09d6626422979039f56edb4"
+    },
+    {
+      "path": "initial_imperfection_material/results/pushover_comparison.png",
+      "size_bytes": 116092,
+      "sha256": "22fc4517481cd5ed329bea33fd0a45fefb39c3d437cbe653e227f1b0fb32cd4f"
+    },
+    {
+      "path": "initial_imperfection_material/results/pushover_curves.csv",
+      "size_bytes": 228298,
+      "sha256": "ab49ad3a0cc7e9546954c5db5cbd1a2456031ded1ee9af74b17eede37bbf06cd"
+    },
+    {
+      "path": "initial_imperfection_material/results/summary.json",
+      "size_bytes": 12495,
+      "sha256": "a421873e2f458e35b96fd1380c1ac9f05eb48fcf5d3926986be7d788dd0a3fe1"
+    },
+    {
+      "path": "initial_imperfection_material/run_experiment.py",
+      "size_bytes": 1783,
+      "sha256": "1b238c42d5138074e898cd75c0d3030fa6e53470a3d3105db120f7b982ba38be"
+    },
+    {
+      "path": "initial_imperfection_material/summarize_convergence_diagnosis.py",
+      "size_bytes": 13007,
+      "sha256": "92c0dae464c483feae577784bd295c36b07604dec134553e58b13307b57bed33"
+    },
+    {
+      "path": "initial_imperfection_material/visualization.py",
+      "size_bytes": 9486,
+      "sha256": "6220ed0eb305ae33e56b81fb979365d4f9aadc900e8b3a00ee3072bf5d6f3124"
+    },
+    {
+      "path": "literature/transmission_tower_wind/README.md",
+      "size_bytes": 5369,
+      "sha256": "4f73a51e9b62c82b173f43a3ef14b0d785dd8670ccd5e3d07d7f1afbc89b43db"
+    },
+    {
+      "path": "literature/transmission_tower_wind/conductor_mass_parameters.md",
+      "size_bytes": 2443,
+      "sha256": "ecd183daf367400511f6595e3eee8172f42794d0001effa3a5ef3bf434148835"
+    },
+    {
+      "path": "literature/transmission_tower_wind/graduation_scope_benchmark.md",
+      "size_bytes": 2898,
+      "sha256": "92caf7dded6c05010634ffae9e9bd81461046263e740ad48cd9d21bbff15d297"
+    },
+    {
+      "path": "model/.config/conductor_catalog.json",
+      "size_bytes": 1471,
+      "sha256": "bf298f100462b6c58313c5b768ff193932cd4fbcb5ef61eefc859b6c8cc78430"
+    },
+    {
+      "path": "model/.config/node_to_fix.json",
+      "size_bytes": 130,
+      "sha256": "15ec3bca8c2c83e86c560da8e3590852a858648e3cd5c283c0f3f615e6fdd91c"
+    },
+    {
+      "path": "model/.config/tower_line_with_insulators.json",
+      "size_bytes": 3390,
+      "sha256": "1a9c04673184a3d66be7a52f0a9e1f1ae4bd4d856da8cf779fe053751be1422e"
+    },
+    {
+      "path": "model/.config/transmission_line.json",
+      "size_bytes": 337,
+      "sha256": "89f232b833327568f3a178eb764f55f812a07f0e23d2e2cb6577060bc7aa0253"
+    },
+    {
+      "path": "model/FORMFINDING.md",
+      "size_bytes": 1833,
+      "sha256": "549e21a91d22ba82ec1a7da7b023098bf3bdc9d3736552695eab2a25d1a17440"
+    },
+    {
+      "path": "model/SecMesh.py",
+      "size_bytes": 25153,
+      "sha256": "dd12540d36ffb4097eb2603c6174195502c0463e2539af84ebe890dd81d0b1a3"
+    },
+    {
+      "path": "model/__init__.py",
+      "size_bytes": 437,
+      "sha256": "0d1771856e467d48f0a872cc059b235857302d3abc18ec665ea6ff3e5c88e5ca"
+    },
+    {
+      "path": "model/conductor_properties.py",
+      "size_bytes": 8583,
+      "sha256": "bec122f899812e5e819ca09780a07dba1120ef5efde669f829e8c666dff17dd1"
+    },
+    {
+      "path": "model/tansimission_line/test.py",
+      "size_bytes": 3681,
+      "sha256": "22d4fb1c40b06a587c4acffdbb709d634741925b5e0a96c2483885901e7f7bdf"
+    },
+    {
+      "path": "model/tansimission_line/test2.py",
+      "size_bytes": 7748,
+      "sha256": "32666b34802f1324f8f53d79b52f76a1668092a78dd4d1f78afeed9a16e90033"
+    },
+    {
+      "path": "model/tansimission_line/transimission_line_model.py",
+      "size_bytes": 35838,
+      "sha256": "7564b90e8919e539e5565a891345ef62568d70ad9ee1b552cb86b1f83a0ddda5"
+    },
+    {
+      "path": "model/test.py",
+      "size_bytes": 786,
+      "sha256": "e3be468f7eae3a9a2934db6932556c534cb80a6025d25ada69a873fd3b827472"
+    },
+    {
+      "path": "model/test_multi_tower_plot.py",
+      "size_bytes": 3549,
+      "sha256": "0e3e28cca44985f3eb805d5d8c4819cdde5b4c31a4c1f6508889820000a1e4f7"
+    },
+    {
+      "path": "model/test_tower_line_insulator_plot.py",
+      "size_bytes": 1275,
+      "sha256": "5da9aeba9363834c66cb4080c97b29e9981e8d2ccb2d87211257d07bc067980b"
+    },
+    {
+      "path": "model/tower_line_system_model.py",
+      "size_bytes": 36484,
+      "sha256": "451914f7705540abc6caba0285793846d66b9327aa7c98dbf4f1ccd8c0d70b1c"
+    },
+    {
+      "path": "model/tower_model.py",
+      "size_bytes": 54525,
+      "sha256": "345476dfeee8fcdb8dfee32e2fb4664f2466e5beb7698c504cb62d10d5cbbccf"
+    },
+    {
+      "path": "model/tower_model_with_buckling.py",
+      "size_bytes": 24770,
+      "sha256": "cf2a1015a25b298b9c214523f0bfd6e5a2b7a77dc466d5757f91c41e4dfc7095"
+    },
+    {
+      "path": "model/tower_model_with_equivalent_imperfection.py",
+      "size_bytes": 18043,
+      "sha256": "108b263a30a10be6456398af6aefdd90ea439e3d525cbba4dc87614d1f125e8d"
+    },
+    {
+      "path": "model/transmission_line_formfinding.py",
+      "size_bytes": 10788,
+      "sha256": "9609f70a90dd5e69c9e6c0a5e0cf558e2a219160ec1d3a472eba99e204b38775"
+    },
+    {
+      "path": "opstool/OpenseepyMain.py",
+      "size_bytes": 553491,
+      "sha256": "241e5802d71a8b397a8fb52c932d2e96337f12af93b65af19530fda5e284b2eb"
+    },
+    {
+      "path": "opstool/after_cal/database_process_example.py",
+      "size_bytes": 1014,
+      "sha256": "3da1f11f2e0cc7c0385792117fd37fbc5640a07ca86ff1b27369cda8619e2737"
+    },
+    {
+      "path": "opstool/after_cal/modelShow.py",
+      "size_bytes": 553277,
+      "sha256": "99e92ecaef54adbe16f067baf5e9040d2383a3fd7c5344cc30e42a4da4478e7c"
+    },
+    {
+      "path": "opstool/after_cal/plot_element9_stress_strain.py",
+      "size_bytes": 1371,
+      "sha256": "82c14e36f4ee82dcd3e80a5037ee3146aa15c8f912dccf198d081abc8ade2247"
+    },
+    {
+      "path": "opstool/convert/tcl_to_python.py",
+      "size_bytes": 173,
+      "sha256": "cdbdc4782e6ff5612229989ea30c810dc083ffe2fd97bac40d1eca9cb6191c95"
+    },
+    {
+      "path": "opstool/convert/test.py",
+      "size_bytes": 511,
+      "sha256": "b057aadf65f17d484f06382d55c0ea3c498f650f1254e89e50dedb29a9748f9e"
+    },
+    {
+      "path": "plotly.html",
+      "size_bytes": 3345563,
+      "sha256": "b2b0f0aebf6dc43adab33d501a848310a1d3661318abc0ad9d7a235df3c10dae"
+    },
+    {
+      "path": "pushover/.config/node_to_add_wind_press.json",
+      "size_bytes": 492,
+      "sha256": "8aee8428ad928a48006d421b08e8552d98d87157819b103a491f5700be9b1555"
+    },
+    {
+      "path": "pushover/.config/node_to_get_reaction.json",
+      "size_bytes": 42,
+      "sha256": "79d6bfc2cec14e391038b2ed752a98488efafbff9da3b747ad1bfa927069eab1"
+    },
+    {
+      "path": "pushover/.config/node_to_record_floor_disp.json",
+      "size_bytes": 456,
+      "sha256": "8a5c6c6d9339b62b27158cfaf3bd149ec58d32845c42a92ff8a8eeb296af3153"
+    },
+    {
+      "path": "pushover/after_cal/plot_reaction_vs_max_drift.py",
+      "size_bytes": 3310,
+      "sha256": "9861d022eb2f8ba8c1e895a4ac22e026e53d3825e2ec8f31bee2a0b196d1ce70"
+    },
+    {
+      "path": "pushover/after_cal/plot_stressStrain.py",
+      "size_bytes": 560,
+      "sha256": "e8e44d859c6b53ded1eefd362f8f56d9e41323bfe49023576c7559d59bfd14a2"
+    },
+    {
+      "path": "pushover/after_cal/plot_stress_distribution.py",
+      "size_bytes": 935,
+      "sha256": "5d1ced8a217c30e98294101ff32988c71f69d35947cdfc149786d453dcb3961a"
+    },
+    {
+      "path": "pushover/after_cal/plot_stress_plotly.py",
+      "size_bytes": 11271,
+      "sha256": "dc4de6c27dea5fa6d467b6696861fa5cd971a010cba6992dc84d83df6e937bf0"
+    },
+    {
+      "path": "pushover/pushover_main_with_buckling.py",
+      "size_bytes": 3497,
+      "sha256": "72a691b249c7383beb470a92b2027e2e3f2c9d87b6231a56727435d1e4291f0d"
+    },
+    {
+      "path": "pushover/pushover_no_buckling.py",
+      "size_bytes": 2974,
+      "sha256": "a6eed796c11103399e7f296754c04e0c9e436e6322840cddf9dfbc31c2001e8a"
+    },
+    {
+      "path": "py_view/README.md",
+      "size_bytes": 1608,
+      "sha256": "34367bb64447c6d7e7c7eb34229449c1f51024c8c018e3750cb750f9ebb8b766"
+    },
+    {
+      "path": "py_view/__init__.py",
+      "size_bytes": 157,
+      "sha256": "61188a4927b4e5d9eada0377440a8f97ccfa7bb2d8df6f006a63cf243d4b9361"
+    },
+    {
+      "path": "py_view/results_dashboard/__init__.py",
+      "size_bytes": 157,
+      "sha256": "258329a55e001011908b2410b37ac7fc411121dd63b740cba4476bc14d7bdc74"
+    },
+    {
+      "path": "py_view/results_dashboard/__main__.py",
+      "size_bytes": 65,
+      "sha256": "917c0647487823fd4176a4efd5857a7fce8d2ccd4ec2e91b3911027cf73d38f8"
+    },
+    {
+      "path": "py_view/results_dashboard/server.py",
+      "size_bytes": 27249,
+      "sha256": "9babca08c959af0cc71e1786577efe9ec5daf4930505e84eeb9f4ebff9e99df5"
+    },
+    {
+      "path": "py_view/tower_line_dashboard.py",
+      "size_bytes": 13882,
+      "sha256": "21e18928c71e45e3931be7ca749401d5fc9a10a5ec30373a042470214b8f0a6d"
+    },
+    {
+      "path": "py_view/view_by_plotly.py",
+      "size_bytes": 1912,
+      "sha256": "e9fdc66c5ce95bc0a9d3f7a203341994799058d6d7bd6eff0055e03cf325a365"
+    },
+    {
+      "path": "pyproject.toml",
+      "size_bytes": 295,
+      "sha256": "edb7ae572607becb1db6e7dab763d1668d976da5d2f120f88f9851eb73a5e668"
+    },
+    {
+      "path": "readme.md",
+      "size_bytes": 3560,
+      "sha256": "6a04b4a4fa228f46ef5fa773048242eb4ae633f0a648206ef7585be2a30ed681"
+    },
+    {
+      "path": "sap_to_db/Element.py",
+      "size_bytes": 3581,
+      "sha256": "ce3aa3fe722f80d4e6f8530c30338fbb3f28d840a9ce9e44c1bd2b6acee545ee"
+    },
+    {
+      "path": "sap_to_db/GeometricTransf.py",
+      "size_bytes": 2231,
+      "sha256": "29a5d050c687ec8854e217bd7202f54a0712982180ddc5569b17fe1a4ac51b21"
+    },
+    {
+      "path": "sap_to_db/L_steel_secmesh.py",
+      "size_bytes": 1596,
+      "sha256": "c0d91a717dc26ba62395f27a456d167fd90064a7038ab6fac3896e4931402f90"
+    },
+    {
+      "path": "sap_to_db/Main.py",
+      "size_bytes": 494,
+      "sha256": "7aa1ccb56ab2b04d700a79eee72e15ce793d0342174dd3c88f2bccdbc8a4ebff"
+    },
+    {
+      "path": "sap_to_db/Mass.py",
+      "size_bytes": 928,
+      "sha256": "3046dc92d331064b48bb370e0f2e8bbded46bbca297f1c0bdba30bcf7744f585"
+    },
+    {
+      "path": "sap_to_db/Search_keyword.py",
+      "size_bytes": 379,
+      "sha256": "de5291ca518cfd2f34b5aaa4995af69a91b3c490d73d33371f227d308750c82d"
+    },
+    {
+      "path": "sap_to_db/SecMesh.py",
+      "size_bytes": 25153,
+      "sha256": "dd12540d36ffb4097eb2603c6174195502c0463e2539af84ebe890dd81d0b1a3"
+    },
+    {
+      "path": "sap_to_db/Section.py",
+      "size_bytes": 2322,
+      "sha256": "badbfdb3d3a1d7494732f05141546410a5f919b221941e8d5a9ff4bc9ad6f860"
+    },
+    {
+      "path": "sap_to_db/db_writer.py",
+      "size_bytes": 467,
+      "sha256": "dd194516ef474f1026cfeedf7d1e4c9ed541fab52e8abddf456bb9dac2f5db26"
+    },
+    {
+      "path": "sap_to_db/fix.py",
+      "size_bytes": 384,
+      "sha256": "f624bb645685439ed3714555c3ef95c6b8938ab75c2d5972e1633573e35876bd"
+    },
+    {
+      "path": "sap_to_db/node_parser.py",
+      "size_bytes": 2098,
+      "sha256": "3b0e9a41c7c412628ea2def923f23ae6450c0085c07aec5ade0f9fabcf2c3e76"
+    },
+    {
+      "path": "tests/test_analysis_common.py",
+      "size_bytes": 12920,
+      "sha256": "f101f919b48f31cc10cd8102858587459a0a644fd562928c21aaf92003ea5985"
+    },
+    {
+      "path": "tests/test_analysis_workflows.py",
+      "size_bytes": 7502,
+      "sha256": "61b0116bab741ad1c6a36e3b727aa0c64db27293f648e8fc39b7a09a2ccc7056"
+    },
+    {
+      "path": "tests/test_conductor_properties.py",
+      "size_bytes": 2081,
+      "sha256": "7b3f5a091df9b503eb970aa2def950c364e5f64c0284475088efb38ac4d281fd"
+    },
+    {
+      "path": "tests/test_equivalent_imperfection_material.py",
+      "size_bytes": 4954,
+      "sha256": "ca25d26315892e4be86d91fd54a253b2e6f189fa0ded3e3ec7b16cc2ebe2b3cf"
+    },
+    {
+      "path": "tests/test_internal_force_recorder.py",
+      "size_bytes": 3062,
+      "sha256": "05c22a0c55694a70bcd5e900b764016db6cd29795206b3b2a07160075451e4a1"
+    },
+    {
+      "path": "tests/test_results_dashboard.py",
+      "size_bytes": 2201,
+      "sha256": "35958df559f662c4996d809423c9d229314fe32027712aa46b1aa52cf04233a3"
+    },
+    {
+      "path": "tests/test_tower_imperfection_shape.py",
+      "size_bytes": 1423,
+      "sha256": "0f103883e6d77ddad5078e5cc9bdd752a9cdcf5b27cccc4d45654f94a7328edf"
+    },
+    {
+      "path": "tests/test_tower_line_dashboard.py",
+      "size_bytes": 2213,
+      "sha256": "4ccc915d591556d0fe299fe8a46f7f3519ee836722495add752b0766d5031392"
+    },
+    {
+      "path": "tests/test_transmission_line_formfinding.py",
+      "size_bytes": 980,
+      "sha256": "aef83bd82960309d00acfa75b748c20edb3bc67f231494b230b828df45a4eda1"
+    },
+    {
+      "path": "util/__init__.py",
+      "size_bytes": 1851,
+      "sha256": "78710a5d85785b2d12bf4bf66aa05e70148e6a072dfd7da6a01fce2ffd2073a6"
+    },
+    {
+      "path": "util/analysis/README.md",
+      "size_bytes": 9246,
+      "sha256": "e79630e40edddd96ed478a249b74295ec464d7cb3446e2d42b89d11e7b42b0c5"
+    },
+    {
+      "path": "util/analysis/TEST_REPORT.md",
+      "size_bytes": 3733,
+      "sha256": "1466b89833008ef5d722ab79a535f9d567823d813d74c4a4b387845f94c6ca33"
+    },
+    {
+      "path": "util/analysis/__init__.py",
+      "size_bytes": 498,
+      "sha256": "593a621f7be39f57e92f76c8aa5c2164bee49ad851864a06629eff2abd7b372c"
+    },
+    {
+      "path": "util/analysis/__main__.py",
+      "size_bytes": 2951,
+      "sha256": "325b048580a28255a568395b1ed8f4812215a4c7b90bc9801c107a68615cf4f6"
+    },
+    {
+      "path": "util/analysis/baseline_snapshot.py",
+      "size_bytes": 4800,
+      "sha256": "719de1f16c59cb2a0059bd24cb35a7e464ef3f08b01d272b3ef44a9e78e31154"
+    },
+    {
+      "path": "util/analysis/demo.py",
+      "size_bytes": 6279,
+      "sha256": "2905259fa966c7b2847708472eb6670ae02c14707c861903bc9c3d4eef419f8b"
+    },
+    {
+      "path": "util/analysis/protocols.py",
+      "size_bytes": 1855,
+      "sha256": "915a33c4e2af199437a6026592a5a4511be3a7eda68e47320b3bd598b129353e"
+    },
+    {
+      "path": "util/analysis/run_manifest.py",
+      "size_bytes": 7938,
+      "sha256": "110ea745b59dbc0a7e3b8223a3575d8c844659a5edfd6f82d64df39de2b8f0cc"
+    },
+    {
+      "path": "util/analysis/stepping.py",
+      "size_bytes": 6885,
+      "sha256": "f88a27de4db9f95082e216ead2ecd5bf994f62cb840f5d5e92a5c143a9d011eb"
+    },
+    {
+      "path": "util/analysis/time_series.py",
+      "size_bytes": 4471,
+      "sha256": "6d4e395ad83cb6e1d1ba254c55b700cb293d484c217be65468fdbf3b34501b98"
+    },
+    {
+      "path": "util/postprocess/__init__.py",
+      "size_bytes": 263,
+      "sha256": "416a7fcfe892b1215fa76561b1efdcf06f4bae681b4d1f988e91139aa6247ebf"
+    },
+    {
+      "path": "util/postprocess/drift_peak.py",
+      "size_bytes": 2917,
+      "sha256": "8b3ef73c8dcb58dfc6ea40f63c850f121076303460b72ca392cd16c5e3529345"
+    },
+    {
+      "path": "util/postprocess/plot_model.py",
+      "size_bytes": 17027,
+      "sha256": "829e238c394a14c4396c5b7258c71033bb0281f9c9fa940c2dff86d31de55d3b"
+    },
+    {
+      "path": "util/postprocess/response_metrics.py",
+      "size_bytes": 4505,
+      "sha256": "ea42d821e559284818addf262b0286e8e0d51a63ce31eb77c77af970da22c5f8"
+    },
+    {
+      "path": "util/preprocess/force_control.py",
+      "size_bytes": 3953,
+      "sha256": "8170d4fd378208a46b57e5323857c80a7772422f0ed7d4af00f517d22ca88cc9"
+    },
+    {
+      "path": "util/preprocess/tag_manager.py",
+      "size_bytes": 5772,
+      "sha256": "2460ee8fcc14ce3b8c1966f47685c7276c3f766eb8a70c255993137deb711ad0"
+    },
+    {
+      "path": "util/processing/INTERNAL_FORCE_HISTORY.md",
+      "size_bytes": 2300,
+      "sha256": "e5e89df0bd3183fac721255295591f6743006a058f7d6b459df17b5ca83167ef"
+    },
+    {
+      "path": "util/processing/floor_drift.py",
+      "size_bytes": 4738,
+      "sha256": "0265e7aadc3838388b20077c25b9354014b8a519d5cc4257db26736fc1cfd238"
+    },
+    {
+      "path": "util/processing/gravity_load.py",
+      "size_bytes": 7064,
+      "sha256": "d714651e318f5456764cf25509b2e2b06068e8bcb5a55aaf4d07ea4b38ec0363"
+    },
+    {
+      "path": "util/processing/internal_force_recorder.py",
+      "size_bytes": 18613,
+      "sha256": "ce17e4297a375ba01658621b6fc75eb743e625546c3cc38b64a80640290e307d"
+    },
+    {
+      "path": "util/processing/node_reaction.py",
+      "size_bytes": 2375,
+      "sha256": "29d04fd2dc74367e5f599d6ff0b4ddcac88dba2d1631a2962202685b728b8ba3"
+    },
+    {
+      "path": "util/processing/pushover_wind_load.py",
+      "size_bytes": 7866,
+      "sha256": "dcf14ba475d248d24262ff5c201495a4d05c995660c8b4a860fee428377779df"
+    },
+    {
+      "path": "uv.lock",
+      "size_bytes": 458899,
+      "sha256": "1fa511ddb779968a4f57220a977fc1873b5b6e78a13a48088601b848cb82cd4c"
+    }
+  ],
+  "protected_evidence": [
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/axial_force_envelope_comparison.csv",
+      "size_bytes": 93520,
+      "sha256": "81c2607b770bc2431e0d4b4f6c3bfebffc0e664ca0543f6b12abcb2f5a528a2e"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/axial_force_envelope_comparison.png",
+      "size_bytes": 84026,
+      "sha256": "9762a99e28027096655e1f3225957553b3216502dd05d557833a99c873c534e3"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/base_shear_displacement.png",
+      "size_bytes": 95730,
+      "sha256": "a90fc28c066cc05058a2eca6c352718a90a1bee2cba5f95a7460c1ae58e8102f"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/cyclic_history.csv",
+      "size_bytes": 38774,
+      "sha256": "e97ee8628226237151dae873a4a9cbacb612c25aab1c5790b1e44cc90a1c3d25"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/internal_force_envelope.csv",
+      "size_bytes": 432726,
+      "sha256": "908590efa0c0edf040310f7b1c777b6105fafd9912bff818a9cc6036b3ff9182"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/model_data/elements.csv",
+      "size_bytes": 244073,
+      "sha256": "1073a32a5e5cdf0a270ded9a7f0a08fcb5a800f57da57b11fc3e7bc17a220eb7"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/model_data/equivalent_materials.csv",
+      "size_bytes": 199567,
+      "sha256": "5debc6614015fecb18cea3536355b533321e790f4ad569c5e59648f7cb2a9309"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/model_data/nodes.csv",
+      "size_bytes": 25527,
+      "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/tower_internal_forces.sqlite",
+      "size_bytes": 70299648,
+      "sha256": "49b4e5710346888fe96ac86dc1b09f052363ce3c68160143d8392e8f2ddc2487"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/tower_internal_forces.sqlite-shm",
+      "size_bytes": 32768,
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/equivalent/tower_internal_forces.sqlite-wal",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/cyclic_history.csv",
+      "size_bytes": 79557,
+      "sha256": "62aa90739efd173b31bff03b90b260845e5872b4f8de486aaccd26ba0c758e62"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/internal_force_envelope.csv",
+      "size_bytes": 1737998,
+      "sha256": "183f5780b3ee1eb07093d4ed2b57608b3582771b18a9108bf906a07c96bf4854"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/beam_integrations.csv",
+      "size_bytes": 267018,
+      "sha256": "d25b3a8c6080aae46320555c0b760b09f774767890e4a2fb8a856ebd3fecfc58"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/element_segments.csv",
+      "size_bytes": 311544,
+      "sha256": "5987a1a8f0ca5c52a4cd9d473d04e20b08649bbe02fb36ac606b7a84a47f0dfa"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/elements.csv",
+      "size_bytes": 578515,
+      "sha256": "b3d9d33ee6729dc462e60c3cb6541ec6ca577ab846c2aa03edccce3552db6cb8"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/geomtransf.csv",
+      "size_bytes": 454836,
+      "sha256": "da30e800c0e5f8df35ad7f280ad90e7daeb6228705d9bfeb04dc55fe67eb19ea"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/materials.csv",
+      "size_bytes": 357,
+      "sha256": "5e04f44d976daed6533ec0cd96714d23c86dfa656ad0bb0b07062355fc5c7eb5"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/nodes.csv",
+      "size_bytes": 365813,
+      "sha256": "f8d003cb3c2d1de5062b7072fc4096baa2aeef354282ba94f6c6b9e8237bb743"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/section_fibers.csv",
+      "size_bytes": 30184,
+      "sha256": "826c0f20bd533259ed5691f36439b642423a337560abf71e797a1f7fd45ef657"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/sections.csv",
+      "size_bytes": 2027,
+      "sha256": "5b2229fa463ce36f1ef2e74cbc5eb7b6c0ff74de86351f74728bf6715e7f3b91"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/model_data/split_nodes.csv",
+      "size_bytes": 410153,
+      "sha256": "391d567a408769672c8c11739e176df4a7747c721e5e4e5eadc0eb1806993807"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/tower_internal_forces.sqlite",
+      "size_bytes": 613310464,
+      "sha256": "c4b2b13f0e2edb6efbd5a44eb6cbf168c662f76446a5feca78797e7a0cd8cec1"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/tower_internal_forces.sqlite-shm",
+      "size_bytes": 32768,
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/segmented_reference/tower_internal_forces.sqlite-wal",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/summary.json",
+      "size_bytes": 3047,
+      "sha256": "4a1135b3add25559d6e7e380afa31cff4c532d6ae954dec96e41180df27a9c57"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/target_comparison.csv",
+      "size_bytes": 653,
+      "sha256": "53a65138c0a4b4fb969b2c239394a32fee077cd0f070558a3a6c526ad5cc04f6"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/attempts.jsonl",
+      "size_bytes": 137347,
+      "sha256": "94167c3625742defc420fd7deafe89a356f4ab57f70f00c2536d60cedfce1336"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/history.csv",
+      "size_bytes": 23354,
+      "sha256": "588364642b649f8bf9dfcd90743dd7431c2b5b1313aae3d09f775ac12734923e"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/member_metadata.json",
+      "size_bytes": 1064651,
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/members.csv",
+      "size_bytes": 43450655,
+      "sha256": "9aca575395dc1ccf518ba6580f27c435f70b27884ec5d6ac65a3ac4251ae0d15"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/model_data/elements.csv",
+      "size_bytes": 244073,
+      "sha256": "1073a32a5e5cdf0a270ded9a7f0a08fcb5a800f57da57b11fc3e7bc17a220eb7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/model_data/equivalent_materials.csv",
+      "size_bytes": 199567,
+      "sha256": "5debc6614015fecb18cea3536355b533321e790f4ad569c5e59648f7cb2a9309"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/model_data/nodes.csv",
+      "size_bytes": 25527,
+      "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/opensees.log",
+      "size_bytes": 9533,
+      "sha256": "d4ea38c1fe9a1e100cde3f44c5e8e4233c35785424cb0f4f3496831d48e95141"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/run_manifest.json",
+      "size_bytes": 5245,
+      "sha256": "d02668cbbe93b71bc6f981dae79842452653af9dd3345129f792425a6f98fe40"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/baseline/summary.json",
+      "size_bytes": 1964,
+      "sha256": "0d19a737952b8c2e8ce1acea094d1d7b65dc2028dd07c07e3c433f2bbeaf8eea"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/convergence_diagnosis.png",
+      "size_bytes": 244547,
+      "sha256": "74c42b85e0d2ed44d2f46978e85de58f46fc8867b4e2f2911b7783893feb5a32"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/critical_members.csv",
+      "size_bytes": 165504,
+      "sha256": "157c526dfcf85d247eae190a37d9ee64f9504811226cc2ca96fd6707004233de"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/attempts.jsonl",
+      "size_bytes": 135592,
+      "sha256": "d17bf2b804260b100499b1d81bf07700468fb5d82a3f933f6fdc122ccac6f404"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/history.csv",
+      "size_bytes": 50364,
+      "sha256": "d1398c803e50ce24524308b117efe026103a3b32fb6c5785298fe857cd21ec93"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/member_metadata.json",
+      "size_bytes": 1064651,
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/members.csv",
+      "size_bytes": 93524287,
+      "sha256": "63d57451298af523a2f6b2228d29edfaa390f62f5fded3ceaa61b8b2022483b6"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/model_data/elements.csv",
+      "size_bytes": 244073,
+      "sha256": "1073a32a5e5cdf0a270ded9a7f0a08fcb5a800f57da57b11fc3e7bc17a220eb7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/model_data/equivalent_materials.csv",
+      "size_bytes": 199567,
+      "sha256": "5debc6614015fecb18cea3536355b533321e790f4ad569c5e59648f7cb2a9309"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/model_data/nodes.csv",
+      "size_bytes": 25527,
+      "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/opensees.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/run_manifest.json",
+      "size_bytes": 4734,
+      "sha256": "b5bc387ac229951cca28b04c472fcf3a878bce07d4c4b27235547dbb9078f26c"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/elastic_877_878/summary.json",
+      "size_bytes": 1405,
+      "sha256": "cbcc7805385322a116b375d8031117e77bf60a55639c39ebec4f2061348cfd90"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/evidence.json",
+      "size_bytes": 15239,
+      "sha256": "c27973d440c620ace557ad21a3f9502b3d171c0bef251e11e5d0116f5761a808"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/attempts.jsonl",
+      "size_bytes": 298282,
+      "sha256": "ba2b770c147836d565e7725889ffc0f80f2218c5b53ad07234f678077d4e20db"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/history.csv",
+      "size_bytes": 50672,
+      "sha256": "a8345444c333da862f5b02c26e08b07abbc44de578d46538a439e1bd9368be5b"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/member_metadata.json",
+      "size_bytes": 1064651,
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/members.csv",
+      "size_bytes": 94010902,
+      "sha256": "e7dc988ca4bfbb216d53d81d65456f4cf528bfce61c9d821bcdf8b42812c2100"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/model_data/elements.csv",
+      "size_bytes": 244073,
+      "sha256": "1073a32a5e5cdf0a270ded9a7f0a08fcb5a800f57da57b11fc3e7bc17a220eb7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/model_data/equivalent_materials.csv",
+      "size_bytes": 199567,
+      "sha256": "5debc6614015fecb18cea3536355b533321e790f4ad569c5e59648f7cb2a9309"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/model_data/nodes.csv",
+      "size_bytes": 25527,
+      "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/opensees.log",
+      "size_bytes": 20534,
+      "sha256": "d57b6191ab2fbea99a9b833bfb2bed032801ff147e9a0cbfc1e07533ba9ff046"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/run_manifest.json",
+      "size_bytes": 4715,
+      "sha256": "a1f8d7cbc846db936152fbf1f2b26979a905d0e945ef2eeaad0d5f257c64740d"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0000.json",
+      "size_bytes": 886236,
+      "sha256": "d6fcc3d41e33d5f72584e233885393dc8aeecaabec35cf4373346a6e0e58c551"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0249.json",
+      "size_bytes": 884944,
+      "sha256": "eeb7baf403baf214318dec39ed7fea3204cf7a9e8671a2e0b46f6ad2cd982519"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0250.json",
+      "size_bytes": 884921,
+      "sha256": "31350df8044cfa94db61e1dc685219f9f2df4ac23d6211e9906a2a6db4003d07"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0251.json",
+      "size_bytes": 884941,
+      "sha256": "0a7d60a013205cbde331ec61dac330a9d129610dd57624405d3029817445c998"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0266.json",
+      "size_bytes": 883784,
+      "sha256": "ff6b783bc058cb8bd9d1d58e2ade7ca240e8ae95d261c5507326d3e609ae77d1"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0267.json",
+      "size_bytes": 883952,
+      "sha256": "aab415a42437f8c65d5aa2492635d6c557845d87f860d5ad9d069d98cf1ce9b0"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0271.json",
+      "size_bytes": 883914,
+      "sha256": "d10c065c642800d170f61d5730e72d641ae630a7dfb8c7a7f4cb555f721ce298"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/spectrum_0272.json",
+      "size_bytes": 884062,
+      "sha256": "8fae7ab6c8ba18f7405ae8ddd13fdcc48b87085e27b0a8dc198a33cd1c22d633"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/stiffness_0272.npz",
+      "size_bytes": 668332,
+      "sha256": "63537d8d7402ea5b85caec8e80eaf0d18b75b038507e0e959b16d9b97a16cb96"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/summary.json",
+      "size_bytes": 1411,
+      "sha256": "4e98899625bbaa48fe39f548b2236dca25352e5690d24e895b97a2cd6b7f0ffa"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/attempts.jsonl",
+      "size_bytes": 18211,
+      "sha256": "b0f2809dca96c89653a29b2c3222abd17e434e5e4fd0d2cd9e14fe5f374bdc3c"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/history.csv",
+      "size_bytes": 6736,
+      "sha256": "8ade7556093ec4b7880b61ce0b4b0d30d2eb672184501ca23b81071d18a56e49"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/member_metadata.json",
+      "size_bytes": 1064651,
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/members.csv",
+      "size_bytes": 12708642,
+      "sha256": "7286f74db5c164bddaed71ca6ac033cf81c6491585036ed51956336285d54bdb"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/model_data/elements.csv",
+      "size_bytes": 244073,
+      "sha256": "1073a32a5e5cdf0a270ded9a7f0a08fcb5a800f57da57b11fc3e7bc17a220eb7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/model_data/equivalent_materials.csv",
+      "size_bytes": 199567,
+      "sha256": "5debc6614015fecb18cea3536355b533321e790f4ad569c5e59648f7cb2a9309"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/model_data/fixes.csv",
+      "size_bytes": 180,
+      "sha256": "f114b832f300c09b80402ebf05091cedcebc70bfc182bb5e61d3c82abda3228f"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/model_data/masses.csv",
+      "size_bytes": 52036,
+      "sha256": "4d239d9b303da1888c3bd7d4ae163caef64b108fdf14b342172869de61b9feea"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/model_data/nodes.csv",
+      "size_bytes": 25527,
+      "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/opensees.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/run_manifest.json",
+      "size_bytes": 3453,
+      "sha256": "230a8eb3d641b8e7479d43cb4e84a94154fc44a8ffb4a86c2434d156163fc249"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_step/spectrum_0000.json",
+      "size_bytes": 857351,
+      "sha256": "cefec4a1b1d12f884324a1911da4af0daf7d98725099be82b03b963a8415f3de"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/material_replay_877.csv",
+      "size_bytes": 22795,
+      "sha256": "e573ea951aeb9e4b5433cebd518613327f6fbb7b6e105f914a7fb6ffaa4cb2a1"
+    }
+  ],
+  "coverage": "Tracked/untracked non-generated source and configuration plus modified tracked files; ignored files and environments excluded. Protected old evidence remains in place and is fully hashed, not archived."
+}

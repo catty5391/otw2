@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" href="data:,">
+  <title>Z30103A6 · OpenSees 成果驾驶舱</title>
+  <link rel="stylesheet" href="/static/styles.css?v=tmq-modal-20261023">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="返回总览">
+      <span class="brand-mark"><i></i><i></i><i></i></span>
+      <span><strong>OTW²</strong><small>OpenSees Tower Lab</small></span>
+    </a>
+    <nav aria-label="页面导航">
+      <a class="nav-link active" href="#overview"><span>01</span>研究总览</a>
+      <a class="nav-link" href="#tianmaqu"><span>02</span>Tian–Ma–Qu 新材料</a>
+      <a class="nav-link" href="#member"><span>03</span>旧材料标定</a>
+      <a class="nav-link" href="#cyclic"><span>04</span>全塔往复</a>
+      <a class="nav-link" href="#forces"><span>05</span>内力探索</a>
+      <a class="nav-link" href="#resources"><span>06</span>报告文献</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="live-dot"><i></i> 本地数据在线</div>
+      <span id="servicePort">本地结果服务</span>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <button class="menu-button" id="menuButton" aria-label="打开导航">☰</button>
+      <div class="crumb"><span>Z30103A6</span><b>/</b> Results Dashboard</div>
+      <div class="top-actions">
+        <span class="engine">OpenSeesPy</span>
+        <a class="ghost-button" href="/download?key=tower-summary">导出摘要 <span>↓</span></a>
+      </div>
+    </header>
+
+    <section id="overview" class="section hero-section reveal">
+      <div class="hero-copy">
+        <div class="eyebrow"><i></i> TRANSMISSION TOWER RESEARCH / 2026</div>
+        <h1>从一根杆件，<br><em>走向整座输电塔。</em></h1>
+        <p>将 Z30103A6 的模型、等效初始缺陷材料、全塔往复响应和逐时内力结果放在同一个可核查界面中。</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#tianmaqu">查看 Tian–Ma–Qu 滞回 <span>↗</span></a>
+          <a class="text-button" href="#forces">打开内力云图 <span>→</span></a>
+          <a class="text-button" href="/download?key=tower-report">阅读全塔报告 <span>→</span></a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <canvas id="heroTower"></canvas>
+        <div class="scanline"></div>
+        <div class="tower-label label-top"><b>39.0 m</b><span>塔顶标高</span></div>
+        <div class="tower-label label-mid"><b id="heroMembers">—</b><span>物理杆件</span></div>
+        <div class="coord">X 11.63<br>Y 6.05<br>Z 39.00</div>
+      </div>
+      <div class="hero-stats">
+        <article><span>历史共同完成目标</span><strong id="commonDrift">—</strong><small>覆盖范围，不代表局部验证</small></article>
+        <article><span>轴力包络相关系数</span><strong id="axialCorrelation">—</strong><small>全塔物理杆件</small></article>
+        <article><span>公平性能评估</span><strong id="speedup">待评估</strong><small>相同完整协议后再比较</small></article>
+        <article><span>内力记录规模</span><strong id="dbSize">—</strong><small>双模型 SQLite</small></article>
+      </div>
+    </section>
+
+    <section class="section reveal" aria-labelledby="workflowTitle">
+      <div class="section-heading compact">
+        <div><div class="section-index">RESEARCH MAP</div><h2 id="workflowTitle">当前成果链</h2></div>
+        <p>已完成内容与下一步研究边界分开呈现，避免把“能运行”误写成“已验证”。</p>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-card done"><span class="step">01</span><i></i><h3>塔—线基础模型</h3><p>S2K 导入、角钢截面、导线质量与找形。</p><b>已建立</b></article>
+        <article class="workflow-card done"><span class="step">02</span><i></i><h3>等效初缺陷材料</h3><p>已有单调重构与峰前卸载算例；实际空间循环待验。</p><b>限定算例证据</b></article>
+        <article class="workflow-card active"><span class="step">03</span><i></i><h3>全塔往复试验</h3><p>细步长完成9/9；关键杆局部失配且应变越界。</p><b>局部机制验证中</b></article>
+        <article class="workflow-card pending"><span class="step">04</span><i></i><h3>风振与易损性</h3><p>脉动风时程、失效判据、IDA 与易损性曲线。</p><b>待推进</b></article>
+      </div>
+      <div class="archive-heading"><span>EXISTING OUTPUTS</span><b>既有计算成果</b><p>点击图片查看原图</p></div>
+      <div class="achievement-grid">
+        <a class="achievement-card tall" href="/asset/buckling-model" target="_blank"><img src="/asset/buckling-model" alt="考虑初始缺陷的输电塔模型" loading="lazy"><div><span>MODEL</span><b>四分段初始缺陷塔模型</b></div></a>
+        <a class="achievement-card" href="/asset/imperfection-pushover" target="_blank"><img src="/asset/imperfection-pushover" alt="不同初始缺陷下的推覆曲线" loading="lazy"><div><span>PUSHOVER</span><b>缺陷幅值—顶点位移</b></div></a>
+        <a class="achievement-card" href="/asset/imperfection-isdr" target="_blank"><img src="/asset/imperfection-isdr" alt="层间位移角响应" loading="lazy"><div><span>ISDR</span><b>反力—最大层间位移角</b></div></a>
+        <a class="achievement-card" href="/asset/line-formfinding" target="_blank"><img src="/asset/line-formfinding" alt="输电线找形收敛结果" loading="lazy"><div><span>FORM-FINDING</span><b>导线弧垂找形收敛</b></div></a>
+        <a class="achievement-card" href="/asset/line-modes" target="_blank"><img src="/asset/line-modes" alt="输电线模态结果" loading="lazy"><div><span>MODAL</span><b>输电线振型</b></div></a>
+        <a class="achievement-card wide" href="/asset/fragility-drift" target="_blank"><img src="/asset/fragility-drift" alt="基于层间位移角的易损性曲线" loading="lazy"><div><span>FRAGILITY</span><b>已有易损性曲线结果</b></div></a>
+      </div>
+    </section>
+
+    <section id="tianmaqu" class="section reveal" aria-labelledby="tmqTitle">
+      <div class="section-heading">
+        <div><div class="section-index">NEW / TIAN–MA–QU MATERIAL</div><h2 id="tmqTitle">Tian–Ma–Qu 新材料</h2></div>
+        <p>新材料全塔试验与独立单杆往复结果；与下方旧版等效材料分开呈现。网页只读取结果，不启动新的计算。</p>
+      </div>
+      <article class="warning-card"><i>!</i><div><b>已接入独立全塔试验，尚未完成本塔角钢标定</b><p>全塔使用实际杆长、截面和钢材参数；循环形状系数从管试件迁移，部分反转规则仍有显式假设。轴向采用 TMQ，弯曲和扭转暂时保持弹性，未启用损伤删除。</p></div></article>
+      <article class="panel tmq-figure-panel hidden" id="tmqB1Panel">
+        <div class="panel-head"><div><span>NEW / MODAL & WIND DIAGNOSTICS</span><h3>塔线进一步诊断：网格、模态截断与阻尼</h3></div></div>
+        <p id="tmqB1Status" class="quality-note" role="status"></p>
+        <a href="/tmq/followup_results/B1_20261024/index.html" target="_blank" rel="noopener"><img src="/tmq/followup_results/B1_20261024/wind_projection/primary_static_response.svg" alt="80段160阶模型控制点与挂点沿风静态重构误差" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqB1Report" href="/tmq/followup_results/B1_20261024/index.html" target="_blank" rel="noopener">成组模态 / 风荷载投影 / 阻尼审计 ↗</a><a class="ghost-button" href="/tmq/followup_results/B1_20261024/REPORT.md">完整步骤和结果 ↓</a></div>
+        <p class="quality-note">本批只分析已有矩阵与记录，新增全塔计算0次。静态网格误差与模态截断误差分别判断；实际动力阻尼和物理适用性仍待验证。</p>
+      </article>
+      <article class="panel tmq-figure-panel hidden" id="tmqModalPanel">
+        <div class="panel-head"><div><span>NEW / MODAL ANALYSIS</span><h3>加导线后的模态：区分导线摆动和塔身振型</h3></div></div>
+        <p id="tmqModalStatus" class="quality-note" role="status"></p>
+        <a href="/tmq/modal_results/index.html" target="_blank" rel="noopener"><img id="tmqModalImage" alt="导线分段加密下的低频模态及匹配后的塔身振型频率" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqModalReport" href="/tmq/modal_results/index.html" target="_blank" rel="noopener">振型动画 / 频率对比 / 质量参与 ↗</a><a class="ghost-button" href="/tmq/modal_results/tower_mode_comparison.csv">塔身模态对比 CSV ↓</a></div>
+        <p class="quality-note">无风重力平衡后的无阻尼切线模态。一塔四档固定远端；低阶主要为导线振动，塔身振型按形状匹配。高阶导线振型及动力截断充分性仍需进一步检查。</p>
+      </article>
+      <article class="panel tmq-figure-panel hidden" id="tmqSpeedPanel">
+        <div class="panel-head"><div><span>NEW / WIND SPEED</span><h3>极限风速探索：单调增风与停止点复核</h3></div></div>
+        <p id="tmqSpeedStatus" class="quality-note" role="status"></p>
+        <a href="/tmq/wind_speed_results/index.html" target="_blank" rel="noopener"><img id="tmqSpeedImage" alt="单塔和塔线体系不同风角的等效风速与位移全过程" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqSpeedReport" href="/tmq/wind_speed_results/index.html" target="_blank" rel="noopener">首次压屈 / 停止位置 / 复核结果 ↗</a><a class="ghost-button" href="/tmq/wind_speed_results/case_summary.csv">风速对比 CSV ↓</a></div>
+        <p class="quality-note">风速按 U=20√λ 换算，为当前未标定气动力假设下的均匀静态风。数值不收敛不等于倒塌；尚未确定实际工程极限风速。</p>
+      </article>
+      <article class="panel tmq-figure-panel hidden" id="tmqWindPanel">
+        <div class="panel-head"><div><span>NEW / DIRECTIONAL WIND</span><h3>多风角：单塔与一塔四档导线</h3></div></div>
+        <p id="tmqWindStatus" class="quality-note" role="status"></p>
+        <a href="/tmq/directional_results_v2/index.html" target="_blank" rel="noopener"><img id="tmqWindImage" alt="四个风角下单塔和显式导线体系的小幅循环验证" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqWindReplay" href="/tmq/directional_results_v2/index.html" target="_blank" rel="noopener">加载方法 / 计算步骤 / 验收结果 ↗</a><a class="ghost-button" href="/tmq/directional_results_v2/case_summary.csv">风角对比 CSV ↓</a></div>
+        <p class="quality-note">0°横线+X、90°顺线+Y。面积与气动力系数尚未标定；微幅循环只验证加载、传力和平衡，不是极限推覆或最危险风角结论。无相邻塔。</p>
+      </article>
+      <article class="panel tmq-figure-panel hidden" id="tmqTowerPanel">
+        <div class="panel-head"><div><span>NEW / FULL TOWER</span><h3>新材料全塔往复：实际计算曲线</h3></div></div>
+        <p id="tmqTowerStatus" class="quality-note" role="status"></p>
+        <a href="/tmq/tower_results/index.html" target="_blank" rel="noopener"><img id="tmqTowerImage" alt="新材料全塔实际往复、压屈杆件数量及局部滞回曲线" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqTowerReplay" href="/tmq/tower_results/index.html" target="_blank" rel="noopener">全塔详细报告 / 逐步查看 ↗</a><a class="ghost-button" href="/tmq/tower_results/publication.json">完整运行汇总 JSON ↓</a></div>
+        <p class="quality-note">完成度和中断位置以实际记录为准；整体近似直线不等于所有杆件未压屈。下方旧版内力浏览器没有切换为新模型，新材料内力数据库在本页详细报告中下载。</p>
+      </article>
+      <article class="panel tmq-figure-panel hidden" id="tmqWeaknessPanel">
+        <div class="panel-head"><div><span>NEW / WEAKNESS SCREENING</span><h3>参照罗贤超：薄弱位置与节间变形</h3></div></div>
+        <p id="tmqWeaknessStatus" class="quality-note" role="status"></p>
+        <a href="/tmq/weakness_results/index.html" target="_blank" rel="noopener"><img id="tmqWeaknessImage" alt="全塔薄弱位置、33米水平层及历史压屈杆件位置" loading="lazy"></a>
+        <div class="tmq-actions"><a class="primary-button small" id="tmqWeaknessReplay" href="/tmq/weakness_results/index.html" target="_blank" rel="noopener">位置查询 / 节间曲线 / 详细报告 ↗</a><a class="ghost-button" href="/tmq/weakness_results/summary.json">方法与数据汇总 JSON ↓</a></div>
+        <p class="quality-note">准静力阶段性筛查，不是动力损伤或倒塌概率。首压屈位置与最大节间位移角分别报告；转角提取方法不同可能改变节间排序。</p>
+      </article>
+      <p id="tmqStatus" class="quality-note" role="status">正在读取 Tian–Ma–Qu 结果…</p>
+      <div id="tmqContent" class="hidden">
+        <div class="metric-row" id="tmqMetrics"></div>
+        <article class="panel tmq-figure-panel">
+          <div class="panel-head"><div><span>COMPLETE HYSTERESIS / ALL STEPS</span><h3>三组完整轴力—位移滞回曲线</h3></div><a href="/tmq/results/full_hysteresis.png" target="_blank" rel="noopener">查看高清原图 ↗</a></div>
+          <a href="/tmq/results/full_hysteresis.svg" target="_blank" rel="noopener"><img id="tmqHysteresis" alt="Tian–Ma–Qu 三组单杆完整滞回曲线，包含全部加载和卸载段" loading="lazy"></a>
+          <p class="quality-note">正值为拉伸，负值为压缩。蓝线为材料结果，橙色标记为已运行的 OpenSees 单杆核对。曲线按计算顺序连接，不按位移排序；最终回到零位移并不代表回到零轴力。</p>
+          <div class="tmq-actions"><a class="primary-button small" id="tmqReplay" href="/tmq/results/index.html" target="_blank" rel="noopener">打开完整页面 / 逐步回放 ↗</a><a class="ghost-button" href="/download?key=tmq-report">实施与结果报告 ↓</a><a class="ghost-button" href="/download?key=tmq-hysteresis">矢量 PDF ↓</a><a class="ghost-button" href="/download?key=tmq-summary">参数与检查 JSON ↓</a><a class="ghost-button" href="/download?key=tmq-sources">文献依据与缺项 ↓</a></div>
+        </article>
+        <article class="panel target-panel"><div class="panel-head"><div><span>THREE PARAMETER SETS</span><h3>逐工况结果与原始数据</h3></div></div>
+          <div class="table-scroll"><table><thead><tr><th>工况</th><th>OpenSees 完成步数</th><th>首次压屈 / kN</th><th>后续压屈 / kN</th><th>拉向最大 / kN</th><th>数值 / 适配检查</th><th>完整数据</th></tr></thead><tbody id="tmqCases"></tbody></table></div>
+          <p class="quality-note">表中压屈承载力为幅值；CSV 保留压负号。表列数值从 summary.json 读取，不是试验误差或全塔承载力。P102 的两个同名文献参数行分别保留 A/B，没有强行映射原试件编号。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="member" class="section reveal" aria-labelledby="memberTitle">
+      <div class="section-heading">
+        <div><div class="section-index">LEGACY / MEMBER CALIBRATION</div><h2 id="memberTitle">旧版等效材料：单杆标定</h2></div>
+        <p>以带半正弦初弯曲的分段梁柱模型为参考，将构件级压屈响应转换为轴向等效本构。</p>
+      </div>
+      <div class="metric-row" id="memberMetrics">
+        <article class="metric-card"><span>参考峰值</span><strong>—</strong><small>kN</small></article>
+        <article class="metric-card"><span>曲线 NRMSE</span><strong>—</strong><small>%</small></article>
+        <article class="metric-card"><span>峰前卸载</span><strong>—</strong><small>零力恢复验收</small></article>
+        <article class="metric-card"><span>参考网格</span><strong>—</strong><small>分段</small></article>
+      </div>
+      <div class="split-grid chart-layout">
+        <article class="panel chart-panel">
+          <div class="panel-head"><div><span>FORCE–SHORTENING</span><h3>单调推覆曲线</h3></div><div class="legend" id="pushoverLegend"></div></div>
+          <div class="chart-wrap"><canvas id="pushoverChart"></canvas><div class="chart-tooltip" id="pushoverTooltip"></div></div>
+        </article>
+        <aside class="panel finding-panel">
+          <span class="panel-kicker">核心结论</span>
+          <h3>精度来自可追溯的构件级标定</h3>
+          <p>已有默认单杆算例的曲线重构误差约为 <b id="memberErrorText">—</b>。这项指标评价该参考骨架的重构，不包含空间端部约束、轴弯耦合或循环留出工况验证。</p>
+          <div class="rule"></div>
+          <dl>
+            <div><dt>实际 L125×8Q345</dt><dd id="memberRange">—</dd></div>
+            <div><dt>验证代表长度</dt><dd id="validationLengths">—</dd></div>
+            <div><dt>该算例峰前卸载</dt><dd id="unloadingState">—</dd></div>
+          </dl>
+          <a class="panel-link" href="/download?key=material-report">打开详细改写报告 <span>↗</span></a>
+        </aside>
+      </div>
+      <div class="image-strip">
+        <figure><img src="/asset/convergence" alt="分段和步长收敛图" loading="lazy"><figcaption><b>网格与步长收敛</b><span>4 / 8 / 16 分段基准检查</span></figcaption></figure>
+        <figure><img src="/asset/unloading" alt="峰前卸载验证图" loading="lazy"><figcaption><b>峰前卸载验证</b><span>修正材料的可恢复响应</span></figcaption></figure>
+        <figure><img src="/asset/validation" alt="实际塔杆长度验证图" loading="lazy"><figcaption><b>实际杆长验证</b><span>最短 / 中值 / 最长杆件</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section id="cyclic" class="section reveal" aria-labelledby="cyclicTitle">
+      <div class="section-heading">
+        <div><div class="section-index">02 / FULL-TOWER CYCLIC</div><h2 id="cyclicTitle">全塔准静力往复</h2></div>
+        <p>同一控制节点、同一荷载路径，对比等效材料模型与四分段几何初缺陷参考模型。</p>
+      </div>
+      <div class="split-grid cyclic-layout">
+        <article class="panel chart-panel large">
+          <div class="panel-head"><div><span>BASE SHEAR–DISPLACEMENT</span><h3>基底剪力—塔顶位移</h3></div><div class="legend" id="cyclicLegend"></div></div>
+          <div class="chart-wrap cyclic-chart"><canvas id="cyclicChart"></canvas><div class="chart-tooltip" id="cyclicTooltip"></div></div>
+        </article>
+        <aside class="result-stack">
+          <article class="result-card cyan"><span>历史共同完成范围</span><strong id="commonCoverage">—</strong><p>只说明目标覆盖；不授予全塔局部验证。</p></article>
+          <article class="result-card"><span>目标点最大剪力误差</span><strong id="towerShearError">—</strong><p>旧共同目标点整体反力统计。</p></article>
+          <article class="result-card"><span>历史轴力包络 NRMSE</span><strong id="towerAxialError">—</strong><p>按全塔最大轴力归一化，不能代表小杆逐杆误差。</p></article>
+          <article class="warning-card"><i>!</i><div><b>当前研究边界</b><p>原步长6/9停止；细步长9/9完成。877/878在−0.6%目标轴压力约低79%，−1%压应变约4.103%超过实际骨架终点。计算完成与物理通过分别判断。</p></div></article>
+        </aside>
+      </div>
+      <article class="panel target-panel">
+        <div class="panel-head"><div><span>HISTORICAL CHECKPOINTS</span><h3>旧基线共同目标点核对</h3></div><a href="/download?key=target-comparison">下载 CSV ↓</a></div>
+        <div class="table-scroll"><table><thead><tr><th>阶段</th><th>目标位移</th><th>等效模型</th><th>四分段参考</th><th>误差</th></tr></thead><tbody id="targetTable"></tbody></table></div>
+      </article>
+      <article class="panel target-panel">
+        <div class="panel-head"><div><span>DIAGNOSTIC EVIDENCE</span><h3>三个历史查因案例</h3></div><a href="/download?key=convergence-report">查因报告 ↓</a></div>
+        <p class="quality-note">下列状态由只读历史摘要、逐杆骨架与已提交历程派生。Elastic消融仅定位原因；旧文件保持原样。阶段坐标是准静力协议进度。</p>
+        <div id="diagnosticCases" class="diagnostic-cases"></div>
+        <div class="diagnostic-controls"><label>案例<select id="diagnosticCase"><option value="baseline">原步长 baseline</option><option value="fine_sparse" selected>细步长 fine_sparse</option><option value="elastic_877_878">Elastic查因消融</option></select></label><label>关键原杆<select id="diagnosticMember"><option>877</option><option>878</option><option>825</option><option>828</option><option>917</option><option>920</option></select></label><button class="ghost-button" id="diagnosticLoad">读取案例</button></div>
+        <p class="quality-note" id="diagnosticMemberInfo">正在读取关键杆证据…</p>
+        <div class="diagnostic-chart-grid"><div class="chart-wrap"><canvas id="diagnosticCurveChart"></canvas></div><div class="chart-wrap"><canvas id="diagnosticMemberChart"></canvas></div><div class="chart-wrap"><canvas id="diagnosticStrainChart"></canvas></div></div>
+        <p class="quality-note" id="diagnosticReference">参考对照仅包含已有同阶段检查点；当前诊断不是全分量空间内力库，没有位移历史动画。</p>
+      </article>
+      <article class="panel target-panel"><div class="panel-head"><div><span>FOLLOWUP RUN MANIFESTS</span><h3>本轮新试验与独立质量状态</h3></div></div><div id="followupRuns" class="quality-note">正在读取清单…</div></article>
+    </section>
+
+    <section id="forces" class="section reveal" aria-labelledby="forcesTitle">
+      <div class="section-heading">
+        <div><div class="section-index">03 / INTERNAL FORCE EXPLORER</div><h2 id="forcesTitle">全塔内力探索器</h2></div>
+        <p>从 SQLite 读取任意记录时刻的内力分布，或统计自定义时间段包络；点击杆件可查看完整历程。</p>
+      </div>
+      <article class="panel force-panel">
+        <div class="force-toolbar">
+          <label><span>模型</span><select id="forceModel"><option value="equivalent">等效材料</option><option value="segmented_reference">四分段参考</option></select></label>
+          <label><span>分量</span><select id="forceComponent"><option value="p">轴力 P</option><option value="vy">剪力 Vy</option><option value="vz">剪力 Vz</option><option value="t">扭矩 T</option><option value="my">弯矩 My</option><option value="mz">弯矩 Mz</option></select></label>
+          <label><span>统计方式</span><select id="forceMode"><option value="snapshot">时刻分布</option><option value="envelope">时段包络</option></select></label>
+          <label><span>投影</span><select id="forceProjection"><option value="xz">X–Z 正视</option><option value="yz">Y–Z 侧视</option></select></label>
+          <button class="primary-button small" id="forceLoad">更新视图</button>
+        </div>
+        <div class="time-controls" id="snapshotControls">
+          <span>记录步</span><input id="forceTime" type="range" min="0" max="0" value="0"><output id="forceTimeOutput">0</output>
+        </div>
+        <div class="time-controls hidden" id="envelopeControls">
+          <span>时段</span><input id="forceStart" type="number" value="0" min="0"><b>—</b><input id="forceEnd" type="number" value="0" min="0"><small>记录步</small>
+        </div>
+        <div class="force-workspace">
+          <div class="tower-map-wrap">
+            <canvas id="forceMap"></canvas>
+            <div class="map-overlay"><span id="forceViewLabel">正在读取…</span><b id="forceMemberCount">—</b></div>
+            <div class="colorbar"><span id="colorMin">−</span><i></i><span id="colorMax">+</span></div>
+            <div class="map-tooltip" id="mapTooltip"></div>
+            <div class="loading" id="forceLoading"><i></i><span>查询内力数据库</span></div>
+          </div>
+          <aside class="member-inspector">
+            <div class="inspector-empty" id="inspectorEmpty"><i>⌁</i><b>选择一根杆件</b><p>将鼠标移到塔身杆件上查看数值，点击后固定并读取全过程。</p></div>
+            <div class="inspector-content hidden" id="inspectorContent">
+              <span class="panel-kicker">MEMBER HISTORY</span>
+              <h3 id="selectedMember">杆件 —</h3>
+              <dl><div><dt>截面</dt><dd id="selectedSection">—</dd></div><div><dt>当前值</dt><dd id="selectedValue">—</dd></div><div><dt>节点</dt><dd id="selectedNodes">—</dd></div></dl>
+              <div class="mini-chart"><canvas id="memberHistoryChart"></canvas></div>
+              <small id="memberHistoryNote">点击塔身其他杆件可切换。</small>
+            </div>
+          </aside>
+        </div>
+        <footer class="force-note"><span><i class="blue"></i>负值</span><span><i class="neutral"></i>接近零</span><span><i class="red"></i>正值</span><p>时段包络显示绝对最大值；颜色上限采用 P98，极值仍在悬停信息中保留。</p></footer>
+      </article>
+    </section>
+
+    <section id="resources" class="section reveal" aria-labelledby="resourcesTitle">
+      <div class="section-heading">
+        <div><div class="section-index">04 / ARCHIVE</div><h2 id="resourcesTitle">报告与文献</h2></div>
+        <p>分析报告、参数依据和公开文献统一归档，网页只建立索引，不重复复制文件。</p>
+      </div>
+      <div class="resource-grid">
+        <article class="panel resource-column"><div class="panel-head"><div><span>PROJECT REPORTS</span><h3>项目报告</h3></div></div><div id="reportList" class="resource-list"></div></article>
+        <article class="panel resource-column"><div class="panel-head"><div><span>LOCAL PAPERS</span><h3>本地全文</h3></div><b id="paperCount">—</b></div><div id="paperList" class="resource-list papers"></div></article>
+      </div>
+      <div class="closing-banner"><div><span>NEXT MILESTONE</span><h3>完成关键杆空间边界、循环与全塔验收，再开展风振试点。</h3></div><a href="/download?key=execution-plan">查看详细执行计划 <span>→</span></a></div>
+    </section>
+
+    <footer class="page-footer"><span>OTW² · Z30103A6 OpenSees Research Workspace</span><span id="lastUpdated">RESULTS LOADED LOCALLY</span></footer>
+  </main>
+  <script src="/static/app.js?v=tmq-modal-20261023" defer></script>
+</body>
+</html>

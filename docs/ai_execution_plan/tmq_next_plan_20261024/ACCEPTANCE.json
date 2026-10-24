@@ -1,0 +1,355 @@
+{
+  "schema": "otw2.tmq_acceptance.v1",
+  "status": "proposed_freeze_before_execution",
+  "not_a_code_or_design_standard": true,
+  "definitions": "METHODS.md",
+  "criteria": {
+    "baseline_identity": {
+      "type": "hard",
+      "requirements": [
+        "protected source/evidence hashes reviewed",
+        "all model states and grids identified",
+        "historical results immutable"
+      ],
+      "on_failure": "resolve provenance or create new declared baseline; no silent substitution"
+    },
+    "mass_and_state_contract": {
+      "type": "hard",
+      "requirements": [
+        "one gravity ledger",
+        "component total and free directional masses separately reconciled",
+        "same-grid node/constraint/DOF mappings explicit",
+        "zero-wind modal state separated from wind/pre-damaged states"
+      ],
+      "on_failure": "block dependent dynamics until identity is resolved"
+    },
+    "eigen_quality": {
+      "type": "numeric",
+      "relative_residual_max": 0.000001,
+      "mass_orthogonality_max_abs": 0.000001,
+      "require_finite_positive_eigenvalues": true,
+      "require_positive_generalized_mass": true,
+      "require_complete_requested_count": true,
+      "on_failure": "exclude failed solve; do not perturb mass"
+    },
+    "modal_subspace": {
+      "type": "numeric_and_scope",
+      "initial_frequency_window_Hz": [
+        1.8,
+        2.7
+      ],
+      "initial_relative_cluster_gap": 0.001,
+      "svd_relative_rank_tolerance": 1e-10,
+      "last_mesh_relevant_frequency_relative_change_max": 0.005,
+      "minimum_principal_cosine_squared": 0.98,
+      "reference_shape_projection_coverage_min": 0.98,
+      "normalized_group_share_change_max_percentage_points": 2,
+      "share_normalization_required": true,
+      "on_failure": "frequency-only or declared output-limited result; trigger bounded N06 if necessary"
+    },
+    "load_mapping": {
+      "type": "hard_numeric",
+      "resultant_force_relative_tolerance": 1e-10,
+      "resultant_force_absolute_tolerance_N": 0.000001,
+      "resultant_moment_relative_tolerance": 1e-10,
+      "resultant_moment_absolute_tolerance_Nm": 0.000001,
+      "requirements": [
+        "6-component DOFs and fixed loads ledger",
+        "same physical wind field remapped per mesh",
+        "no double equivalent and explicit cable loads"
+      ],
+      "on_failure": "correct load mapping before any coupled result admission"
+    },
+    "static_truncation": {
+      "type": "numeric",
+      "target_output_relative_error_max": 0.02,
+      "require_residual_flexibility_report": true,
+      "near_zero_policy": "freeze absolute scales before trial; report absolute and relative errors",
+      "on_failure": "limit output scope or request bounded basis expansion"
+    },
+    "damping_design": {
+      "type": "hard",
+      "maximum_candidate_schemes": 3,
+      "requirements": [
+        "sources or explicit assumptions",
+        "whole research frequency spectrum",
+        "actual element flags and node/region coverage",
+        "current/initial/committed stiffness stated",
+        "TMQ zeta distinct from viscous damping"
+      ],
+      "on_failure": "do not claim actual damping from coefficient formula alone"
+    },
+    "response_mesh": {
+      "type": "numeric",
+      "target_displacement_rms_relative_difference_max": 0.02,
+      "target_peak_force_tension_relative_difference_max": 0.05,
+      "require_same_physical_input": true,
+      "require_declared_common_band_and_outputs": true,
+      "on_failure": "mesh-sensitive scope; no unconditional grid convergence"
+    },
+    "frequency_response": {
+      "type": "numeric",
+      "weighted_band_L2_relative_error_max": 0.05,
+      "resonance_peak_amplitude_relative_error_max": 0.05,
+      "require_resonance_grid_refinement": true,
+      "require_explicit_candidate_C_for_offline_reference": true,
+      "require_actual_C_match_before_dynamic_admission": true,
+      "candidate_C_identity_required": ["scheme_id", "construction", "DOF_coverage", "sha256", "frequency_band", "outputs"],
+      "actual_C_offline_recheck_owner": "N08",
+      "on_failure": "limit band/outputs or extend basis within budget"
+    },
+    "time_and_isolation": {
+      "type": "hard",
+      "requirements": [
+        "actual accepted substep timestamps",
+        "identical continuous forcing under dt refinement",
+        "no double mean wind/gravity",
+        "independent A then B agrees with B alone",
+        "rollback and failure records remain distinct",
+        "all recorders closed on exception"
+      ],
+      "on_failure": "correct integration contract before tower pilot"
+    },
+    "dynamic_balance": {
+      "type": "numeric_and_hard",
+      "translation_absolute_floor_N": 0.1,
+      "rotation_absolute_floor_Nm": 0.1,
+      "relative_scale_factor": 0.00001,
+      "threshold_rule": "max(absolute_floor, relative_scale_factor * declared max term magnitude)",
+      "requirements": [
+        "Fext-Fint-Ma-Cv with no double counting",
+        "translation and rotation separated",
+        "tower and remote reactions included",
+        "coverage of accepted states explicit"
+      ],
+      "on_failure": "reject affected dynamic records; never substitute static equilibrium"
+    },
+    "zero_input": {
+      "type": "numeric",
+      "maximum_unexplained_displacement_drift_m": 0.000001,
+      "requirements": [
+        "gravity equilibrium precision audited",
+        "no state transition under zero perturbation"
+      ],
+      "on_failure": "diagnose initialization/time/damping issues"
+    },
+    "free_decay": {
+      "type": "numeric",
+      "frequency_relative_error_max": 0.01,
+      "damping_absolute_floor_ratio": 0.001,
+      "damping_relative_error_factor": 0.1,
+      "damping_error_rule": "absolute difference <= max(0.001, 0.10 * target damping ratio)",
+      "requirements": [
+        "resolve near-degenerate beating",
+        "compare with correct equilibrium state"
+      ],
+      "on_failure": "revisit actual damping participation and excitation"
+    },
+    "linear_energy": {
+      "type": "numeric_limited",
+      "relative_closure_error_max": 0.01,
+      "scope": "analytic/linear fixed-tangent benchmark only with full storage and work terms",
+      "near_zero_policy": "freeze absolute energy scale before run; no division by near zero",
+      "nonlinear_missing_energy": "null with reason; no invented balance pass",
+      "on_failure": "diagnose time integration or ledger; do not generalize this gate to nonlinear TMQ"
+    },
+    "wind_field": {
+      "type": "hard_and_statistical",
+      "requirements": [
+        "unit/time/direction and pressure/force semantics established",
+        "seed and shared latent spatial field saved",
+        "mean/transient separated",
+        "PSD/coherence compared with record-length uncertainty",
+        "full-square or linearized aerodynamic law stated"
+      ],
+      "on_failure": "keep coherent toy input as integration test only"
+    },
+    "elastic_pilot": {
+      "type": "hard",
+      "require_zero_tmq_buckling_events": true,
+      "require_zero_tensile_yield_events": true,
+      "require_all_cables_tension": true,
+      "require_complete_physical_time": true,
+      "statistics_status": "short pilot, not extreme-value or failure-probability evidence",
+      "on_failure": "bounded amplitude reduction or classify outside elastic pilot"
+    },
+    "time_convergence": {
+      "type": "numeric",
+      "rms_relative_difference_max": 0.02,
+      "peak_and_key_internal_force_relative_difference_max": 0.05,
+      "require_same_input_and_complete_common_interval": true,
+      "on_failure": "report dt sensitivity; no automatic unbounded dt halving"
+    },
+    "physical_inputs": {
+      "type": "hard_scope",
+      "requirements": [
+        "reference source or explicit assumption per parameter",
+        "wind speed reference height/averaging/terrain definition",
+        "line sag-tension compatibility and boundary scope",
+        "aerodynamic parameter version separate from prototype"
+      ],
+      "on_failure": "conditional model only; no design wind-speed claim"
+    },
+    "reference_convergence": {
+      "type": "numeric",
+      "reference_peak_load_last_mesh_relative_difference_max": 0.02,
+      "reference_stiffness_last_mesh_relative_difference_max": 0.05,
+      "requirements": [
+        "same imperfection function and boundary while refining",
+        "step-size precision assessed"
+      ],
+      "on_failure": "do not calibrate equivalent model to unconverged reference"
+    },
+    "material_recoverability": {
+      "type": "numeric_scope",
+      "unloaded_force_over_cycle_peak_max": 0.01,
+      "residual_shortening_over_max_input_shortening_max": 0.01,
+      "scope": "reference verified elastic fibers; corresponding displacement/force controlled protocols separately",
+      "requirements": [
+        "absolute N/mm errors reported",
+        "reference uncertainty stated"
+      ],
+      "on_failure": "mechanism mismatch; do not fix by relabeling geometric elasticity as plasticity"
+    },
+    "material_holdout": {
+      "type": "numeric_scope",
+      "heldout_peak_force_relative_error_max": 0.05,
+      "heldout_initial_and_unloading_stiffness_relative_error_max": 0.1,
+      "heldout_cycle_area_relative_error_max": 0.15,
+      "residual_displacement_error_over_protocol_peak_max": 0.05,
+      "requirements": [
+        "independent holdout frozen before fitting",
+        "reference or experiment uncertainty reported",
+        "no shared-implementation self-validation claim"
+      ],
+      "on_failure": "limit member/path scope, choose hybrid/reference route, or stop physical generalization"
+    },
+    "panel_validation": {
+      "type": "numeric_scope",
+      "elastic_stiffness_relative_error_max": 0.05,
+      "peak_load_relative_error_max": 0.1,
+      "requirements": [
+        "same boundary and axial-bending transmission",
+        "first unstable group and response mechanism compared",
+        "valid constituent member scope",
+        "explicit section/grade/slenderness/boundary/axial-bending/cycle domains",
+        "numerical_reference_only is not independent physical validation"
+      ],
+      "on_failure": "single-member pass does not license whole-tower nonlinear interpretation"
+    },
+    "pushover_convergence": {
+      "type": "numeric_scope",
+      "peak_load_relative_difference_max": 0.02,
+      "peak_displacement_relative_difference_max": 0.05,
+      "common_path_nrmse_max": 0.05,
+      "requirements": [
+        "same physical load and state",
+        "declining sampled path distinguished from stable continuous branch",
+        "near-symmetric events grouped"
+      ],
+      "on_failure": "sampled peak or partial path only; do not assign collapse"
+    },
+    "partial_result": {
+      "type": "hard",
+      "requirements": [
+        "last accepted state separated from failed attempts",
+        "numerical_stop/timeout/out_of_scope/physical_event separate",
+        "no extrapolated endpoint or tail",
+        "all comparisons only over common completed domain"
+      ],
+      "on_failure": "reject misleading complete-curve metrics"
+    },
+    "event_traceability": {
+      "type": "hard",
+      "requirements": [
+        "all physical member IDs mapped",
+        "first/ever/current events separate",
+        "equivalent strain not fiber strain",
+        "local record links for each published event",
+        "missing channels disclosed"
+      ],
+      "on_failure": "limit rankings to actual observed coverage"
+    },
+    "physical_sensitivity": {
+      "type": "hard_scope",
+      "maximum_parameters": 3,
+      "maximum_cases": 7,
+      "requirements": [
+        "one-at-a-time changes with baseline",
+        "bounds supported or marked exploratory",
+        "rank/peak/mechanism uncertainty reported"
+      ],
+      "on_failure": "retain model-dependent intervals; no cherry-picked single estimate"
+    },
+    "nonlinear_admission": {
+      "type": "gated",
+      "gates": [
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "requirements": [
+        "material/path remains in validated range",
+        "key member actual states mapped to material_validity_scope; uncovered nonlinear state is out_of_scope",
+        "cable slack/compression monitored",
+        "damping effect and dynamic balance reported",
+        "no statistical collapse claim from few runs"
+      ],
+      "on_failure": "restricted exploratory output or no nonlinear run; formal gate remains closed"
+    },
+    "residual_modal": {
+      "type": "hard_scope",
+      "requirements": [
+        "defined unloading history with gravity and material memory",
+        "actual equilibrium before eigensolve",
+        "nonpositive eigenvalues reported as stability evidence",
+        "no automatic reset to virgin model"
+      ],
+      "on_failure": "not_applicable or unstable residual state, no normal modal animation"
+    },
+    "fragility_admission": {
+      "type": "hard",
+      "requirements": [
+        "physical event criteria frozen independently",
+        "intensity and exposure precisely defined",
+        "quality/timeout/censoring rules explicit",
+        "sampling and confidence design specified",
+        "formal eligibility guard retained"
+      ],
+      "on_failure": "response statistics only or defer fitting"
+    },
+    "publication": {
+      "type": "hard",
+      "requirements": [
+        "old routes and artifacts retained",
+        "case/model/state and assumptions next to charts",
+        "display scale distinct from physical amplitude",
+        "raw data and reports linked",
+        "failed/partial evidence not hidden",
+        "schema and browser checks"
+      ],
+      "on_failure": "do not label unverified publication as verified analysis"
+    },
+    "performance": {
+      "type": "hard",
+      "requirements": [
+        "same hardware/thread/output scope",
+        "cold/warm native build separated",
+        "observed timings and storage recorded",
+        "no unmeasured speedup claim"
+      ],
+      "on_failure": "report raw costs only"
+    },
+    "scope_closeout": {
+      "type": "hard",
+      "requirements": [
+        "all selected tasks assessed, not necessarily passed",
+        "optional branches explicitly unexecuted",
+        "each claim traces to data",
+        "reproduction instructions and remaining issues",
+        "no graduation guarantee"
+      ],
+      "on_failure": "deliver partial assessed scope with exact outstanding items"
+    }
+  }
+}

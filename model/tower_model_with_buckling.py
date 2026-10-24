@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from typing import Any
 
 try:
@@ -21,6 +22,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         *args: Any,
         random_disp_ratio: float = 0.01,
         member_divisions: int = 4,
+        imperfection_seed: int | None = None,
         **kwargs: Any,
     ) -> None:
         if int(member_divisions) < 2:
@@ -28,6 +30,13 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         super().__init__(*args, **kwargs)
         self.random_disp_ratio = float(random_disp_ratio)
         self.member_divisions = int(member_divisions)
+        self.imperfection_seed = imperfection_seed
+        if imperfection_seed is None:
+            self._imperfection_random = None
+        else:
+            import random
+
+            self._imperfection_random = random.Random(int(imperfection_seed))
         self._frame_element_tag_namespace = "source_element"
         self.split_node_map: dict[int, dict[str, Any]] = {}
         self.segmented_connectivity_map: dict[int, dict[str, Any]] = {}
@@ -58,7 +67,13 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         )
 
     # 计算element上分割点坐标
-    def _get_breakpoint_coord(self, node_i: dict[str, Any], node_j: dict[str, Any], num: int):
+    def _get_breakpoint_coord(
+        self,
+        node_i: dict[str, Any],
+        node_j: dict[str, Any],
+        num: int,
+        imperfection_vector: tuple[float, float, float] | None = None,
+    ):
         node_i_x = node_i["x"]
         node_i_y = node_i["y"]
         node_i_z = node_i["z"]
@@ -69,11 +84,24 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         x = float(node_i_x) + (float(node_j_x) - float(node_i_x)) * ratio
         y = float(node_i_y) + (float(node_j_y) - float(node_i_y)) * ratio
         z = float(node_i_z) + (float(node_j_z) - float(node_i_z)) * ratio
-        if(num == 2):
-            dealt_x, delta_y, delta_z = self._add_rand_disp(x, y, z, node_i_x, node_i_y, node_i_z, node_j_x, node_j_y, node_j_z)
-            x += dealt_x
-            y += delta_y
-            z += delta_z
+        # 所有内部节点沿同一横向方向组成半正弦初弯曲。这样改变
+        # member_divisions 只改变离散精度，不会改变缺陷峰值位置和形状。
+        if imperfection_vector is None:
+            imperfection_vector = self._add_rand_disp(
+                x,
+                y,
+                z,
+                node_i_x,
+                node_i_y,
+                node_i_z,
+                node_j_x,
+                node_j_y,
+                node_j_z,
+            )
+        shape_factor = math.sin(math.pi * ratio)
+        x += imperfection_vector[0] * shape_factor
+        y += imperfection_vector[1] * shape_factor
+        z += imperfection_vector[2] * shape_factor
         return x, y, z
     
     def _add_rand_disp(
@@ -125,7 +153,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         e2z = ux * e1y - uy * e1x
 
         # 在垂直于杆件的平面内随机取一个方向
-        theta = random.uniform(0, 2 * math.pi)
+        generator = self._imperfection_random or random
+        theta = generator.uniform(0, 2 * math.pi)
 
         disp_x = disp * (math.cos(theta) * e1x + math.sin(theta) * e2x)
         disp_y = disp * (math.cos(theta) * e1y + math.sin(theta) * e2y)
@@ -153,11 +182,27 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             node_i = self.node_map[node_i_tag]
             node_j = self.node_map[node_j_tag]
             segment_nodes = [node_i_tag]
+            imperfection_vector = self._add_rand_disp(
+                0.5 * (float(node_i["x"]) + float(node_j["x"])),
+                0.5 * (float(node_i["y"]) + float(node_j["y"])),
+                0.5 * (float(node_i["z"]) + float(node_j["z"])),
+                node_i["x"],
+                node_i["y"],
+                node_i["z"],
+                node_j["x"],
+                node_j["y"],
+                node_j["z"],
+            )
 
             for station_index in range(1, self.member_divisions):
                 ratio = station_index / self.member_divisions
                 node_tag = self._allocate_node_tag()
-                x, y, z = self._get_breakpoint_coord(node_i, node_j, station_index)
+                x, y, z = self._get_breakpoint_coord(
+                    node_i,
+                    node_j,
+                    station_index,
+                    imperfection_vector,
+                )
                 ops.node(node_tag, x, y, z)
                 node_record = {
                     "tower_id": self.tower_id,
@@ -536,7 +581,7 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     def model_tower(self) -> dict[str, Any]:
         self.node()
         self.fix()
-        # self.mass()
+        self.mass()
         self.material()
         self.section()
         self.geomtransf()

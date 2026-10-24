@@ -19,7 +19,18 @@ def main() -> None:
         default=1.0 / 1000.0,
         help="Initial bow e0/L",
     )
-    parser.add_argument("--steps", type=int, default=400, help="Displacement-control steps")
+    parser.add_argument("--steps", type=int, default=800, help="Displacement-control steps")
+    parser.add_argument("--reference-divisions", type=int, default=16)
+    parser.add_argument(
+        "--skip-convergence",
+        action="store_true",
+        help="Skip the additional 4/8/16 mesh and step-size study",
+    )
+    parser.add_argument(
+        "--skip-actual-validation",
+        action="store_true",
+        help="Skip minimum/median/maximum actual L125x8 member validation",
+    )
     parser.add_argument("--maximum-strain", type=float, default=0.03)
     arguments = parser.parse_args()
     summary = run_experiment(
@@ -28,6 +39,9 @@ def main() -> None:
         length=arguments.length,
         maximum_strain=arguments.maximum_strain,
         steps=arguments.steps,
+        reference_divisions=arguments.reference_divisions,
+        run_convergence=not arguments.skip_convergence,
+        run_actual_validation=not arguments.skip_actual_validation,
     )
     print(json.dumps(summary["metrics"], ensure_ascii=False, indent=2))
 

@@ -649,6 +649,9 @@ class OpenSeesModel:
                 "shape": data.get("Shape", ""),
                 "area": float(data.get("Area", 0.0)),
                 "tors_const": float(data.get("TorsConst", 0.0)),
+                "i22": float(data.get("I22", 0.0)),
+                "i33": float(data.get("I33", 0.0)),
+                "i23": float(data.get("I23", 0.0)),
             }
         return properties
 

@@ -1,0 +1,12 @@
+test_corrupt_archive_and_differing_existing_result_are_rejected (tests.test_result_archives.ResultArchiveTests.test_corrupt_archive_and_differing_existing_result_are_rejected) ... ok
+test_manifest_cannot_escape_repository (tests.test_result_archives.ResultArchiveTests.test_manifest_cannot_escape_repository) ... ok
+test_restore_exact_bytes_and_existing_files_are_idempotent (tests.test_result_archives.ResultArchiveTests.test_restore_exact_bytes_and_existing_files_are_idempotent) ... ok
+test_split_gzip_stream_restores_in_manifest_order (tests.test_result_archives.ResultArchiveTests.test_split_gzip_stream_restores_in_manifest_order) ... ok
+test_degenerate_geometry_and_nonfinite_data_are_rejected (tests.test_tmq_insulator_audit.InsulatorForceReconstructionTests.test_degenerate_geometry_and_nonfinite_data_are_rejected) ... ok
+test_extension_compression_and_rigid_translation (tests.test_tmq_insulator_audit.InsulatorForceReconstructionTests.test_extension_compression_and_rigid_translation) ... ok
+test_large_rigid_rotation_does_not_create_axial_force (tests.test_tmq_insulator_audit.InsulatorForceReconstructionTests.test_large_rigid_rotation_does_not_create_axial_force) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.111s
+
+OK

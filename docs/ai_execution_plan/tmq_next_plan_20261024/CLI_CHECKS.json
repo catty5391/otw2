@@ -1,0 +1,18 @@
+{
+  "schema": "otw2.plan_cli_help_check.v1",
+  "new_FE_runs": 0,
+  "checks": [
+    {
+      "command": ".venv/bin/python -m initial_imperfection_material.tian_ma_qu.modal_analysis --help",
+      "status": "fulfilled",
+      "exit_code": 0,
+      "output": "usage: modal_analysis.py [-h] --output OUTPUT [--segments SEGMENTS]\n                         [--modes MODES] [--solver {scipy,arpack}]\n\nGravity-equilibrated, undamped modal screening of the existing one-tower\nmodel.\n\noptions:\n  -h, --help            show this help message and exit\n  --output OUTPUT\n  --segments SEGMENTS\n  --modes MODES\n  --solver {scipy,arpack}\nProcess 0 Terminating\n"
+    },
+    {
+      "command": ".venv/bin/python -m initial_imperfection_material.tian_ma_qu.full_tower --help",
+      "status": "fulfilled",
+      "exit_code": 0,
+      "output": "usage: full_tower.py [-h] --output OUTPUT [--axial-mode {tmq,elastic}]\n                     [--targets TARGETS [TARGETS ...]]\n                     [--maximum-increment MAXIMUM_INCREMENT]\n                     [--minimum-increment MINIMUM_INCREMENT]\n                     [--timeout TIMEOUT] [--record-nodes]\n                     [--wind-config WIND_CONFIG] [--control-dof {1,2}]\n                     [--wind-speed-targets WIND_SPEED_TARGETS [WIND_SPEED_TARGETS ...]]\n                     [--maximum-load-increment MAXIMUM_LOAD_INCREMENT]\n                     [--minimum-load-increment MINIMUM_LOAD_INCREMENT]\n                     [--drift-guard DRIFT_GUARD]\n\nIndependent exploratory whole-tower TMQ runner. Never overwrites evidence.\nExample: python -m initial_imperfection_material.tian_ma_qu.full_tower\n--output ... All history times are quasi-static step indices, not seconds. No\nfiber damage.\n\noptions:\n  -h, --help            show this help message and exit\n  --output OUTPUT\n  --axial-mode {tmq,elastic}\n  --targets TARGETS [TARGETS ...]\n  --maximum-increment MAXIMUM_INCREMENT\n  --minimum-increment MINIMUM_INCREMENT\n  --timeout TIMEOUT\n  --record-nodes        Save all six nodal DOFs at every accepted step\n  --wind-config WIND_CONFIG\n                        Explicit directional wind JSON; omitted preserves\n                        legacy single-DOF loading\n  --control-dof {1,2}\n  --wind-speed-targets WIND_SPEED_TARGETS [WIND_SPEED_TARGETS ...]\n                        Monotonic dimensional wind-speed targets; requires\n                        --wind-config\n  --maximum-load-increment MAXIMUM_LOAD_INCREMENT\n  --minimum-load-increment MINIMUM_LOAD_INCREMENT\n  --drift-guard DRIFT_GUARD\n                        Horizontal displacement/height computational guard,\n                        NOT collapse\nProcess 0 Terminating\n"
+    }
+  ]
+}

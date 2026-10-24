@@ -27,3 +27,22 @@ from py_view import TowerLineDashboard
 viewer = TowerLineDashboard(built_model)
 viewer.write_html("tower_line.html")
 ```
+
+## Z30103A6 成果驾驶舱
+
+`results_dashboard` 将当前已经生成的研究结果整合成一个本地网页：
+
+- 单杆推覆、收敛、峰前卸载和实际杆长验证；
+- 等效材料全塔与四分段全塔的往复响应对比；
+- 从 SQLite 内力库查询任意记录时刻或任意时间段的全塔内力分布；
+- 点击杆件查看该构件的完整内力历程；
+- 集中下载材料报告、全塔报告、参数依据和本地文献。
+
+从项目根目录启动：
+
+```bash
+.venv/bin/python -m py_view.results_dashboard --host 0.0.0.0 --port 9999
+```
+
+浏览器访问 `http://127.0.0.1:9999`。网页只读取现有 JSON、CSV 和 SQLite
+结果，不会重新运行 OpenSees，也不会复制两套大体积内力数据库。

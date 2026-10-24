@@ -80,6 +80,7 @@ class MemberProperties:
     extreme_fiber_distance: float
     elastic_modulus: float
     yield_strength: float
+    steel_hardening_ratio: float = 0.03
     effective_length_factor: float = 1.0
     leg_width: float | None = None
     thickness: float | None = None
@@ -92,6 +93,7 @@ class MemberProperties:
             "extreme_fiber_distance": self.extreme_fiber_distance,
             "elastic_modulus": self.elastic_modulus,
             "yield_strength": self.yield_strength,
+            "steel_hardening_ratio": self.steel_hardening_ratio,
             "effective_length_factor": self.effective_length_factor,
         }
         invalid = [name for name, value in positive.items() if value <= 0.0]
@@ -115,8 +117,42 @@ class MemberProperties:
             area=area,
             inertia_weak=2.96163421763085e-6 - 1.76769111570248e-6,
             extreme_fiber_distance=sqrt(2.0) * centroid,
-            elastic_modulus=2.06e11,
+            elastic_modulus=2.10e11,
             yield_strength=345e6,
+            steel_hardening_ratio=0.03,
+            leg_width=leg_width,
+            thickness=thickness,
+        )
+
+    @classmethod
+    def from_equal_angle(
+        cls,
+        *,
+        name: str,
+        length: float,
+        leg_width: float,
+        thickness: float,
+        area: float,
+        inertia_weak: float,
+        elastic_modulus: float,
+        yield_strength: float,
+        steel_hardening_ratio: float = 0.03,
+    ) -> "MemberProperties":
+        """Build member properties for any equal-angle entry in an S2K model."""
+
+        centroid = (
+            leg_width * thickness * leg_width / 2.0
+            + thickness * (leg_width - thickness) * thickness / 2.0
+        ) / area
+        return cls(
+            name=name,
+            length=length,
+            area=area,
+            inertia_weak=inertia_weak,
+            extreme_fiber_distance=sqrt(2.0) * centroid,
+            elastic_modulus=elastic_modulus,
+            yield_strength=yield_strength,
+            steel_hardening_ratio=steel_hardening_ratio,
             leg_width=leg_width,
             thickness=thickness,
         )
@@ -155,11 +191,14 @@ class MemberProperties:
 
 
 class EquivalentImperfectionMaterial:
-    """Generate and register an asymmetric OpenSees ``HystereticSM`` material.
+    """Generate a member-level asymmetric equivalent constitutive law.
 
     The tension side retains an ordinary steel envelope.  The compression side
     is either obtained from a Perry-type initially crooked pin-ended member or
-    sampled from a four-segment reference analysis.
+    sampled from a segmented reference analysis.  The default OpenSees carrier
+    is ``ElasticMultiLinear``: this deliberately makes the pre-yield geometric
+    flexibility reversible.  ``HystereticSM`` remains available only as an
+    explicit experimental option for later post-buckling cyclic calibration.
     """
 
     def __init__(
@@ -171,7 +210,7 @@ class EquivalentImperfectionMaterial:
         imperfection_ratio: float | None,
     ) -> None:
         if not 2 <= len(compression_envelope) <= 7:
-            raise ValueError("HystereticSM 压缩骨架必须包含 2 到 7 个点。")
+            raise ValueError("当前等效压缩骨架必须包含 2 到 7 个点。")
         strains = [point.strain for point in compression_envelope]
         if any(point.strain >= 0.0 or point.stress >= 0.0 for point in compression_envelope):
             raise ValueError("压缩骨架的应变和应力必须均为负值。")
@@ -235,7 +274,7 @@ class EquivalentImperfectionMaterial:
         *,
         imperfection_ratio: float,
     ) -> "EquivalentImperfectionMaterial":
-        """Sample a monotonic four-segment curve into at most seven points."""
+        """Sample a monotonic segmented-reference curve into at most seven points."""
 
         valid = [point for point in curve if point.shortening > 0.0 and point.force > 0.0]
         if len(valid) < 3:
@@ -267,7 +306,7 @@ class EquivalentImperfectionMaterial:
         return cls(
             member,
             envelope,
-            source="calibrated from four-segment geometric-imperfection model",
+            source="calibrated from segmented geometric-imperfection model",
             imperfection_ratio=imperfection_ratio,
         )
 
@@ -325,27 +364,75 @@ class EquivalentImperfectionMaterial:
 
     def tension_envelope(self) -> tuple[BackbonePoint, ...]:
         yield_strain = self.member.yield_strength / self.member.elastic_modulus
+        terminal_strain = max(0.02, 8.0 * yield_strain)
+        terminal_stress = self.member.yield_strength + self.member.steel_hardening_ratio * (
+            self.member.elastic_modulus * (terminal_strain - yield_strain)
+        )
         return (
             BackbonePoint(0.80 * yield_strain, 0.80 * self.member.yield_strength),
             BackbonePoint(yield_strain, self.member.yield_strength),
-            BackbonePoint(max(0.02, 8.0 * yield_strain), 1.02 * self.member.yield_strength),
+            BackbonePoint(terminal_strain, terminal_stress),
         )
 
-    def register_opensees(self, ops: Any, material_tag: int) -> None:
-        """Create the multilinear material in the active OpenSees domain."""
+    def register_opensees(
+        self,
+        ops: Any,
+        material_tag: int,
+        *,
+        response_mode: str = "reversible",
+        stress_scale: float = 1.0,
+    ) -> None:
+        """Create the equivalent material in the active OpenSees domain.
+
+        ``reversible`` uses ``ElasticMultiLinear`` so unloading before steel
+        yield retraces the same member envelope.  ``hysteretic`` reproduces the
+        original prototype and is retained for controlled comparisons only.
+        """
+
+        if stress_scale <= 0.0:
+            raise ValueError("stress_scale 必须大于 0。")
+        if response_mode == "reversible":
+            compression = list(reversed(self.compression_envelope))
+            tension = list(self.tension_envelope())
+            negative_limit = compression[0]
+            positive_limit = tension[-1]
+            points = [
+                BackbonePoint(
+                    negative_limit.strain * 1.01,
+                    negative_limit.stress * 1.000001,
+                ),
+                *compression,
+                BackbonePoint(0.0, 0.0),
+                *tension,
+                BackbonePoint(
+                    positive_limit.strain * 1.01,
+                    positive_limit.stress * 1.000001,
+                ),
+            ]
+            arguments: list[Any] = ["ElasticMultiLinear", material_tag, "-strain"]
+            arguments.extend(point.strain for point in points)
+            arguments.append("-stress")
+            arguments.extend(point.stress * stress_scale for point in points)
+            ops.uniaxialMaterial(*arguments)
+            return
+        if response_mode != "hysteretic":
+            raise ValueError("response_mode 仅支持 reversible 或 hysteretic。")
 
         arguments: list[Any] = ["HystereticSM", material_tag, "-posEnv"]
         for point in self.tension_envelope():
-            arguments.extend((point.stress, point.strain))
+            arguments.extend((point.stress * stress_scale, point.strain))
         arguments.append("-negEnv")
         for point in self.compression_envelope:
-            arguments.extend((point.stress, point.strain))
+            arguments.extend((point.stress * stress_scale, point.strain))
         arguments.extend(("-pinch", 1.0, 1.0, "-damage", 0.0, 0.0, "-beta", 0.0))
         ops.uniaxialMaterial(*arguments)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "source": self.source,
+            "default_response_mode": "reversible",
+            "calibration_strain_limit": abs(self.compression_envelope[-1].strain),
+            "beyond_limit_behavior": "near-constant plateau with 1e-6 numerical tangent",
             "imperfection_ratio": self.imperfection_ratio,
             "peak_compressive_load": self.peak_compressive_load,
             "peak_compressive_stress": self.peak_compressive_stress,

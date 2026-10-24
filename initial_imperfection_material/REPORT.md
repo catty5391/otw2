@@ -1,174 +1,232 @@
-# 初始缺陷等效材料单杆试验报告
+# 初始缺陷等效杆件本构：修订试验报告
 
-## 1. 目的与结论
+## 1. 本轮修订目的
 
-当前 `model/tower_model_with_buckling.py` 把每根塔杆分成 4 段，在中部节点施加随机横向偏移，再用 `Corotational + forceBeamColumn + Steel02` 表示几何非线性和材料非线性。该方法能显示弯曲变形和杆端内力，但会显著增加全塔节点、单元和积分点数量。
+初版证明了七点压缩骨架能够重构单杆的单调轴力—缩短曲线，但审查发现三个必须优先解决的问题：
 
-本次另开 `initial_imperfection_material` 模块，先在单杆层面研究一种等效方法：两节点直杆本身不再设置初弯曲，而是把原杆的长细比、初弯曲和压屈后降强折算到一个拉压不对称的 `HystereticSM` 骨架中。
+1. `HystereticSM` 把屈服前可恢复的几何柔化表现成了有记忆的滞回过程；
+2. 原四分段标定曲线存在约 4%～5% 的网格误差；
+3. 单杆试验与 Z30103A6 全塔模型的弹性模量、强化比、梁单元和积分方法没有统一。
 
-首轮试验表明：
+本轮已经逐项修改，并增加实际塔杆筛查、压缩—卸载验收、网格/步长收敛和未收敛保护。当前成果仍定位为“**单杆单调受压与屈服前卸载的等效杆件本构原型**”，还没有宣称可直接替换全塔风振模型。
 
-- 四分段基准模型的峰值承载力为 **250.52 kN**；
-- Perry 正弦初弯曲理论给出的首次屈服荷载为 **235.21 kN**，OpenSees 单单元计算峰值为 **235.13 kN**，相对基准低 **6.14%**；
-- 从四分段曲线自动提取 7 个控制点后，单单元等效材料的峰值和峰值位移与基准一致，全曲线归一化均方根误差为 **2.24%**，曲线面积误差为 **5.26%**；
-- 无缺陷 `Steel02` 直杆一直到截面屈服和强化，无法自行发生侧向屈曲，峰值比四分段基准高 **189%**，证明不能只把四段杆改成一个普通 truss。
+## 2. 主要代码改动
 
-因此，这条路线值得继续，但当前成果应称为“**等效杆件屈曲本构原型**”，而不是新的 Q345 钢材本构，也还不是已经编译进 OpenSees 核心的 C++ 材料。
+### 2.1 峰前响应改成可逆非线性弹性
+
+初版用 `HystereticSM` 承载整条拉压不对称骨架。即使 `damage=0、beta=0`，它仍有自身的卸载/再加载规则，不能保证沿峰前几何柔化曲线原路返回。
+
+现在默认载体改为 `ElasticMultiLinear`：
+
+- 压缩支仍来自分段参考曲线或 Perry 试算；
+- 拉伸支与参考钢材采用同一 `E、fy、b`；
+- 卸载沿同一单值骨架返回，因此屈服前没有人为残余力；
+- `HystereticSM` 仅作为 `response_mode="hysteretic"` 的旧模型对照，不再是默认材料。
+
+这个选择解决的是“屈服前恢复”问题。它也意味着峰后卸载目前同样是可逆的，尚未表示真实的屈曲后塑性、刚度退化和循环损伤。因此它适合本轮单调推覆与小循环验收，暂不直接用于脉动风全时程。
+
+### 2.2 标定参考改为收敛后的分段模型
+
+参考模型由固定四段改为可配置分段，默认采用：
+
+```text
+16 segments
+dispBeamColumn
+Corotational transformation
+Legendre integration, 6 points
+Steel02: E=210 GPa, fy=345 MPa, b=0.03
+```
+
+这些参数与当前 `OpenSeesModelWithBuckling` 的核心单元、积分和材料参数保持一致。试件仍为二维弱轴、两端铰接、确定性半正弦初弯曲，因此边界和空间传力尚未等同于塔架。
+
+### 2.3 原塔初弯曲离散同步修正
+
+原塔代码只在 `num==2` 的分点加偏移，改变分段数会同时改变缺陷位置，二分段甚至没有缺陷。现在每根杆先生成一个固定的横向缺陷方向，所有内部节点按
+
+```text
+w(x) = e0 sin(πx/L)
+```
+
+分配偏移。因此 `member_divisions=2、4、8、16` 都保持同一个跨中峰值和同一缺陷方向，分段数只控制离散精度。
+
+### 2.4 收敛状态和共同区间评价
+
+每次分析现在记录：
+
+- 请求步数和完成步数；
+- 是否到达目标位移；
+- 请求终点和实际终点；
+- 计算时间。
+
+参考模型未完成全部步数时默认直接报错，不再继续生成“完整曲线误差”。候选曲线和参考曲线的 NRMSE、单调外功只在二者共同覆盖的位移区间计算，禁止把参考曲线终点力常值外推。
+
+## 3. 试件与统一参数
+
+演示试件仍使用 `Source/Z30103A6.s2k` 中的 `L125x8Q345`：
+
+| 参数 | 修订值 | 说明 |
+|---|---:|---|
+| 杆长 | 3.000 m | 保留用于方法演示 |
+| 面积 | 0.001936 m² | S2K |
+| 弱轴惯性矩 | 1.193943×10⁻⁶ m⁴ | `I22-abs(I23)` |
+| 弹性模量 | 210 GPa | 与 S2K、全塔模型统一 |
+| 屈服强度 | 345 MPa | Q345 |
+| Steel02 强化比 | 0.03 | 与全塔构造器默认值统一 |
+| 初弯曲 | `L/1000` | 半正弦 |
+| 有效长度系数 | 1.0 | 单杆两端铰接假定 |
+| 长细比 | 120.80 | 演示杆 |
+| Euler 荷载 | 274.95 kN | 计算值 |
+| 截面屈服荷载 | 667.92 kN | 计算值 |
+
+纤维离散后的面积误差为 0，弱轴惯性矩误差为 `-0.166%`。
+
+## 4. 屈服前压缩—卸载验收
+
+加载路径为：
+
+```text
+εeq: 0 → -0.0005 → 0
+```
+
+即 3 m 杆先压缩 1.5 mm，再恢复原端距。采用十六段参考模型、默认可逆等效材料和旧 `HystereticSM` 载体同时计算。
+
+| 模型 | 最大压缩轴力 | 回到原端距后的轴力 |
+|---|---:|---:|
+| 16 段 Steel02 参考 | 193.11 kN | 0.00019 N |
+| 可逆等效材料 | 190.82 kN | 0 N |
+| 旧 HystereticSM 载体 | 190.82 kN | +9.49 kN |
+
+参考模型全过程最大纤维应力为 **169.93 MPa**，低于 345 MPa，确认属于钢材弹性范围。验收容限取 `0.001Afy=0.668 kN`，参考模型和新材料均通过。
+
+![屈服前压缩卸载](results/pre_yield_unloading.png)
+
+这个结果说明初版审查指出的残余力问题已经被消除。旧载体曲线保留在图中，作为材料形式选择确实会影响风振卸载路径的直接证据。
+
+## 5. 网格和步长收敛
+
+### 5.1 分段收敛
+
+保持半正弦初弯曲、材料、纤维和 400 个位移步不变：
+
+| 分段数 | 完成步数 | 峰值承载力 | 相对 16 段 |
+|---:|---:|---:|---:|
+| 4 | 400/400 | 254.90 kN | +4.55% |
+| 8 | 400/400 | 246.02 kN | +0.91% |
+| 16 | 400/400 | 243.81 kN | 0 |
+
+四段结果不再作为标定基准。八段与十六段峰值差小于 1%，默认使用十六段。
+
+### 5.2 步长收敛
+
+十六段模型从 400 步增加到 800 步，峰值均为 **243.806 kN**，本算例记录到的峰值缩短均为 **2.475 mm**。默认主试验采用 800 步。
+
+![收敛检查](results/convergence_study.png)
+
+## 6. 修订后的单调推覆结果
+
+| 模型 | 峰值 | 峰值误差 | NRMSE | 单调外功误差 |
+|---|---:|---:|---:|---:|
+| 16 段参考 | 243.81 kN | — | — | — |
+| 标定型可逆等效材料 | 243.81 kN | 0.00% | 2.10% | 4.46% |
+| Perry 可逆试算材料 | 238.78 kN | -2.06% | 28.42% | 70.78% |
+| 无缺陷 Steel02 corotTruss | 1013.79 kN（终点） | +315.82% | 307.71% | 831.84% |
+
+“峰值零误差”仍然只代表骨架取点规则包含参考峰值，不是独立预测能力。`2.10%` 的 NRMSE 和 `4.46%` 的单调外功误差表示七点骨架对这条已知曲线的重构精度。
 
 ![单杆推覆曲线](results/pushover_comparison.png)
 
-## 2. 试件与参数来源
+Perry 支路仍只把首次纤维屈服作为峰值；3% 压应变和 25% 残余强度仍是试算假设。报告和 JSON 已将 3% 明确称为“骨架标定边界”，不是失效应变。超过该边界时默认保持近似恒定的末端残余应力（为避免零切线导致求解奇异，保留 `10⁻⁶` 量级的数值切线），不再含糊地把它解释为构件断裂。
 
-试件直接采用 `Source/Z30103A6.s2k` 中的 `L125x8Q345`：
+## 7. 实际 Z30103A6 杆件筛查与验证
 
-| 参数 | 数值 | 来源或计算 |
-|---|---:|---|
-| 杆长 `L` | 3.000 m | 本轮代表性试验长度，可由命令行修改 |
-| 截面面积 `A` | 0.001936 m² | S2K `Area` |
-| 弱轴惯性矩 `Imin` | 1.193943×10⁻⁶ m⁴ | S2K `I22 - abs(I23)` |
-| 弹性模量 `E` | 206 GPa | 当前试验取值 |
-| 屈服强度 `fy` | 345 MPa | Q345 |
-| 初弯曲幅值 `e0` | 3 mm | 默认 `e0/L=1/1000` |
-| 有效长度系数 `K` | 1.0 | 两端铰接试验 |
-| 长细比 `KL/i` | 120.80 | 计算值 |
-| 无量纲长细比 `λ̄` | 1.5737 | `sqrt(A fy / Ne)` |
-| Euler 荷载 `Ne` | 269.72 kN | `π²EI/(KL)²` |
-| 截面屈服荷载 `Afy` | 667.92 kN | 计算值 |
+从 S2K 的 `CONNECTIVITY - FRAME` 和 `FRAME SECTION ASSIGNMENTS` 直接抽取 `L125x8Q345`：
 
-四分段对照模型的初弯曲采用确定性的半正弦曲线 `w0(x)=e0 sin(πx/L)`。这里没有沿用全塔代码中的随机方向，是为了让材料标定可重复。
+- 数量：112 根；
+- 长度：1.440～2.414 m；
+- 中位长度：1.602 m；
+- 在 `K=1` 假定下，弱轴长细比：57.97～97.19。
 
-## 3. 力学模型
+这确认 3 m 演示杆不代表塔中该截面的实际长度范围。本轮进一步取最短、中位和最长三种实际长度，分别用十六段参考曲线重新标定：
 
-### 3.1 Perry 初弯曲试算
-
-对两端铰接、具有半正弦初弯曲的杆件，弹性放大后的跨中总挠度取：
-
-```text
-e(N) = e0 / (1 - N/Ne)
-```
-
-弱轴最外缘首次达到屈服时：
-
-```text
-N/A + N e(N) c/Imin = fy
-```
-
-程序用二分法求解 `N`。为了使一根轴向 truss 的应变同时包含材料压缩和弯曲导致的弦长变化，采用：
-
-```text
-εeq(N) = N/(EA) + π²[e(N)²-e0²]/(4L²)
-```
-
-在峰值前取 6 个荷载比例点。峰值后的第 7 点暂取 `ε=-0.03`、残余强度为峰值的 25%。这个峰后比例是**明确的试验假设**，不是规范推荐值；结果也显示它会明显高估大变形阶段的耗能，只适合做初始骨架，不能直接用于全塔。
-
-### 3.2 规范柱曲线检查
-
-程序同时给出两个承载力水平线：
-
-- GB 50017—2017 附录 D 的 a 类曲线：`φ=0.3540`，`φAfy=236.43 kN`；
-- EC3 b 曲线（缺陷系数 `α=0.34`）：`χ=0.3165`，`χAfy=211.39 kN`。
-
-GB 50017 的截面分类表将 Q345 轧制等边角钢的 `a*` 按 a 类使用，附录 D 给出 a 类参数 `(α1,α2,α3)=(0.41,0.986,0.152)`。EC3 的柱曲线公式和各曲线缺陷系数可在 JRC 的 Eurocode 3 设计报告中核对。
-
-这两条线仅用于量级和安全性检查，不是对本模型的试验验证。连接偏心、螺栓滑移、局部屈曲和弯扭屈曲都可能改变真实承载力。
-
-### 3.3 标定型等效材料
-
-第二种材料不是人为指定峰后斜率，而是从四分段基准曲线自动取点。当前最多使用 `HystereticSM` 允许的 7 个压缩骨架点：
-
-```text
-0.30Δp, 0.65Δp, 1.00Δp, 2Δp, 5Δp, 15Δp, Δmax
-```
-
-其中 `Δp` 是四分段模型达到峰值时的轴向缩短。压缩应力和等效应变按 `σ=-N/A`、`ε=-Δ/L` 转换。拉伸支沿用 Q345 的弹性—屈服—小幅强化骨架。单调试验阶段设 `pinch=(1,1)`、`damage=(0,0)`，避免在没有循环试验依据时擅自加入捏拢和损伤退化。
-
-OpenSees 官方说明 `HystereticSM` 每个正、负方向可设置 2～7 个骨架点，且两侧点数可以不同，适合本试验的拉压不对称骨架。若将来需要真正的 C++ 材料，OpenSees 的开发指南要求实现 `setTrialStrain`、`getStress`、`getTangent`、状态提交/回退、复制以及 `sendSelf/recvSelf` 等接口；本轮先把力学假设和目标曲线验证清楚，暂不进入编译维护阶段。
-
-![材料骨架](results/material_backbones.png)
-
-## 4. OpenSees 对照模型
-
-试验包含四组曲线：
-
-1. `four_segment_reference`：4 个 `forceBeamColumn`，半正弦初弯曲，`Corotational` 坐标变换，Q345 `Steel02` 纤维角钢截面；
-2. `equivalent_calibrated`：1 个两节点 truss，使用由第 1 组自动标定的 `HystereticSM`；
-3. `equivalent_perry`：1 个两节点 truss，使用 Perry 关系生成的试算骨架；
-4. `perfect_steel_truss`：1 个两节点 truss，只使用 `Steel02`，作为“忽略屈曲”的反例。
-
-角钢纤维按两个不重叠矩形离散，并旋转到弱主轴方向。所有模型均采用轴向位移控制，压缩至 `Δ/L=0.03`，共 400 步。四分段模型失效后下降支能通过位移控制继续追踪。
-
-![归一化推覆曲线](results/normalized_pushover.png)
-
-## 5. 数值结果
-
-| 模型 | 峰值 / kN | 峰值缩短 / mm | 峰值误差 | NRMSE | 曲线面积误差 |
+| 代表杆 | 长度 | 长细比 | 参考峰值 | NRMSE | 单调外功误差 |
 |---|---:|---:|---:|---:|---:|
-| 四分段几何缺陷基准 | 250.52 | 2.475 | — | — | — |
-| 标定型等效材料 | 250.52 | 2.475 | 0.00% | 2.24% | 5.26% |
-| Perry 试算材料 | 235.13 | 2.250 | -6.14% | 29.95% | 85.95% |
-| 无缺陷 Steel02 直杆 | 724.40 | 90.000（计算终点） | +189.16% | 243.49% | 756.77% |
+| 最短 | 1.440 m | 57.97 | 569.80 kN | 2.36% | 4.64% |
+| 中位 | 1.602 m | 64.52 | 540.09 kN | 2.34% | 4.78% |
+| 最长 | 2.414 m | 97.19 | 351.30 kN | 2.00% | 4.46% |
 
-标定模型在峰值附近和长下降段上都与四分段模型接近；Perry 试算模型的峰值合理，但单个假定残余点造成下降段过缓。这一区别很重要：**规范或 Perry 公式适合控制峰值，峰后曲线仍需用四分段模型、壳模型或试验标定。**
+三组分析均到达目标位移。它们证明“按每根物理杆或参数分组离线生成骨架”的方法能覆盖该截面的实际长度范围，但仍属于同数据标定后的重构检查。Q235、Q420 角钢和不同有效长度系数尚未完成验证。
 
-标定模型的初始刚度误差为 `-0.52%`；在 `2Δp、4Δp、6Δp` 处的承载力误差分别为 `0.00%、8.58%、5.20%`。这说明 7 点骨架已经能用于单调推覆原型，但在循环加载或要求更精细的峰后耗能时，仍应增加独立标定数据，而不是把 7 点拟合视为最终答案。
+![实际杆长验证](results/actual_member_validation.png)
 
-单次运行中，四分段基准约耗时 0.57 s，三个单单元模型各约 0.0015 s。这个比值只说明单杆层面的潜在加速，不能直接外推到全塔，因为全塔还包含组装、荷载、收敛和结果记录成本。
+逐根筛查数据见 `results/actual_l125x8_members.csv`，三种代表杆的验证表见 `results/actual_member_validation.csv`。
 
-## 6. 初弯曲敏感性
+## 8. 当前可以和不可以做什么
 
-Perry 试算中，`e0/L` 从 `1/2000` 增大到当前全塔默认值附近的 `1/100` 时，首次屈服荷载从 250.65 kN 降至 124.40 kN。由此可见，初弯曲幅值不是可随意固定的数值，论文中必须交代来源并做敏感性分析。
+当前原型已经可以：
 
-![初弯曲敏感性](results/imperfection_sensitivity.png)
+- 重构一根已标定角钢杆的单调 `N-Δ` 曲线；
+- 在未屈服的小幅压缩—卸载路径中恢复零力；
+- 按原始物理杆的 `L、K、A、I、fy、b` 独立生成材料；
+- 用 `corotTruss` 保留塔架层面的整体大位移几何非线性；
+- 对未收敛和评价区间不一致给出显式状态或拒绝评价；
+- 对实际 L125x8 杆长进行分组标定和误差统计。
 
-建议下一步把实际塔杆按长细比分为若干组，至少扫描 `λ=40、60、80、100、120、150`，并使用 GB 综合缺陷常见分档或实测/文献幅值。当前 `1/1000` 只是便于和单杆理论核对的首轮值；原全塔代码默认 `random_disp_ratio=0.01` 即 `L/100`，影响很大，应在论文建模章节专门论证或调整。
+当前还不能：
 
-## 7. 能做与不能做的事
+- 描述屈曲后的不可恢复变形、循环退化和真实滞回耗能；
+- 输出被等效掉的杆内弯矩、侧移形态和屈曲方向；
+- 自动表示单角钢连接偏心、弯扭/局部屈曲和节点滑移；
+- 直接沿用原纤维应变阈值作为等效杆损伤判据；
+- 由单根铰接杆证明空间塔段的弯曲传力和失效顺序等效；
+- 将同一杆再施加几何初弯曲，或拆段后按每段短长度重复生成材料。
 
-等效材料可以：
+## 9. 接回课题主线的建议
 
-- 用一个轴向单元近似一根原始杆的 `N-Δ` 峰值和峰后降强；
-- 显著减少全塔四分段带来的节点、单元和纤维积分成本；
-- 通过 `original_member_id + L + K + section + fy` 建立材料缓存；
-- 在后续风时程中记录构件轴力、等效应变和失效状态。
+下一阶段不宜直接替换全塔。建议按以下顺序：
 
-当前原型不能：
+1. 对塔中主要 Q235、Q345、Q420 截面各选短、中、长杆，形成独立的单杆误差矩阵；
+2. 为参考分段模型增加屈服后卸载—再加载和拉压往复路径；
+3. 根据参考回线决定是否需要“峰前非线性弹性 + 峰后损伤塑性”的混合材料；库存材料无法清晰实现时，再开发原生 C++ `UniaxialMaterial`；
+4. 选择一个包含主材和斜材的小塔段，比较弹性刚度、模态、推覆、首根失稳杆和失效顺序；
+5. 小塔段通过后，再把材料缓存和构件级损伤指标接入全塔风时程及易损性分析。
 
-- 给出真实的跨中侧移、弯矩分布和屈曲方向；
-- 自动表示单角钢连接偏心、弯扭屈曲、局部屈曲或节点滑移；
-- 不经重新标定就用于任意杆长、截面或边界条件；
-- 同时使用等效材料和几何初弯曲，否则会重复计入缺陷；
-- 把同一物理杆再拆成多段并按每段长度生成材料，否则长细比和承载力会被错误改变。
+本课题中最稳妥的表述仍是：**面向输电塔批量非线性分析的构件级等效建模方法**。创新点不必放在发明复杂本构，而应放在参考模型—等效骨架—误差验收—塔段验证这条完整证据链。
 
-## 8. 推荐的后续开发顺序
+## 10. 复现与输出
 
-1. 从 Z30103A6 中抽取实际杆长分布，对 6 组长细比、4 组初弯曲做批量单杆标定，并形成误差表；
-2. 选取塔身主材、斜材各 2～3 根，把单杆等效材料接入一个小塔段，与四分段模型比较推覆曲线和失效顺序；
-3. 仅当单调和循环验证都稳定后，建立全塔“每根原始杆一个等效材料/单元”的可选模型类；
-4. 若循环风荷载需要刚度退化，再依据试验或高精度模型标定 `damage`、`pinch`，不要直接套用本轮的零损伤参数；
-5. C++ `UniaxialMaterial` 放在最后。其价值主要是封装公式、减少 Python 建模开销，并不会替代前面的力学标定。
-
-## 9. 文件与复现
-
-- `material.py`：构件参数、GB/EC3 折减系数、Perry 骨架、四分段曲线采样和 OpenSees 材料注册；
-- `experiment.py`：四分段基准、两节点等效模型、误差指标和 CSV/JSON 导出；
-- `visualization.py`：4 张 PNG；
-- `run_experiment.py`：命令行入口；
-- `results/pushover_curves.csv`：全部逐步推覆结果；
-- `results/material_backbones.csv`：OpenSees 输入骨架；
-- `results/summary.json`：构件参数、理论值、误差和运行时间。
-
-复现命令：
+默认完整试验：
 
 ```bash
 uv run python -m initial_imperfection_material.run_experiment
 ```
 
-## 10. 参考资料
+快速调试时可以跳过附加收敛和实际杆验证：
 
-1. GB 50017—2017《钢结构设计标准》，第 7.2 节和附录 D：[标准文本镜像（含轧制等边角钢分类）](https://www.steelbuildingtech.com/cdn/https/www.steelbuildingtech.com/Content/upload/pdf/2020739979/GB-50017-2017-Standard-for-design-of-steel-structures.pdf)。
-2. Simões da Silva, L.; Simões, R., *Design of Steel Structures*, JRC Eurocodes report：[欧盟委员会 JRC PDF](https://publications.jrc.ec.europa.eu/repository/bitstream/JRC96658/jrc_steel_report_2015_07_22.pdf)。报告给出 EC3 柱曲线、无量纲长细比和缺陷系数。
-3. OpenSees, `HystereticSM Material`：[官方文档](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/HystereticSM.html)。
-4. OpenSees, `Steel02 Material`：[官方文档](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/Steel02.html)。
-5. Scott, M. H.; Fenves, G. L., *How to Introduce a New Material into OpenSees*：[PEER/OpenSees PDF](https://opensees.berkeley.edu/OpenSees/NewMaterial.pdf)。
-6. Abdelrahman et al., *An effective stress-strain model for angles under axial compression*, Structures 20 (2019) 298–308：[DOI 页面](https://doi.org/10.1016/j.istruc.2019.04.013)。该类研究说明单角钢等效应力—应变方法需要用试验或高精度模型标定。
-7. Padilla-Llano et al., *OpenSees simulation of steel column axial cyclic response including local buckling*：[SSRC/AISC PDF](https://www.aisc.org/globalassets/continuing-education/ssrc-proceedings/2015/opensees-simulation-of-steel-column-axial-cyclic-response-including-local-buckling.pdf)。该文证明可用带下降段的单轴材料等效构件屈曲，但其冷弯截面参数不能直接移植到本项目热轧角钢。
+```bash
+uv run python -m initial_imperfection_material.run_experiment \
+  --steps 100 \
+  --reference-divisions 8 \
+  --skip-convergence \
+  --skip-actual-validation \
+  --output /tmp/imperfection-check
+```
+
+主要输出：
+
+- `summary.json`：参数、收敛状态、误差和卸载验收；
+- `pushover_curves.csv`：全部单调曲线；
+- `pre_yield_unloading.csv`：压缩—卸载全过程；
+- `convergence_study.csv`：分段和步长收敛；
+- `actual_l125x8_members.csv`：112 根实际构件筛查；
+- `actual_member_validation.csv`：短、中、长代表杆验证；
+- `material_backbones.csv`：材料骨架点。
+
+## 11. 参考资料
+
+1. GB 50017—2017《钢结构设计标准》，第 7.2 节和附录 D：[标准文本](https://www.steelbuildingtech.com/cdn/https/www.steelbuildingtech.com/Content/upload/pdf/2020739979/GB-50017-2017-Standard-for-design-of-steel-structures.pdf)。
+2. Simões da Silva, L.; Simões, R., *Design of Steel Structures*：[JRC Eurocode 3 报告](https://publications.jrc.ec.europa.eu/repository/bitstream/JRC96658/jrc_steel_report_2015_07_22.pdf)。
+3. OpenSees `ElasticMultiLinear Material`：[官方文档](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/ElasticMultiLinear.html)。
+4. OpenSees `HystereticSM Material`：[官方文档](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/HystereticSM.html)。
+5. OpenSees `Corotational Truss Element`：[官方文档](https://opensees.github.io/OpenSeesDocumentation/user/manual/model/elements/CorotationalTruss.html)。
+6. Scott, M. H.; Fenves, G. L., *How to Introduce a New Material into OpenSees*：[PEER/OpenSees PDF](https://opensees.berkeley.edu/OpenSees/NewMaterial.pdf)。
+7. Abdelrahman et al., *An effective stress-strain model for angles under axial compression*, Structures 20 (2019) 298–308：[DOI](https://doi.org/10.1016/j.istruc.2019.04.013)。

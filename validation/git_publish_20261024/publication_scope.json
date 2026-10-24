@@ -1,0 +1,12 @@
+{
+  "scope": "source, methods, conclusions, plans and lightweight validation only; no generated raw data or archives",
+  "selected_files": 225,
+  "selected_bytes": 2765268,
+  "forbidden_data_paths": [],
+  "max_file_bytes": 119128,
+  "verification": {
+    "full_suite_passed": 468,
+    "unique_passed_with_targeted": 469,
+    "source_only_rerun_passed": 53
+  }
+}

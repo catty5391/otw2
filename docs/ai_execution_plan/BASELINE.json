@@ -1,0 +1,112 @@
+{
+  "captured_date": "2026-10-22",
+  "branch": "redevelop",
+  "head": "aa3272ce71b002b30b8a8062ed35bcfa2482ae60",
+  "dirty_worktree": true,
+  "files": [
+    {
+      "path": "Source/Z30103A6.s2k",
+      "size_bytes": 5323157,
+      "sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16"
+    },
+    {
+      "path": "initial_imperfection_material/material.py",
+      "size_bytes": 17340,
+      "sha256": "2de92a7374ceb0f89f5249ddefdbd2a6b882c737f4f2eb4b506eb597f5a6b70a"
+    },
+    {
+      "path": "initial_imperfection_material/experiment.py",
+      "size_bytes": 35128,
+      "sha256": "770d06ddbbfcf5e8c64d38e3f245667abda5b3a5cd324fe1fb5354b133045efd"
+    },
+    {
+      "path": "initial_imperfection_material/full_tower_cyclic.py",
+      "size_bytes": 27007,
+      "sha256": "6e4843f2e5329a8c0a7867a03e9a8a433d0321becd3740c9841c1d759bc914c2"
+    },
+    {
+      "path": "initial_imperfection_material/diagnose_tower_convergence.py",
+      "size_bytes": 13169,
+      "sha256": "7517e97660bf9b8c06e70b3519da525e36f118b7c8c2b913a3c469d3ac80c496"
+    },
+    {
+      "path": "initial_imperfection_material/summarize_convergence_diagnosis.py",
+      "size_bytes": 13007,
+      "sha256": "92c0dae464c483feae577784bd295c36b07604dec134553e58b13307b57bed33"
+    },
+    {
+      "path": "model/tower_model_with_buckling.py",
+      "size_bytes": 24770,
+      "sha256": "cf2a1015a25b298b9c214523f0bfd6e5a2b7a77dc466d5757f91c41e4dfc7095"
+    },
+    {
+      "path": "model/tower_model_with_equivalent_imperfection.py",
+      "size_bytes": 18043,
+      "sha256": "108b263a30a10be6456398af6aefdd90ea439e3d525cbba4dc87614d1f125e8d"
+    },
+    {
+      "path": "util/analysis/stepping.py",
+      "size_bytes": 6885,
+      "sha256": "f88a27de4db9f95082e216ead2ecd5bf994f62cb840f5d5e92a5c143a9d011eb"
+    },
+    {
+      "path": "util/analysis/run_manifest.py",
+      "size_bytes": 7938,
+      "sha256": "110ea745b59dbc0a7e3b8223a3575d8c844659a5edfd6f82d64df39de2b8f0cc"
+    },
+    {
+      "path": "initial_imperfection_material/results/full_tower_cyclic/calibration_library.json",
+      "size_bytes": 305966,
+      "sha256": "9364706a08203e4a632875f55862b11c7cb4f18b3267d866efdf19d9695d59c7"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/evidence.json",
+      "size_bytes": 15239,
+      "sha256": "c27973d440c620ace557ad21a3f9502b3d171c0bef251e11e5d0116f5761a808"
+    }
+  ],
+  "scope_note": "选定文件指纹，不是完整源码快照；大量最新成果尚未提交。",
+  "tests": {
+    "declared_test_count_at_planning": 53,
+    "rerun_during_planning": false,
+    "historical_suite_result": "53/53",
+    "last_material_subset_result": "6/6",
+    "warning": "历史通过记录不替代后续执行批次的实际测试。"
+  },
+  "evidence": {
+    "diagnosis": "initial_imperfection_material/CONVERGENCE_DIAGNOSIS.md",
+    "original": {
+      "completed_targets": 6,
+      "requested_targets": 9,
+      "accepted_steps": 272,
+      "final_u_m": -0.117775
+    },
+    "fine_step": {
+      "completed_targets": 9,
+      "requested_targets": 9,
+      "accepted_steps": 590,
+      "smallest_accepted_increment_m": 0.0000390625,
+      "configured_minimum_increment_m": 0.000001220703125,
+      "local_force_error_877_878_percent_approx": 79,
+      "maximum_compressive_equivalent_strain": 0.0410276651325291,
+      "calibration_terminal_compressive_strain": 0.03,
+      "physically_validated": false
+    },
+    "elastic_ablation": {
+      "members": [
+        877,
+        878
+      ],
+      "completed_targets": 9,
+      "accepted_steps": 587,
+      "failed_attempts": 0,
+      "purpose": "查因对照，不是材料修复"
+    },
+    "perry_members": [
+      825,
+      828,
+      917,
+      920
+    ]
+  }
+}

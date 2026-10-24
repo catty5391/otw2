@@ -1,0 +1,994 @@
+{
+  "schema": "otw2.cyclic_protocol_design.v1",
+  "version": 1,
+  "frozen_date": "2026-10-22",
+  "design_frozen": true,
+  "amplitude_status": "pending_reference_bindings",
+  "scope": "T10 engineering preparation only; no reference response, candidate law, route or validation conclusion has been produced.",
+  "provenance": {
+    "historical_member_metadata": {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/member_metadata.json",
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    "plan": "docs/ai_execution_plan/PLAN.md#T10-and-section-7"
+  },
+  "groups": {
+    "q235_l40_0850": {
+      "section": "L40x3Q235",
+      "length_m": 0.85,
+      "actual_member_ids": [
+        877,
+        878
+      ],
+      "primary_member_id": 877,
+      "reserved_boundary_member_id": 878,
+      "geometry_source": "historical_member_metadata",
+      "selection_reason": "original convergence hotspot; mirrored member reserved for an independent future boundary path"
+    },
+    "q235_l40_1950": {
+      "section": "L40x3Q235",
+      "length_m": 1.95,
+      "actual_member_ids": [
+        825,
+        828,
+        917,
+        920
+      ],
+      "primary_member_id": 825,
+      "reserved_boundary_member_id": 828,
+      "additional_members_deferred": [
+        917,
+        920
+      ],
+      "geometry_source": "historical_member_metadata",
+      "selection_reason": "historical Perry fallback group; other actual loading paths are not assumed identical"
+    }
+  },
+  "boundaries": {
+    "pinned_3d": {
+      "description": "Spatial member with explicitly released end rotations; measured axial end shortening, not tower-restraint equivalence.",
+      "training_allowed": true
+    },
+    "tower_6dof_replay": {
+      "description": "Actual member's two-end six-DOF committed history, including original unloaded state, gravity, and all previous stages.",
+      "training_allowed": false
+    }
+  },
+  "split_policy": {
+    "freeze_before_candidate_parameter_fit": true,
+    "training_only_pinned_boundary": true,
+    "actual_tower_boundary_reserved_for_future_holdout": true,
+    "legacy_tower_paths_are_diagnostic_not_blind_holdout": true,
+    "holdout_used_for_model_selection_loses_holdout_status": true,
+    "do_not_refit_per_holdout_case": true,
+    "amplitude_reference_sharing_is_not_response_data_sharing": true
+  },
+  "anchor_definitions": {
+    "zero": {
+      "observation_kind": "unloaded_reference",
+      "expected_sign": 0
+    },
+    "elastic_compression_small": {
+      "observation_kind": "fiber_response",
+      "expected_sign": 1,
+      "fiber_stress_ratio_ceiling": 0.1,
+      "material_requirement": "Elastic"
+    },
+    "elastic_tension_small": {
+      "observation_kind": "fiber_response",
+      "expected_sign": -1,
+      "fiber_stress_ratio_ceiling": 0.1,
+      "material_requirement": "Elastic"
+    },
+    "compression_far_low": {
+      "observation_kind": "fiber_response",
+      "expected_sign": 1,
+      "fiber_stress_ratio_ceiling": 0.25,
+      "meaning": "pilot reference stress margin, not proof of zero Steel02 residual"
+    },
+    "compression_far_high": {
+      "observation_kind": "fiber_response",
+      "expected_sign": 1,
+      "fiber_stress_ratio_ceiling": 0.5,
+      "meaning": "pilot reference stress margin, not proof of zero Steel02 residual"
+    },
+    "compression_near_peak": {
+      "observation_kind": "reference_peak_neighborhood",
+      "expected_sign": 1,
+      "meaning": "measured reference force peak neighborhood with recorded fiber state; not equivalent strain threshold"
+    },
+    "compression_postpeak": {
+      "observation_kind": "reference_postpeak_state",
+      "expected_sign": 1,
+      "requires_after_peak": true,
+      "meaning": "accepted complete reference postpeak state; no assumed 3 or 5 percent equivalent strain"
+    },
+    "tension_reversal": {
+      "observation_kind": "reference_tension_state",
+      "expected_sign": -1,
+      "meaning": "measured tensile reference state within accepted control domain"
+    }
+  },
+  "amplitude_references": {
+    "q235_l40_0850_elastic": {
+      "group_id": "q235_l40_0850",
+      "boundary_id": "pinned_3d",
+      "material_model": "Elastic",
+      "availability": "pending"
+    },
+    "q235_l40_0850_steel02": {
+      "group_id": "q235_l40_0850",
+      "boundary_id": "pinned_3d",
+      "material_model": "Steel02",
+      "availability": "pending"
+    },
+    "q235_l40_1950_elastic": {
+      "group_id": "q235_l40_1950",
+      "boundary_id": "pinned_3d",
+      "material_model": "Elastic",
+      "availability": "pending"
+    },
+    "q235_l40_1950_steel02": {
+      "group_id": "q235_l40_1950",
+      "boundary_id": "pinned_3d",
+      "material_model": "Steel02",
+      "availability": "pending"
+    }
+  },
+  "response_sources": {
+    "response_q235_l40_0850_c0_diagnostic": {
+      "group_id": "q235_l40_0850",
+      "split": "diagnostic",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c1_train": {
+      "group_id": "q235_l40_0850",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c2_train": {
+      "group_id": "q235_l40_0850",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c3_train": {
+      "group_id": "q235_l40_0850",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c4_train": {
+      "group_id": "q235_l40_0850",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c5_seen_diagnostic": {
+      "group_id": "q235_l40_0850",
+      "split": "diagnostic",
+      "previously_used_for_diagnosis": true,
+      "reserved_before_calibration": false,
+      "availability": "existing_diagnostic_path_requires_accepted_replay_bindings",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c5_future_holdout": {
+      "group_id": "q235_l40_0850",
+      "split": "holdout",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": true,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_0850_c6_sequence_holdout": {
+      "group_id": "q235_l40_0850",
+      "split": "holdout",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": true,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c0_diagnostic": {
+      "group_id": "q235_l40_1950",
+      "split": "diagnostic",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c1_train": {
+      "group_id": "q235_l40_1950",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c2_train": {
+      "group_id": "q235_l40_1950",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c3_train": {
+      "group_id": "q235_l40_1950",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c4_train": {
+      "group_id": "q235_l40_1950",
+      "split": "training",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": false,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c5_seen_diagnostic": {
+      "group_id": "q235_l40_1950",
+      "split": "diagnostic",
+      "previously_used_for_diagnosis": true,
+      "reserved_before_calibration": false,
+      "availability": "existing_diagnostic_path_requires_accepted_replay_bindings",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c5_future_holdout": {
+      "group_id": "q235_l40_1950",
+      "split": "holdout",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": true,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    },
+    "response_q235_l40_1950_c6_sequence_holdout": {
+      "group_id": "q235_l40_1950",
+      "split": "holdout",
+      "previously_used_for_diagnosis": false,
+      "reserved_before_calibration": true,
+      "availability": "future_not_generated",
+      "path": null,
+      "sha256": null
+    }
+  },
+  "cases": [
+    {
+      "case_id": "q235_l40_0850_c0_diagnostic",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C0",
+      "split": "diagnostic",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Elastic",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_elastic",
+      "response_source_id": "response_q235_l40_0850_c0_diagnostic",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "elastic_tension_small",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "elastic_compression_small",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c1_train",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C1",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_steel02",
+      "response_source_id": "response_q235_l40_0850_c1_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c2_train",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C2",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_steel02",
+      "response_source_id": "response_q235_l40_0850_c2_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.8
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.4
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.9
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.6
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 1
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.5
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.75
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c3_train",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C3",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_steel02",
+      "response_source_id": "response_q235_l40_0850_c3_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 0.75
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c4_train",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C4",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_steel02",
+      "response_source_id": "response_q235_l40_0850_c4_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "tension_reversal",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c5_seen_diagnostic",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C5",
+      "split": "diagnostic",
+      "boundary_id": "tower_6dof_replay",
+      "reference_material": "Steel02",
+      "path_kind": "two_end_6dof_history",
+      "amplitude_reference_id": null,
+      "response_source_id": "response_q235_l40_0850_c5_seen_diagnostic",
+      "targets": [],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c5_future_holdout",
+      "group_id": "q235_l40_0850",
+      "member_id": 878,
+      "protocol": "C5",
+      "split": "holdout",
+      "boundary_id": "tower_6dof_replay",
+      "reference_material": "Steel02",
+      "path_kind": "two_end_6dof_history",
+      "amplitude_reference_id": null,
+      "response_source_id": "response_q235_l40_0850_c5_future_holdout",
+      "targets": [],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_0850_c6_sequence_holdout",
+      "group_id": "q235_l40_0850",
+      "member_id": 877,
+      "protocol": "C6",
+      "split": "holdout",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_0850_steel02",
+      "response_source_id": "response_q235_l40_0850_c6_sequence_holdout",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c0_diagnostic",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C0",
+      "split": "diagnostic",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Elastic",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_elastic",
+      "response_source_id": "response_q235_l40_1950_c0_diagnostic",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "elastic_tension_small",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "elastic_compression_small",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c1_train",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C1",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_steel02",
+      "response_source_id": "response_q235_l40_1950_c1_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c2_train",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C2",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_steel02",
+      "response_source_id": "response_q235_l40_1950_c2_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.8
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.4
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.9
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.6
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 1
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.5
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 0.75
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c3_train",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C3",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_steel02",
+      "response_source_id": "response_q235_l40_1950_c3_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 0.75
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c4_train",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C4",
+      "split": "training",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_steel02",
+      "response_source_id": "response_q235_l40_1950_c4_train",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_near_peak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "tension_reversal",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_postpeak",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": true,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c5_seen_diagnostic",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C5",
+      "split": "diagnostic",
+      "boundary_id": "tower_6dof_replay",
+      "reference_material": "Steel02",
+      "path_kind": "two_end_6dof_history",
+      "amplitude_reference_id": null,
+      "response_source_id": "response_q235_l40_1950_c5_seen_diagnostic",
+      "targets": [],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c5_future_holdout",
+      "group_id": "q235_l40_1950",
+      "member_id": 828,
+      "protocol": "C5",
+      "split": "holdout",
+      "boundary_id": "tower_6dof_replay",
+      "reference_material": "Steel02",
+      "path_kind": "two_end_6dof_history",
+      "amplitude_reference_id": null,
+      "response_source_id": "response_q235_l40_1950_c5_future_holdout",
+      "targets": [],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    },
+    {
+      "case_id": "q235_l40_1950_c6_sequence_holdout",
+      "group_id": "q235_l40_1950",
+      "member_id": 825,
+      "protocol": "C6",
+      "split": "holdout",
+      "boundary_id": "pinned_3d",
+      "reference_material": "Steel02",
+      "path_kind": "reference_anchored_axial",
+      "amplitude_reference_id": "q235_l40_1950_steel02",
+      "response_source_id": "response_q235_l40_1950_c6_sequence_holdout",
+      "targets": [
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_low",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        },
+        {
+          "anchor": "compression_far_high",
+          "factor": 1
+        },
+        {
+          "anchor": "zero",
+          "factor": 0
+        }
+      ],
+      "fitting_allowed": false,
+      "execution_status": "not_started"
+    }
+  ],
+  "requirements": {
+    "gate_statuses": {
+      "G1": "passed",
+      "T09": "completed"
+    },
+    "reference_fiber_classification": "first nominal fy crossing is a stated observation rule, not a claim of sharp Steel02 elastic/plastic switching",
+    "cyclic_recovery": "must be measured from C0/C1 response; never inferred only from sigma<fy",
+    "units": {
+      "end_shortening": "m",
+      "compression_positive": true,
+      "translation": "m",
+      "rotation": "rad",
+      "force": "N",
+      "moment": "N*m",
+      "fiber_strain": "dimensionless"
+    },
+    "requested_outputs": [
+      "initial_and_gravity_prefix",
+      "all_accepted_substeps",
+      "stage_cycle_direction",
+      "both_end_6dof_and_end_forces",
+      "basic_deformation",
+      "reference_fiber_extrema_and_nominal_yield_event",
+      "reference_peak_and_postpeak_events",
+      "unloading_stiffness",
+      "zero_force_intercept",
+      "zero_displacement_recovery_force",
+      "conjugate_external_work_not_Vbase_utop_area",
+      "completed_domain_and_solver_coverage"
+    ],
+    "second_batch": "actual Q345 median-length member and Q420 main member selection waits for G1/T09; no fictitious member IDs"
+  }
+}

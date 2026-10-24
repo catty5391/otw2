@@ -1,0 +1,269 @@
+{
+  "schema": "otw2.insulator_saved_state_audit.v1",
+  "new_FE_runs": 0,
+  "method": "N=EA*(current_length/initial_length-1); current Elastic corotTruss strings only",
+  "limitations": [
+    "no insulator strength/buckling validation",
+    "first saved compression is not exact onset",
+    "equivalent wind speed is static load scaling, not an engineering design wind speed"
+  ],
+  "cases": [
+    {
+      "case": "tower_line_0",
+      "wind_angle_deg": 0.0,
+      "saved_steps": 124,
+      "legs": [
+        {
+          "element": 1529,
+          "upper": 820,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1530,
+          "upper": 520,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1531,
+          "upper": 521,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1532,
+          "upper": 821,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        }
+      ],
+      "sources": [
+        {
+          "path": "wind_speed_results/runs/tower_line_0/model_data/nodes.csv",
+          "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_0/line_model/insulators.csv",
+          "sha256": "2408b92cb7cadfe22ca34d4a2becfcee895bea3b923e741ad2b82d8ab9c83851"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_0/node_states.csv.gz",
+          "sha256": "93b84ee5c735802299489c62329835d7619497f74366034255b91a1e86e94261"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_0/history.csv",
+          "sha256": "dbb1246eb1a26bafeaac55616e9dc411c52492085d123e2ff21a4592588c3cb4"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_0/summary.json",
+          "sha256": "98113b60e9a65d76d97ca8c6e936fa38f4f6ca3d53432bb52506e382504b46e0"
+        }
+      ],
+      "compression_detection_tolerance_N": 1.0,
+      "gravity_forces_N": [
+        5898.490845357429,
+        5900.630529676043,
+        5900.630529676043,
+        5898.490845357429
+      ],
+      "first_saved_compression": {
+        "case": "tower_line_0",
+        "step": 18,
+        "element_tag": 1529,
+        "wind_load_factor": 5.296875,
+        "equivalent_wind_speed_m_s": 46.02988159880492,
+        "force_N_tension_positive": -64.23837332070192
+      },
+      "minimum_force": {
+        "case": "tower_line_0",
+        "step": 123,
+        "element_tag": 1529,
+        "wind_load_factor": 45.98574207723141,
+        "equivalent_wind_speed_m_s": 135.6255758730357,
+        "force_N_tension_positive": -47403.92001441052
+      },
+      "minimum_force_at_peak_load": {
+        "case": "tower_line_0",
+        "step": 123,
+        "element_tag": 1529,
+        "wind_load_factor": 45.98574207723141,
+        "equivalent_wind_speed_m_s": 135.6255758730357,
+        "force_N_tension_positive": -47403.92001441052
+      }
+    },
+    {
+      "case": "tower_line_45_disp",
+      "wind_angle_deg": 45.0,
+      "saved_steps": 130,
+      "legs": [
+        {
+          "element": 1529,
+          "upper": 820,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1530,
+          "upper": 520,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1531,
+          "upper": 521,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1532,
+          "upper": 821,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        }
+      ],
+      "sources": [
+        {
+          "path": "wind_speed_results/runs/tower_line_45_disp/model_data/nodes.csv",
+          "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_45_disp/line_model/insulators.csv",
+          "sha256": "2408b92cb7cadfe22ca34d4a2becfcee895bea3b923e741ad2b82d8ab9c83851"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_45_disp/node_states.csv.gz",
+          "sha256": "7b81ddf5a64fd456824fe1065bad1c74ac127c542bd5bfae6ec40c18ebe27fa7"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_45_disp/history.csv",
+          "sha256": "7cd11bdc1649fb97ea10bb483fb05ff5f95958e3be258127935bf18556bce872"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_45_disp/summary.json",
+          "sha256": "8f6dbe0aada4c7183c257fdb2a0b4abc064bdc7b97e57d578d21b0bec519b8d4"
+        }
+      ],
+      "compression_detection_tolerance_N": 1.0,
+      "gravity_forces_N": [
+        5898.490845357429,
+        5900.630529676043,
+        5900.630529676043,
+        5898.490845357429
+      ],
+      "first_saved_compression": {
+        "case": "tower_line_45_disp",
+        "step": 32,
+        "element_tag": 1529,
+        "wind_load_factor": 10.680825362051806,
+        "equivalent_wind_speed_m_s": 65.36306407154368,
+        "force_N_tension_positive": -151.33019455326746
+      },
+      "minimum_force": {
+        "case": "tower_line_45_disp",
+        "step": 88,
+        "element_tag": 1529,
+        "wind_load_factor": 29.376025097913622,
+        "equivalent_wind_speed_m_s": 108.39930829652673,
+        "force_N_tension_positive": -10955.769531861837
+      },
+      "minimum_force_at_peak_load": {
+        "case": "tower_line_45_disp",
+        "step": 88,
+        "element_tag": 1529,
+        "wind_load_factor": 29.376025097913622,
+        "equivalent_wind_speed_m_s": 108.39930829652673,
+        "force_N_tension_positive": -10955.769531861837
+      }
+    },
+    {
+      "case": "tower_line_90",
+      "wind_angle_deg": 90.0,
+      "saved_steps": 102,
+      "legs": [
+        {
+          "element": 1529,
+          "upper": 820,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1530,
+          "upper": 520,
+          "lower": 1101064,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1531,
+          "upper": 521,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        },
+        {
+          "element": 1532,
+          "upper": 821,
+          "lower": 1101065,
+          "EA_N": 100000000.0,
+          "initial_length_m": 9.55278100869061
+        }
+      ],
+      "sources": [
+        {
+          "path": "wind_speed_results/runs/tower_line_90/model_data/nodes.csv",
+          "sha256": "5a4140f43447978af9a9fe438eda9e105d97dedf60f11e7e05444499c9155cf4"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_90/line_model/insulators.csv",
+          "sha256": "2408b92cb7cadfe22ca34d4a2becfcee895bea3b923e741ad2b82d8ab9c83851"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_90/node_states.csv.gz",
+          "sha256": "1c390c954ee67d5d7f8336872f02aef54c55ea3bf94572a1203a866ffd22ec7f"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_90/history.csv",
+          "sha256": "c9324fbd14e776f037ecb55491bf68b08bd0e5165f68b75504661e684ff38831"
+        },
+        {
+          "path": "wind_speed_results/runs/tower_line_90/summary.json",
+          "sha256": "6646eee089b7d5f196de8d0ef1f0ff0ba7d066e27eab395e1b22e49f76c3070e"
+        }
+      ],
+      "compression_detection_tolerance_N": 1.0,
+      "gravity_forces_N": [
+        5898.490845357429,
+        5900.630529676043,
+        5900.630529676043,
+        5898.490845357429
+      ],
+      "first_saved_compression": null,
+      "minimum_force": {
+        "case": "tower_line_90",
+        "step": 0,
+        "element_tag": 1529,
+        "wind_load_factor": 0.0,
+        "equivalent_wind_speed_m_s": 0.0,
+        "force_N_tension_positive": 5898.490845357429
+      },
+      "minimum_force_at_peak_load": {
+        "case": "tower_line_90",
+        "step": 101,
+        "element_tag": 1529,
+        "wind_load_factor": 37.97440419921875,
+        "equivalent_wind_speed_m_s": 123.24675119323632,
+        "force_N_tension_positive": 5917.445172798352
+      }
+    }
+  ]
+}

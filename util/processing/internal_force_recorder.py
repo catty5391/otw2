@@ -34,7 +34,7 @@ class TowerInternalForceHistory:
             raise FileNotFoundError(f"未找到内力数据库: {self.database_path}")
 
     def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.database_path)
+        connection = sqlite3.connect(self.database_path.resolve().as_uri() + "?mode=ro", uri=True)
         connection.row_factory = sqlite3.Row
         return connection
 
@@ -255,6 +255,10 @@ class TowerInternalForceRecorder:
             )
         if self.database_path.exists():
             self.database_path.unlink()
+        for suffix in ("-wal", "-shm"):
+            sidecar = Path(f"{self.database_path}{suffix}")
+            if sidecar.exists():
+                sidecar.unlink()
         self.connection = sqlite3.connect(self.database_path)
         self.connection.execute("PRAGMA journal_mode=WAL")
         self.connection.execute("PRAGMA synchronous=NORMAL")
@@ -365,6 +369,29 @@ class TowerInternalForceRecorder:
         for element_tag in sorted(self.element_records):
             try:
                 response = tuple(float(value) for value in self.ops.eleResponse(element_tag, "localForce"))
+                if not response:
+                    axial = tuple(
+                        float(value)
+                        for value in self.ops.eleResponse(element_tag, "axialForce")
+                    )
+                    if len(axial) == 1:
+                        # corotTruss 只有一个轴力响应。按梁单元数据库格式展开，
+                        # 使全塔查询和包络接口无需区分两类模型。
+                        force = axial[0]
+                        response = (
+                            -force,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            force,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                        )
             except Exception as exc:  # pragma: no cover - depends on OpenSees element type
                 failures.append((element_tag, str(exc)))
                 if self.strict:

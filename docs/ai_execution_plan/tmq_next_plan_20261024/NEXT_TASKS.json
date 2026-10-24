@@ -1,0 +1,984 @@
+{
+  "schema": "otw2.tmq_next_plan.v1",
+  "created_date_local": "2026-10-24",
+  "timezone": "Asia/Shanghai",
+  "status": "planning_only",
+  "source_plan": "PLAN.md",
+  "methods": "METHODS.md",
+  "criteria": "ACCEPTANCE.json",
+  "baseline": "BASELINE.json",
+  "first_batch": [
+    "N00",
+    "N01",
+    "N02",
+    "N03",
+    "N04",
+    "N05"
+  ],
+  "first_batch_full_tower_fe_limit": 0,
+  "execution_status_values": [
+    "planned",
+    "running",
+    "complete",
+    "blocked"
+  ],
+  "assessment_values": [
+    "not_assessed",
+    "pass",
+    "fail",
+    "limited",
+    "not_required"
+  ],
+  "physical_validation_values": [
+    "unvalidated",
+    "limited",
+    "validated_for_declared_scope"
+  ],
+  "dependency_semantics": "depends_on requires completed assessment and accessible artifacts; required gates additionally require evidence meeting their declared scope. Complete with fail does not open a pass gate.",
+  "threshold_policy": "suggested_project_values_not_codes; freeze before trials; version and re-evaluate after change",
+  "concurrency": {
+    "full_tower_processes": 1,
+    "subagents": "only_if_user_or_applicable_instructions_request",
+    "blas_threads": 1
+  },
+  "scope_routes": [
+    {
+      "id": "elastic_numerical",
+      "required_gates": [
+        "G0",
+        "G1",
+        "G2",
+        "G3"
+      ],
+      "physical_status": "unvalidated_allowed_if_explicit",
+      "closeout": "N21,N22,N23 with all selected tasks assessed"
+    },
+    {
+      "id": "nonlinear_physical",
+      "required_gates": [
+        "G0",
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "physical_status": "validated_only_for_declared_scope",
+      "closeout": "N21,N22,N23; N19 optional; N20 admission only"
+    },
+    {
+      "id": "limited_diagnostic",
+      "required_gates": [
+        "G0"
+      ],
+      "physical_status": "unvalidated",
+      "closeout": "N21,N22,N23 after selected diagnostic scope is assessed; failed gates and missing scope retained"
+    }
+  ],
+  "gates": {
+    "G0": {
+      "tasks": [
+        "N00",
+        "N01"
+      ],
+      "requirement": "traceable model, mass, constraints, initialization and immutable evidence"
+    },
+    "G1": {
+      "tasks": [
+        "N02",
+        "N03",
+        "N06"
+      ],
+      "requirement": "Qualified eigenpairs, subspaces and wind response for declared band/outputs under frozen candidate linear C; actual implementation is confirmed in N08.",
+      "acceptance_phases": [
+        "candidate_linear_C",
+        "implemented_C_confirmed"
+      ],
+      "implementation_confirmation_owner": "N08",
+      "required_damping_identity": [
+        "scheme_id",
+        "C_construction",
+        "DOF_coverage",
+        "matrix_or_construction_sha256",
+        "frequency_band",
+        "output_scope"
+      ]
+    },
+    "G2": {
+      "tasks": [
+        "N04",
+        "N07",
+        "N08"
+      ],
+      "requirement": "actual damping, vector loads, time/isolation and dynamic checks pass",
+      "requires_gates": [
+        "G1"
+      ],
+      "required_gate_phases": {
+        "G1": "implemented_C_confirmed"
+      }
+    },
+    "G3": {
+      "tasks": [
+        "N09",
+        "N10",
+        "N11"
+      ],
+      "requirement": "wind input and low-amplitude response convergence pass",
+      "requires_gates": [
+        "G2"
+      ]
+    },
+    "G4": {
+      "tasks": [
+        "N12",
+        "N13",
+        "N14"
+      ],
+      "requirement": "physical sources and independent member/panel validation pass in declared scope",
+      "scope_contract": "material_validity_scope.json must enumerate section/grade/slenderness/boundary/axial-bending/cycle domains and evidence level; one panel is not a whole-tower license",
+      "numerical_reference_only_is_physical_validation": false
+    },
+    "G5": {
+      "tasks": [
+        "N15",
+        "N16",
+        "N17"
+      ],
+      "requirement": "static path and mechanism assessed with adequate numerical/physical sensitivity evidence"
+    },
+    "G6": {
+      "tasks": [
+        "N18"
+      ],
+      "requires_gates": [
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "requirement": "nonlinear dynamic records and validity checks pass; no automatic collapse inference"
+    },
+    "G7": {
+      "tasks": [
+        "N20"
+      ],
+      "requires_gates": [
+        "G6"
+      ],
+      "requirement": "frozen physical event definitions, sample quality and statistical design; no automatic fitting"
+    }
+  },
+  "total_full_tower_fe_cap": 43,
+  "total_full_tower_process_minutes_cap": 645,
+  "tasks": [
+    {
+      "id": "N00",
+      "title": "冻结当前证据和执行工作区",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [],
+      "batch": "B1",
+      "track": "evidence",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N00 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "baseline_check.json",
+        "evidence_index.csv",
+        "execution_log.md"
+      ],
+      "criteria": [
+        "baseline_identity"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N01",
+      "title": "静力模态动力共用模型声明",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N00"
+      ],
+      "batch": "B1",
+      "track": "contract",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N01 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "model_contract.json",
+        "model_difference_table.csv"
+      ],
+      "criteria": [
+        "mass_and_state_contract"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N02",
+      "title": "成组模态与子空间复核",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N00",
+        "N01"
+      ],
+      "batch": "B1",
+      "track": "modal",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N02 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "modal_groups.csv",
+        "subspace_checks.json"
+      ],
+      "criteria": [
+        "eigen_quality",
+        "modal_subspace"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N03",
+      "title": "实际风荷载投影与静柔度截断",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01",
+        "N02"
+      ],
+      "batch": "B1",
+      "track": "modal",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N03 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "generalized_wind_loads.csv",
+        "static_truncation.json"
+      ],
+      "criteria": [
+        "load_mapping",
+        "static_truncation"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N04",
+      "title": "阻尼策略和瞬态接口审计",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01",
+        "N02",
+        "N03"
+      ],
+      "batch": "B1",
+      "track": "dynamic_design",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N04 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "damping_candidates.json",
+        "transient_adapter_spec.md"
+      ],
+      "criteria": [
+        "damping_design"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N05",
+      "title": "首批诊断发布与发布器参数化",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N02",
+        "N03",
+        "N04"
+      ],
+      "batch": "B1",
+      "track": "delivery",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N05 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "modal_diagnostic_manifest.json",
+        "REPORT.md",
+        "verification.json"
+      ],
+      "criteria": [
+        "publication"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N06",
+      "title": "有界扩阶加密与频响验证",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N02",
+        "N03",
+        "N04"
+      ],
+      "batch": "B2",
+      "track": "modal",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N06 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 2,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": "at most 80 segments/300 modes and one 160 segments/<=300 modes; actual need required"
+      },
+      "artifacts": [
+        "modal_admission.json",
+        "frequency_response_comparison.csv"
+      ],
+      "criteria": [
+        "eigen_quality",
+        "modal_subspace",
+        "response_mesh",
+        "frequency_response"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "diagnostic task still assessed even if FE extension not_required; write extension_decision separately"
+    },
+    {
+      "id": "N07",
+      "title": "独立空间瞬态适配与解析小试验",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01",
+        "N04"
+      ],
+      "batch": "B2",
+      "track": "dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N07 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 12,
+        "per_small_model_timeout_seconds": 60,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "transient_adapter.json",
+        "analytic_benchmark_results.json"
+      ],
+      "criteria": [
+        "dynamic_balance",
+        "time_and_isolation"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N08",
+      "title": "全塔小扰动衰减与谐波验收",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N06",
+        "N07"
+      ],
+      "batch": "B2",
+      "track": "dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N08 —",
+      "required_gates": [
+        "G0",
+        "G1"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 8,
+        "per_full_tower_process_timeout_seconds": 600,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "dynamic_adapter_admission.json",
+        "free_decay.csv",
+        "dynamic_balance.json"
+      ],
+      "criteria": [
+        "free_decay",
+        "dynamic_balance",
+        "zero_input",
+        "linear_energy"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null,
+      "required_gate_conditions": {
+        "G1": {
+          "minimum_phase": "candidate_linear_C",
+          "after_task": "confirm actual C and recheck N06 offline; mismatch blocks G2/G3 without automatic FE budget expansion"
+        }
+      }
+    },
+    {
+      "id": "N09",
+      "title": "风场单位时间空间相关核验",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01"
+      ],
+      "batch": "B2",
+      "track": "wind_input",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N09 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": "<=3 seeds for generator diagnostics, no full-tower FE"
+      },
+      "artifacts": [
+        "wind_field_contract.json",
+        "wind_field_verification.json"
+      ],
+      "criteria": [
+        "wind_field"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N10",
+      "title": "小幅单塔塔线风振试点",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N08",
+        "N09"
+      ],
+      "batch": "B3",
+      "track": "dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N10 —",
+      "required_gates": [
+        "G2"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 6,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "pilot_response.csv",
+        "pilot_summary.json"
+      ],
+      "criteria": [
+        "dynamic_balance",
+        "elastic_pilot"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N11",
+      "title": "时间步空间网格与截断收敛",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N10"
+      ],
+      "batch": "B3",
+      "track": "dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N11 —",
+      "required_gates": [
+        "G2"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 6,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "response_convergence.csv",
+        "dynamic_numerical_scope.json"
+      ],
+      "criteria": [
+        "time_convergence",
+        "response_mesh"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N12",
+      "title": "线系统边界与气动力物理依据",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N00",
+        "N01"
+      ],
+      "batch": "B4",
+      "track": "physical",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N12 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 4,
+        "per_small_model_timeout_seconds": 300,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "physical_input_sources.csv",
+        "physical_input_scope.json"
+      ],
+      "criteria": [
+        "physical_inputs"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N13",
+      "title": "论文TMQ与循环机制核验",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N00"
+      ],
+      "batch": "B4",
+      "track": "physical",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N13 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 12,
+        "per_small_model_timeout_seconds": 120,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "tmq_paper_crosswalk.csv",
+        "material_protocol_results.json"
+      ],
+      "criteria": [
+        "material_recoverability",
+        "material_holdout"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N14",
+      "title": "真实角钢参考标定留出及塔段验证",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N12",
+        "N13"
+      ],
+      "batch": "B4",
+      "track": "physical",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N14 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 20,
+        "per_small_model_timeout_seconds": 300,
+        "extra_limits": "<=18 member cases + <=2 panel cases"
+      },
+      "artifacts": [
+        "member_validation.csv",
+        "panel_validation.json",
+        "material_validity_scope.json"
+      ],
+      "criteria": [
+        "reference_convergence",
+        "material_recoverability",
+        "material_holdout",
+        "panel_validation"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "List evidence_level (independent_physical or numerical_reference_only), validated member domains and panel transmission scope; never promote numerical-reference agreement alone to physical validation"
+    },
+    {
+      "id": "N15",
+      "title": "已有峰值下降段与数值停止复核",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01"
+      ],
+      "batch": "B4",
+      "track": "static_path",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N15 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 4,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "peak_path_audit.json",
+        "peak_convergence.csv"
+      ],
+      "criteria": [
+        "pushover_convergence",
+        "partial_result"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "numerical path review may precede G4; keep all physical claims unvalidated until G4"
+    },
+    {
+      "id": "N16",
+      "title": "薄弱位置与全局响应关联",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N01",
+        "N15"
+      ],
+      "batch": "B4",
+      "track": "mechanism",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N16 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "weak_member_events.csv",
+        "weakness_comparison.json"
+      ],
+      "criteria": [
+        "event_traceability"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N17",
+      "title": "物理假设敏感性和模型选择",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N12",
+        "N14",
+        "N15",
+        "N16"
+      ],
+      "batch": "B4",
+      "track": "physical",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N17 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 7,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": "baseline plus <=3 one-at-a-time parameter bounds, <=7 total, no Cartesian expansion"
+      },
+      "artifacts": [
+        "sensitivity.csv",
+        "selected_model_scope.json"
+      ],
+      "criteria": [
+        "physical_sensitivity"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "Map all key nonlinear-demand members into material_validity_scope; uncovered nonlinear demand is out_of_scope, not formal validated output"
+    },
+    {
+      "id": "N18",
+      "title": "准入后的有限非线性风振",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N11",
+        "N14",
+        "N17"
+      ],
+      "batch": "B5",
+      "track": "nonlinear_dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N18 —",
+      "required_gates": [
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 8,
+        "per_full_tower_process_timeout_seconds": 1200,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "nonlinear_wind_summary.json",
+        "nonlinear_scope.json"
+      ],
+      "criteria": [
+        "nonlinear_admission",
+        "dynamic_balance",
+        "partial_result"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "formal branch requires G4. If unavailable, a separate explicitly unvalidated exploratory scope may be proposed; does not satisfy G6 or formal eligibility; map each key nonlinear member/state to material_validity_scope; uncovered nonlinear behavior is out_of_scope"
+    },
+    {
+      "id": "N19",
+      "title": "有平衡残余状态的切线模态",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N18"
+      ],
+      "batch": "B5",
+      "track": "nonlinear_dynamic",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N19 —",
+      "required_gates": [
+        "G6"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 2,
+        "per_full_tower_process_timeout_seconds": 900,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "residual_state_modal.json"
+      ],
+      "criteria": [
+        "residual_modal"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": null
+    },
+    {
+      "id": "N20",
+      "title": "易损性准入审查与统计设计",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N11",
+        "N14",
+        "N17",
+        "N18"
+      ],
+      "batch": "B5",
+      "track": "statistics",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N20 —",
+      "required_gates": [
+        "G6"
+      ],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "fragility_admission.json",
+        "statistical_sampling_plan.json"
+      ],
+      "criteria": [
+        "fragility_admission"
+      ],
+      "completion_rule": "actual steps, commands, inputs, outputs, tests, numerical and physical assessment, stop/failure details",
+      "scope_notes": "admission and sampling design only, no production fitting or mass sampling"
+    },
+    {
+      "id": "N21",
+      "title": "每批网页科学图和说明",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N05"
+      ],
+      "batch": "rolling",
+      "track": "delivery",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N21 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "publication_manifest.json",
+        "browser_verification.json"
+      ],
+      "criteria": [
+        "publication"
+      ],
+      "completion_rule": "rolling per-batch deliverables; final closure at N23",
+      "scope_notes": null
+    },
+    {
+      "id": "N22",
+      "title": "性能记录与预算选择",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N00"
+      ],
+      "batch": "rolling",
+      "track": "performance",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N22 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": "reuse planned runs; <=2 small I/O benchmarks, no additional full-tower FE"
+      },
+      "artifacts": [
+        "performance.csv",
+        "resource_budget.json"
+      ],
+      "criteria": [
+        "performance"
+      ],
+      "completion_rule": "rolling per-batch deliverables; final closure at N23",
+      "scope_notes": null
+    },
+    {
+      "id": "N23",
+      "title": "适用域论文素材与交接",
+      "execution_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "depends_on": [
+        "N21",
+        "N22"
+      ],
+      "batch": "closeout",
+      "track": "delivery",
+      "task_card": "PLAN.md",
+      "source_section_marker": "### N23 —",
+      "required_gates": [],
+      "budget": {
+        "maximum_new_full_tower_cases": 0,
+        "per_full_tower_process_timeout_seconds": 0,
+        "maximum_small_model_cases": 0,
+        "per_small_model_timeout_seconds": 0,
+        "extra_limits": null
+      },
+      "artifacts": [
+        "FINAL_REPORT.md",
+        "execution_status.json",
+        "HANDOFF.md"
+      ],
+      "criteria": [
+        "scope_closeout"
+      ],
+      "completion_rule": "selected scope tasks all assessed; optional or unpassed tasks explicitly retained; requires no fabricated pass",
+      "scope_notes": "do not wait indefinitely for optional physical/statistical branches; assess selected scope honestly"
+    }
+  ]
+}

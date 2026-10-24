@@ -1,0 +1,41 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const {chromium}=require(process.env.OTW2_PLAYWRIGHT_MODULE||'playwright');
+(async()=>{
+  const base=process.env.OTW2_DASHBOARD_URL||'http://127.0.0.1:9999',out=process.argv[2];
+  if(!out||fs.existsSync(out))throw Error('Supply a new screenshot directory');fs.mkdirSync(out,{recursive:true});
+  const browser=await chromium.launch({headless:true}),checks=[],errors=[];
+  try{
+    const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
+    const api=await (await page.request.get(base+'/api/tian-ma-qu')).json(),data=api.modal_analysis;
+    assert.equal(data.primary_case,'coupled_80_checked');assert.equal(data.validated_for_design,false);
+    await page.goto(base+'/#tianmaqu',{waitUntil:'domcontentloaded'});
+    await page.locator('#tmqModalPanel').waitFor({state:'visible',timeout:60000});
+    await page.locator('#tmqModalPanel').scrollIntoViewIfNeeded();await page.locator('#tmqModalImage').evaluate(i=>i.decode());
+    await page.locator('#tmqModalPanel').screenshot({path:path.join(out,'homepage_modal.png')});checks.push('Homepage publishes actual coupled modal results');
+    await page.goto(base+'/tmq/modal_results/index.html',{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>document.querySelector('#modeInfo').textContent.includes('第1阶'),{timeout:60000});
+    assert.equal(await page.locator('#modeSelect option').count(),160);
+    assert.equal(await page.locator('#towerComparison tbody tr').count(),3);
+    for(const img of await page.locator('img').all())await img.evaluate(i=>i.decode());
+    checks.push('Report loads 160 mode shapes, three matched tower modes and scientific figures');
+    const first=await page.locator('#systemCanvas').evaluate(c=>c.toDataURL());await page.waitForTimeout(150);
+    const second=await page.locator('#systemCanvas').evaluate(c=>c.toDataURL());assert.notEqual(first,second);
+    await page.locator('#playButton').click();checks.push('Canvas animates saved eigenvectors and supports pause');
+    await page.locator('[data-shape="0"]').click();
+    assert.equal(await page.locator('#modeSelect').inputValue(),String(data.tower_matches[data.primary_case][0].mode-1));
+    assert.match(await page.locator('#modeInfo').innerText(),/2\.104/);
+    checks.push('Tower-shape shortcuts select matched global mode numbers');
+    await page.screenshot({path:path.join(out,'modal_desktop.png'),fullPage:true});
+    await page.selectOption('#caseSelect','bare_checked');
+    await page.waitForFunction(()=>document.querySelector('#modeSelect').options.length===20);
+    assert.match(await page.locator('#modeInfo').innerText(),/2\.102/);
+    await page.selectOption('#caseSelect','coupled_80_checked');
+    await page.waitForFunction(()=>document.querySelector('#modeSelect').options.length===160);
+    await page.setViewportSize({width:390,height:844});
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    await page.screenshot({path:path.join(out,'modal_mobile.png'),fullPage:true});
+    checks.push('Model switching and mobile layout work without viewport overflow');
+    assert.deepEqual(errors,[]);checks.push('No browser page errors');
+    const result={passed:true,checks,errors};fs.writeFileSync(path.join(out,'browser_result.json'),JSON.stringify(result,null,2)+'\n');process.stdout.write(JSON.stringify(result)+'\n');
+  }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

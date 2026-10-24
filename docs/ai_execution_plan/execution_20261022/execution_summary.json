@@ -1,0 +1,220 @@
+{
+  "schema": "otw2.execution_batch_summary.v1",
+  "created_at": "2026-10-22T14:44:13.037809+00:00",
+  "batch_id": "execution_20261022",
+  "all_25_tasks_completed": false,
+  "selected_route": null,
+  "task_status_counts": {
+    "planned": 8,
+    "in_progress": 2,
+    "done": 9,
+    "blocked": 6,
+    "deferred": 0,
+    "not_selected": 0
+  },
+  "tests": {
+    "passed": 264,
+    "total": 264,
+    "seconds": 16.44,
+    "log": "docs/ai_execution_plan/execution_20261022/integration_final_tests.log",
+    "log_sha256": "d831cafe7ec51f1aefc8ca422c90fdf948404bbe83ad249c4f8bc4c3cb60383c",
+    "physical_validation_implied": false
+  },
+  "browser": {
+    "version": "v5",
+    "actual_interaction_groups_passed": 8,
+    "result": "initial_imperfection_material/results/followup/execution_20261022/dashboard_browser_v5/browser_result.json"
+  },
+  "protected_baseline_verification": {
+    "protected_count": 97,
+    "changed": [],
+    "sqlite_read_lock_shared_memory_changes": [],
+    "wal_files_checked_as_durable_evidence": true,
+    "archive_valid": true,
+    "passed": true
+  },
+  "cases": [
+    {
+      "case_id": "reference_legacy_v1",
+      "run_id": "497c64e1931c4474acda8c04b2c6b662",
+      "manifest": "initial_imperfection_material/results/followup/execution_20261022/reference_legacy_v1/segmented_reference/run_manifest.json",
+      "manifest_sha256": "474936bfe4f1dae88e6b9ce6193704354ce1eb10b3c7bdffa8f3261d54f7d255",
+      "status": "completed",
+      "completed_targets": 9,
+      "requested_targets": 9,
+      "accepted_cyclic_steps": 587,
+      "solver": {
+        "attempts": 591,
+        "failed_attempts": 4,
+        "accepted_steps": 587,
+        "reduced_steps": 0
+      },
+      "runtime_seconds": 3323.969311538618,
+      "final_relative_displacement_m": 2.234049398383217e-19,
+      "final_base_shear_N": 3896.7973576621407,
+      "validation_status": "unvalidated",
+      "domain_status": "unknown",
+      "first_out_of_domain_event": null,
+      "eligible_for_fragility": false
+    },
+    {
+      "case_id": "solver_legacy_v1",
+      "run_id": "073a02c86fcf499897a7affaa82ba1f4",
+      "manifest": "initial_imperfection_material/results/followup/execution_20261022/solver_legacy_v1/equivalent/run_manifest.json",
+      "manifest_sha256": "478bfd0dbb29ce51a3dfe0afcfc636fc9b7777480acc7a442432638fd129112d",
+      "status": "nonconverged",
+      "completed_targets": 6,
+      "requested_targets": 9,
+      "accepted_cyclic_steps": 272,
+      "solver": {
+        "attempts": 298,
+        "failed_attempts": 26,
+        "accepted_steps": 272,
+        "reduced_steps": 1
+      },
+      "runtime_seconds": 461.08334974804893,
+      "final_relative_displacement_m": -0.11777499999999991,
+      "final_base_shear_N": -526855.1148244005,
+      "validation_status": "unvalidated",
+      "domain_status": "unknown",
+      "first_out_of_domain_event": null,
+      "eligible_for_fragility": false
+    },
+    {
+      "case_id": "solver_fine_v1",
+      "run_id": "94314d0a734a4adcaa749eed8004fb07",
+      "manifest": "initial_imperfection_material/results/followup/execution_20261022/solver_fine_v1/equivalent/run_manifest.json",
+      "manifest_sha256": "6ad0daad03c3c95702d25642ed8e7eda6f826c8c8b69451243d5a5a915cc5adf",
+      "status": "completed",
+      "completed_targets": 9,
+      "requested_targets": 9,
+      "accepted_cyclic_steps": 590,
+      "solver": {
+        "attempts": 646,
+        "failed_attempts": 56,
+        "accepted_steps": 590,
+        "reduced_steps": 4
+      },
+      "runtime_seconds": 422.62908802973107,
+      "final_relative_displacement_m": -3.7460032092321432e-19,
+      "final_base_shear_N": -2.9240254661999643e-09,
+      "validation_status": "unvalidated",
+      "domain_status": "out_of_range",
+      "first_out_of_domain_event": {
+        "event_id": "domain-1",
+        "member_id": "877",
+        "quantity": "equivalent_strain",
+        "value": -0.03033354019729604,
+        "accepted_step": 499,
+        "stage_id": "target_8_-0.010000",
+        "direction": null,
+        "boundary": null,
+        "committed": true,
+        "allowed_range": [
+          -0.030000000000000016,
+          0.02
+        ],
+        "unit": "dimensionless",
+        "reasons": [
+          "quantity_out_of_range"
+        ],
+        "evidence_ids": [
+          "calibration"
+        ],
+        "domain_evidence_ids": [
+          "calibration"
+        ],
+        "action": "diagnostic_continue"
+      },
+      "eligible_for_fragility": false
+    },
+    {
+      "case_id": "solver_gradual_v1",
+      "run_id": "411c1fde0327474c8de62d75a050f998",
+      "manifest": "initial_imperfection_material/results/followup/execution_20261022/solver_gradual_v1/equivalent/run_manifest.json",
+      "manifest_sha256": "598db26899057c03d0b0c003e8a0ed8b3e3c3ede7755221d7284d15e0760594a",
+      "status": "nonconverged",
+      "completed_targets": 6,
+      "requested_targets": 9,
+      "accepted_cyclic_steps": 277,
+      "solver": {
+        "attempts": 320,
+        "failed_attempts": 43,
+        "accepted_steps": 277,
+        "reduced_steps": 6
+      },
+      "runtime_seconds": 251.96092579187825,
+      "final_relative_displacement_m": -0.1176272949218749,
+      "final_base_shear_N": -526195.5647788352,
+      "validation_status": "unvalidated",
+      "domain_status": "unknown",
+      "first_out_of_domain_event": null,
+      "eligible_for_fragility": false
+    }
+  ],
+  "G1": {
+    "status": "not_passed",
+    "scope": "complete_nine_target_protocol",
+    "reasons": [
+      "877 full matching mesh force history relative difference 0.02154462149619401 exceeds 1e-6",
+      "prefix fiber extrema changes exceed two percent; force convergence is not local strain convergence"
+    ],
+    "calibration_and_dynamic_expansion_authorized_by_gate": false
+  },
+  "evidence_summary_fingerprints": {
+    "mechanics/mesh_full_v1_sub8/mesh_study_summary.json": {
+      "sha256": "73933268872bd568069c832b45a2848ba59c81ab09402ffbf2d3d48a0841ee51"
+    },
+    "mechanics/mesh_full_877_v2_sub16/mesh_study_summary.json": {
+      "sha256": "a1e4db2a05c3cf69e3cbbf1f7a4d2b992ee67f6edac66ffc2602f45167236b28"
+    },
+    "mechanics/mesh_full_877_v3_sub16_fallback/mesh_study_summary.json": {
+      "sha256": "20ff5589dfde007b4d27823effa00181324996351a41c5f8ca4186f2083abfc4"
+    },
+    "mechanics/full_825_dense_peak_sampling.json": {
+      "sha256": "e447fc4658f6ccf73476ca06d38bdf49ae91c1e8e1bd2f9f949f968e68e705f3"
+    },
+    "mechanics/fiber_prefix6_v1/fiber_study_summary.json": {
+      "sha256": "fe8a894e163ba09e5ecfa755861f112f2bb93d3aa063ec3e8416abef02485612"
+    },
+    "mechanics/mirror_prefix6_v1/mesh_study_summary.json": {
+      "sha256": "7e4aed721c600148d34b73c6c6292cca08bc654e5fb98a6351ba003cbeb16372"
+    },
+    "solver_comparisons_v1/reference_vs_fine.json": {
+      "sha256": "7ddfa8cb2c22c5e24c0e6967cb61c5f222867660e19fc8f60285dce6d373d528"
+    },
+    "solver_comparisons_v1/fine_vs_gradual.json": {
+      "sha256": "d62448a2c234c0988e785d193c8d2ea9e885f4445c0321a15016cd7e1cc2fbae"
+    }
+  },
+  "local_reference_archive_coordinate_note": "Local replay source_step indexes parent JSONL accepted_step; recover original tower cyclic source_step by looking up the parent row. Raw MemberStateRecorder source_step is the original tower cyclic step.",
+  "reports": [
+    "docs/ai_execution_plan/execution_20261022/RESULTS.md",
+    "docs/ai_execution_plan/execution_20261022/MECHANICS.md",
+    "docs/ai_execution_plan/execution_20261022/CONFIG_CACHE.md",
+    "docs/ai_execution_plan/execution_20261022/QUALITY.md",
+    "docs/ai_execution_plan/execution_20261022/SOLVER_RECORDS.md",
+    "docs/ai_execution_plan/execution_20261022/RECORDING.md",
+    "docs/ai_execution_plan/execution_20261022/FULL_REFERENCE.md",
+    "docs/ai_execution_plan/execution_20261022/TOWER_SOLVER_REGRESSION.md",
+    "docs/ai_execution_plan/execution_20261022/T09_ACTUAL_CALIBRATION.md",
+    "docs/ai_execution_plan/execution_20261022/CYCLIC_PROTOCOL_PREPARATION.md",
+    "docs/ai_execution_plan/execution_20261022/SAMPLE_ADMISSION.md",
+    "docs/ai_execution_plan/execution_20261022/WIND_ADAPTER.md",
+    "docs/ai_execution_plan/execution_20261022/DASHBOARD_VALIDATION.md",
+    "docs/ai_execution_plan/execution_20261022/decisions.md",
+    "docs/ai_execution_plan/execution_20261022/execution_log.md"
+  ],
+  "service": {
+    "port": 9999,
+    "bound_host": "0.0.0.0",
+    "health_last_verified": "ok",
+    "overview_response_bytes": 69263,
+    "formal_sample_admission_from_new_runs": false
+  },
+  "mutation_scope": {
+    "old_result_roots_overwritten": false,
+    "git_commit_or_push_performed": false,
+    "production_material_route_selected": false
+  }
+}

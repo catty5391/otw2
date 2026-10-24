@@ -1,0 +1,1352 @@
+{
+  "schema": "otw2.ai_execution_plan.v1",
+  "created_at": "2026-10-22",
+  "plan_only": false,
+  "project_root": "/home/panqiheng/otw2",
+  "branch_at_planning": "redevelop",
+  "head_at_planning": "aa3272ce71b002b30b8a8062ed35bcfa2482ae60",
+  "selected_route": null,
+  "study_scope": null,
+  "execution_default_batch": [
+    "T00",
+    "T01",
+    "T02",
+    "T03",
+    "T04"
+  ],
+  "status_values": [
+    "planned",
+    "in_progress",
+    "done",
+    "blocked",
+    "deferred",
+    "not_selected"
+  ],
+  "dependency_semantics": "depends_on为公共前置；conditional_dependencies由T11选路及用户研究范围决定；非选中路线记not_selected；本文件不自动调度或执行命令。",
+  "routes": {
+    "A": "限定范围的一维循环等效",
+    "B": "关键杆保留分段的混合模型",
+    "C": "经过验证的分段模型研究主线"
+  },
+  "gates": [
+    {
+      "id": "G0",
+      "title": "可复现",
+      "evidence_from": [
+        "T00"
+      ],
+      "execution_assessment": {
+        "status": "passed",
+        "scope": "recoverable_source_and_protected_old_evidence"
+      }
+    },
+    {
+      "id": "G1",
+      "title": "局部参考可信",
+      "evidence_from": [
+        "T01",
+        "T05",
+        "T08"
+      ],
+      "execution_assessment": {
+        "status": "not_passed",
+        "scope": "full_nine_target_protocol",
+        "reason": "877_matching_four_segment_replay_differs_by_2.15446_percent;prefix_fiber_extrema_not_converged",
+        "partial_scope": "six_target_force_history_mesh_and_fiber_force_metrics_only_not_full_G1"
+      }
+    },
+    {
+      "id": "G2",
+      "title": "路线可辨识",
+      "evidence_from": [
+        "T11"
+      ],
+      "execution_assessment": {
+        "status": "not_evaluated",
+        "reason": "upstream_physical_gate_or_route_pending"
+      }
+    },
+    {
+      "id": "G3",
+      "title": "构件通过",
+      "evidence_from": [
+        "T16"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B"
+      ],
+      "execution_assessment": {
+        "status": "not_evaluated",
+        "reason": "upstream_physical_gate_or_route_pending"
+      }
+    },
+    {
+      "id": "G4",
+      "title": "全塔通过",
+      "evidence_from": [
+        "T18"
+      ],
+      "execution_assessment": {
+        "status": "not_evaluated",
+        "reason": "upstream_physical_gate_or_route_pending"
+      }
+    },
+    {
+      "id": "G5",
+      "title": "动力通过",
+      "evidence_from": [
+        "T20",
+        "T21"
+      ],
+      "optional_for_scope": [
+        "wind",
+        "fragility"
+      ],
+      "execution_assessment": {
+        "status": "not_evaluated",
+        "reason": "upstream_physical_gate_or_route_pending"
+      }
+    },
+    {
+      "id": "G6",
+      "title": "易损性可用",
+      "evidence_from": [
+        "T22"
+      ],
+      "optional_for_scope": [
+        "fragility"
+      ],
+      "execution_assessment": {
+        "status": "not_evaluated",
+        "reason": "upstream_physical_gate_or_route_pending"
+      }
+    }
+  ],
+  "protected_result_roots": [
+    "initial_imperfection_material/results/full_tower_cyclic",
+    "initial_imperfection_material/results/convergence_diagnosis"
+  ],
+  "new_result_root_pattern": "initial_imperfection_material/results/followup/<batch_id>/<case_id>",
+  "threshold_policy": "PLAN.md第5.4节均为项目建议；执行前冻结，不得当规范或事后调整以宣称通过。",
+  "tasks": [
+    {
+      "id": "T00",
+      "title": "冻结工作区与证据基线",
+      "priority": "P0",
+      "phase": "基础",
+      "owner_focus": "协调",
+      "status": "done",
+      "depends_on": [],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/CONVERGENCE_DIAGNOSIS.md",
+        "util/analysis/TEST_REPORT.md"
+      ],
+      "proposed_artifacts": [
+        "baseline_inventory.json",
+        "execution_log.md",
+        "decisions.md",
+        "acceptance_profile.json"
+      ],
+      "acceptance": [
+        "完整保存未跟踪源码与已有修改的可恢复来源",
+        "实际运行并登记当前测试基线",
+        "旧结果指纹未变"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T00",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/baseline/baseline_inventory.json"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047760+00:00",
+        "notes": "源码归档、53/53实际基线、验收冻结、97旧证据核查通过。"
+      }
+    },
+    {
+      "id": "T01",
+      "title": "参数、截面耦合与弹性刚度审计",
+      "priority": "P0",
+      "phase": "基础",
+      "owner_focus": "力学",
+      "status": "done",
+      "depends_on": [
+        "T00"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/experiment.py",
+        "model/tower_model_with_buckling.py",
+        "model/tower_model_with_equivalent_imperfection.py",
+        "model/tower_model.py"
+      ],
+      "proposed_artifacts": [
+        "model_assumptions.csv",
+        "elastic_stiffness_audit.json",
+        "tests/test_model_mechanical_parity.py"
+      ],
+      "acceptance": [
+        "完整Steel02、I23、局部轴与边界逐项对照",
+        "legacy与aligned配置分别保存",
+        "弹性与截面精度满足冻结门槛"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T01",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/MECHANICS.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047780+00:00",
+        "notes": "参数/弹性审计完成；旧等效截面耦合缺失已量化；主轴隔离原型通过，不等于生产模型修复。"
+      }
+    },
+    {
+      "id": "T02",
+      "title": "统一配置与标定缓存版本",
+      "priority": "P0",
+      "phase": "基础",
+      "owner_focus": "工程",
+      "status": "done",
+      "depends_on": [
+        "T00",
+        "T01"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "model/tower_model_with_equivalent_imperfection.py",
+        "initial_imperfection_material/experiment.py",
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "util/analysis/run_manifest.py"
+      ],
+      "proposed_artifacts": [
+        "initial_imperfection_material/config.py",
+        "initial_imperfection_material/calibration_cache.py",
+        "tests/test_calibration_cache.py"
+      ],
+      "acceptance": [
+        "关键物理/数值/版本变化正确失效",
+        "无广泛异常静默Perry回退",
+        "原子写入和新目录保护通过"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T02",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/CONFIG_CACHE.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047786+00:00",
+        "notes": "v2完整身份缓存、显式旧库、类型回退与入口接入，21项缓存测试通过。"
+      }
+    },
+    {
+      "id": "T03",
+      "title": "运行、验证范围与物理状态分离",
+      "priority": "P0",
+      "phase": "基础",
+      "owner_focus": "工程",
+      "status": "done",
+      "depends_on": [
+        "T00"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "util/analysis/run_manifest.py",
+        "fluctuate_wind_simulate/fragility_curve/main.py"
+      ],
+      "proposed_artifacts": [
+        "util/analysis/result_quality.py",
+        "quality_schema.json",
+        "tests/test_result_quality.py"
+      ],
+      "acceptance": [
+        "completed与未验证/越界可同时存在",
+        "历史未知结果不会默认通过",
+        "诊断对照不能进入正式统计"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T03",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/QUALITY.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047793+00:00",
+        "notes": "独立质量契约与Manifest，17项测试；未知/越界/局部失配不准入。"
+      }
+    },
+    {
+      "id": "T04",
+      "title": "局部历程记录与协议对齐",
+      "priority": "P0",
+      "phase": "基础",
+      "owner_focus": "工程",
+      "status": "done",
+      "depends_on": [
+        "T02",
+        "T03"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "util/processing/internal_force_recorder.py",
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "initial_imperfection_material/diagnose_tower_convergence.py",
+        "initial_imperfection_material/summarize_convergence_diagnosis.py"
+      ],
+      "proposed_artifacts": [
+        "util/processing/member_state_recorder.py",
+        "initial_imperfection_material/compare_runs.py",
+        "recording_schema.md",
+        "tests/test_member_state_recorder.py",
+        "tests/test_compare_material_runs.py"
+      ],
+      "acceptance": [
+        "两端6DOF与committed/trial分开",
+        "比较显式选择两个运行且不依赖固定步号",
+        "无共同阶段安全返回并且旧内力API兼容"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T04",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/RECORDING.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047797+00:00",
+        "notes": "关键杆全历程、SQLite兼容、通用协议比较和只读探针已实现验证；参考精度由T08另验。"
+      }
+    },
+    {
+      "id": "T05",
+      "title": "真实残差、功与状态验收",
+      "priority": "P0",
+      "phase": "局部参考",
+      "owner_focus": "工程",
+      "status": "done",
+      "depends_on": [
+        "T01",
+        "T04"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "util/analysis/stepping.py",
+        "util/postprocess/response_metrics.py",
+        "initial_imperfection_material/full_tower_cyclic.py"
+      ],
+      "proposed_artifacts": [
+        "util/analysis/equilibrium_checks.py",
+        "util/postprocess/energy.py",
+        "tests/test_equilibrium_and_work.py"
+      ],
+      "acceptance": [
+        "自由DOF残差由解析小模型证实",
+        "真实分布荷载外功与V-u面积区分",
+        "提交后不合格状态不被假装回滚重试"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T05",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/SOLVER_RECORDS.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047801+00:00",
+        "notes": "静力/显式惯性阻尼动力残差、共轭外功、提交后拒绝处理通过；未知质量/约束明确不支持。"
+      }
+    },
+    {
+      "id": "T06",
+      "title": "全塔一致的三维局部参考构建",
+      "priority": "P0",
+      "phase": "局部参考",
+      "owner_focus": "力学",
+      "status": "done",
+      "depends_on": [
+        "T01",
+        "T02"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "model/tower_model_with_buckling.py",
+        "initial_imperfection_material/experiment.py"
+      ],
+      "proposed_artifacts": [
+        "initial_imperfection_material/member_reference_3d.py",
+        "tests/test_member_reference_3d.py"
+      ],
+      "acceptance": [
+        "实际截面方向与缺陷方向可复现",
+        "空间边界和重力重放定义完整",
+        "纯弹性与同离散重放核对通过"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T06",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/MECHANICS.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047804+00:00",
+        "notes": "明确空间边界、旧二维包装、重力起6DOF重放通过；六目标同4段端力误差低于5e-10，高幅/网格另验。"
+      }
+    },
+    {
+      "id": "T07",
+      "title": "全塔参考关键杆边界历程",
+      "priority": "P0",
+      "phase": "局部参考",
+      "owner_focus": "力学",
+      "status": "in_progress",
+      "depends_on": [
+        "T02",
+        "T04",
+        "T05",
+        "T06"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "model/tower_model_with_buckling.py"
+      ],
+      "proposed_artifacts": [
+        "boundary_history",
+        "reference_events",
+        "local_response_truth_table.csv"
+      ],
+      "acceptance": [
+        "记录重力和全部前序循环",
+        "legacy记录回归通过",
+        "关键杆是否屈服/局部失稳可从数据回答"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T07",
+      "execution": {
+        "run_ids": [
+          "497c64e1931c4474acda8c04b2c6b662",
+          "2e714743ad8447a18dfbd5a777e9dddc"
+        ],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/RECORDING.md",
+          "docs/ai_execution_plan/execution_20261022/FULL_REFERENCE.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "legacy全塔9/9、587步/607局部记录；新旧588行u/V/loadfactor逐行差0，39次残差检查全部通过。完整真值/事件图已发布；aligned全塔尚未执行。",
+        "case_ids": [
+          "reference_legacy_v1",
+          "reference_prefix_6_v1"
+        ]
+      }
+    },
+    {
+      "id": "T08",
+      "title": "真实边界重放与局部收敛",
+      "priority": "P0",
+      "phase": "局部参考",
+      "owner_focus": "力学",
+      "status": "blocked",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/experiment.py",
+        "initial_imperfection_material/summarize_convergence_diagnosis.py"
+      ],
+      "proposed_artifacts": [
+        "local_reference_convergence.csv",
+        "boundary_attribution.md",
+        "reference_valid_domain.json"
+      ],
+      "acceptance": [
+        "同4段重放先吻合",
+        "网格/步长/Fiber逐项收敛",
+        "不确定参考和不可表达耦合明确标注"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T08",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/MECHANICS.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "本批局部试验已完成。完整877三组定向对照后同4重放端力差2.15446%未过门；825/32按全部子步峰力/峰位达门。前6目标细Fiber端力指标通过，但fiber极值变化2.15%-3.46%尚未收敛；878/828同4重放通过，不等于可删镜像。完整G1未过，禁止继续标定/候选全塔。"
+      }
+    },
+    {
+      "id": "T09",
+      "title": "实际杆标定及Perry专项处置",
+      "priority": "P1",
+      "phase": "路线判断",
+      "owner_focus": "力学",
+      "status": "blocked",
+      "depends_on": [
+        "T02",
+        "T08"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/material.py",
+        "model/tower_model_with_equivalent_imperfection.py"
+      ],
+      "proposed_artifacts": [
+        "calibration_library_v2.json",
+        "perry_group_resolution.md",
+        "calibration_metrics.csv"
+      ],
+      "acceptance": [
+        "优先0.85m及1.95m关键组而非全194组",
+        "完整参考曲线和骨架分开保留",
+        "无未验证回退或静默范围外延"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T09",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/T09_ACTUAL_CALIBRATION.md"
+        ],
+        "test_results": [
+          {
+            "suite": "test_actual_member_calibration",
+            "passed": 15,
+            "total": 15,
+            "seconds": 0.114,
+            "kind": "synthetic_contract_not_physical_calibration"
+          }
+        ],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "门控两组离线重构工具和15/15合成测试完成；真实S2K+G1pending预检查两组blocked/G1_not_passed，无FE、无正式库/实际图，物理标定未完成。"
+      }
+    },
+    {
+      "id": "T10",
+      "title": "循环参考、留出集与依据",
+      "priority": "P1",
+      "phase": "路线判断",
+      "owner_focus": "力学",
+      "status": "blocked",
+      "depends_on": [
+        "T08",
+        "T09"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/experiment.py",
+        "literature/transmission_tower_wind/README.md"
+      ],
+      "proposed_artifacts": [
+        "cyclic_benchmark_cases.json",
+        "holdout_cases.json",
+        "cyclic_mechanism_basis.md"
+      ],
+      "acceptance": [
+        "数据及留出集先于候选材料冻结",
+        "峰前可逆条件由参考证实",
+        "新参数具有可标定观测量"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T10",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/CYCLIC_PROTOCOL_PREPARATION.md",
+          "literature/transmission_tower_wind/cyclic_member_material_mechanisms.md"
+        ],
+        "test_results": [
+          {
+            "suite": "test_cyclic_protocol_contract",
+            "passed": 16,
+            "total": 16,
+            "seconds": 0.026,
+            "kind": "synthetic_contract_not_physical_validation"
+          }
+        ],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "16用例预冻结(8训练/4诊断/4留出)、绑定/防泄漏契约和16/16测试、合法文献机制核查完成；真实幅值0、FE0。完整G1/T09未通过，实际循环参考与参数识别未完成。"
+      }
+    },
+    {
+      "id": "T11",
+      "title": "选择A等效、B混合或C参考主线",
+      "priority": "P1",
+      "phase": "路线判断",
+      "owner_focus": "协调",
+      "status": "blocked",
+      "depends_on": [
+        "T08",
+        "T09",
+        "T10"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/CONVERGENCE_DIAGNOSIS.md"
+      ],
+      "proposed_artifacts": [
+        "MODEL_ROUTE_DECISION.md"
+      ],
+      "acceptance": [
+        "以边界/耦合/局部误差证据选路",
+        "适用杆族与拒绝规则明确",
+        "未选任务标not_selected而非done"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T11",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "完整G1、实际标定及独立循环证据未满足，A/B/C保持未选。先处理参考路径/纤维极值，不用一维本构拟合掩盖参考失配。"
+      }
+    },
+    {
+      "id": "T12",
+      "title": "循环材料状态原型",
+      "priority": "P1",
+      "phase": "实现",
+      "owner_focus": "力学",
+      "status": "planned",
+      "depends_on": [
+        "T11"
+      ],
+      "applies_to_routes": [
+        "A"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/material.py"
+      ],
+      "proposed_artifacts": [
+        "initial_imperfection_material/cyclic_material.py",
+        "tests/test_cyclic_material_state.py"
+      ],
+      "acceptance": [
+        "可恢复与不可恢复状态分离",
+        "trial/commit/revert/copy及切线测试通过",
+        "训练/留出通过且无任意参数硬拟合"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T12",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T13",
+      "title": "原生OpenSees材料适配",
+      "priority": "P1",
+      "phase": "实现",
+      "owner_focus": "工程",
+      "status": "planned",
+      "depends_on": [
+        "T12"
+      ],
+      "applies_to_routes": [
+        "A"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/material.py",
+        "model/tower_model_with_equivalent_imperfection.py"
+      ],
+      "proposed_artifacts": [
+        "native_material_adapter",
+        "native_build_instructions.md",
+        "tests/test_native_material_lifecycle.py"
+      ],
+      "acceptance": [
+        "先验证现有载体能力再决定C++",
+        "原生与原型同路径一致",
+        "失败步回滚、复制独立及面积长度单位通过"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T13",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T14",
+      "title": "关键杆分段的混合模型",
+      "priority": "P1",
+      "phase": "实现",
+      "owner_focus": "工程",
+      "status": "planned",
+      "depends_on": [
+        "T11"
+      ],
+      "applies_to_routes": [
+        "B"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "model/tower_model_with_buckling.py",
+        "model/tower_model_with_equivalent_imperfection.py",
+        "util/processing/internal_force_recorder.py"
+      ],
+      "proposed_artifacts": [
+        "model/tower_model_hybrid_imperfection.py",
+        "representation_policy.json",
+        "tests/test_hybrid_tower_model.py"
+      ],
+      "acceptance": [
+        "选择规则可事先用于留出工况",
+        "标签/质量/重力/风面积/端转角一致",
+        "不重复缺陷且原杆映射可追溯"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T14",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T15",
+      "title": "自适应求解与数值配置回归",
+      "priority": "P1",
+      "phase": "实现",
+      "owner_focus": "工程",
+      "status": "done",
+      "depends_on": [
+        "T02",
+        "T04",
+        "T05"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "util/analysis/stepping.py",
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "initial_imperfection_material/experiment.py"
+      ],
+      "proposed_artifacts": [
+        "solver_profiles.json",
+        "tests/test_convergence_diagnostics.py",
+        "solver_path_sensitivity.csv"
+      ],
+      "acceptance": [
+        "完整算法参数与生效容差有记录",
+        "legacy/fine基线可复现且质量状态正确",
+        "新恢复策略路径可解释且无假回滚"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T15",
+      "execution": {
+        "run_ids": [
+          "073a02c86fcf499897a7affaa82ba1f4",
+          "94314d0a734a4adcaa749eed8004fb07",
+          "411c1fde0327474c8de62d75a050f998"
+        ],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/SOLVER_RECORDS.md",
+          "docs/ai_execution_plan/execution_20261022/TOWER_SOLVER_REGRESSION.md",
+          "initial_imperfection_material/results/followup/execution_20261022/solver_comparisons_v1"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T14:33:51.755476+00:00",
+        "notes": "有效配置/attempt/预算/恢复策略实现；新legacy复现6/9、272步，fine复现9/9、590步且旧新591行u/V差0；gradual同细步下限只6/9、277步、min_increment停止。已按共同进度比较路径；未宣称gradual改善或材料物理通过。",
+        "case_ids": [
+          "solver_legacy_v1",
+          "solver_fine_v1",
+          "solver_gradual_v1"
+        ]
+      }
+    },
+    {
+      "id": "T16",
+      "title": "构件独立验收与适用域",
+      "priority": "P1",
+      "phase": "验证",
+      "owner_focus": "验证",
+      "status": "planned",
+      "depends_on": [
+        "T09",
+        "T10",
+        "T15"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B"
+      ],
+      "conditional_dependencies": [
+        {
+          "when": {
+            "selected_route": [
+              "A"
+            ]
+          },
+          "requires": [
+            "T13"
+          ]
+        },
+        {
+          "when": {
+            "selected_route": [
+              "B"
+            ]
+          },
+          "requires": [
+            "T14"
+          ]
+        }
+      ],
+      "existing_files": [
+        "initial_imperfection_material/experiment.py",
+        "initial_imperfection_material/material.py"
+      ],
+      "proposed_artifacts": [
+        "member_validation_matrix.csv",
+        "validated_domains.json",
+        "member_validation_report.md"
+      ],
+      "acceptance": [
+        "关键杆与留出工况均通过冻结门槛",
+        "局部误差和范围逐项给出",
+        "参考屈服与等效应变不混同"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T16",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T17",
+      "title": "横担/塔段验证",
+      "priority": "P1",
+      "phase": "验证",
+      "owner_focus": "力学",
+      "status": "planned",
+      "depends_on": [
+        "T16"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "model/tower_model_with_buckling.py",
+        "initial_imperfection_material/full_tower_cyclic.py"
+      ],
+      "proposed_artifacts": [
+        "subassembly_cases.json",
+        "subassembly_validation_report.md"
+      ],
+      "acceptance": [
+        "真实边界且扩一圈敏感性可接受",
+        "局部力变形及事件机制通过",
+        "构件合格但网络失配不得进入全塔"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T17",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T18",
+      "title": "全塔整体与局部回归",
+      "priority": "P1",
+      "phase": "验证",
+      "owner_focus": "验证",
+      "status": "planned",
+      "depends_on": [
+        "T11",
+        "T15"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [
+        {
+          "when": {
+            "selected_route": [
+              "A",
+              "B"
+            ]
+          },
+          "requires": [
+            "T17"
+          ]
+        },
+        {
+          "when": {
+            "selected_route": [
+              "C"
+            ]
+          },
+          "requires": [
+            "T08"
+          ]
+        }
+      ],
+      "existing_files": [
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "model/tower_model_with_buckling.py",
+        "model/tower_model_with_equivalent_imperfection.py"
+      ],
+      "proposed_artifacts": [
+        "tower_validation_report.md",
+        "member_checkpoint_errors.csv",
+        "event_comparison.csv",
+        "tower_valid_domain.json"
+      ],
+      "acceptance": [
+        "原协议与有选择留出工况完成",
+        "A/B关键杆及全体局部误差通过；C参考收敛/残差/事件一致性通过",
+        "无隐式越界/参考未定却宣称通过"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T18",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T19",
+      "title": "公平性能比较与版本冻结",
+      "priority": "P2",
+      "phase": "交付",
+      "owner_focus": "验证",
+      "status": "planned",
+      "depends_on": [
+        "T18"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "initial_imperfection_material/full_tower_cyclic.py",
+        "util/analysis/run_manifest.py"
+      ],
+      "proposed_artifacts": [
+        "benchmark_results.json",
+        "benchmark_report.md",
+        "validated_configuration_bundle"
+      ],
+      "acceptance": [
+        "相同协议/质量/记录量串行至少3次",
+        "冷标定与热求解成本分列",
+        "速度结论不引用不同完成度的旧耗时"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T19",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      }
+    },
+    {
+      "id": "T20",
+      "title": "动力初始化与风振模型适配",
+      "priority": "P2",
+      "phase": "动力",
+      "owner_focus": "工程",
+      "status": "blocked",
+      "depends_on": [
+        "T18"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "fluctuate_wind_simulate/opensees_simulate/wind_refactor_common.py",
+        "tests/test_analysis_workflows.py"
+      ],
+      "proposed_artifacts": [
+        "dynamic_model_config.json",
+        "modal_damping_validation.md",
+        "tests/test_dynamic_sample_isolation.py"
+      ],
+      "acceptance": [
+        "模型族/记录器能力正确",
+        "质量/重力/模态/阻尼小幅核对通过",
+        "样本顺序与进程不污染材料历史"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T20",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/execution_log.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "样本独立重建/重力初态/可配置模型和记录器等工程前置及8项真实小模型测试已完成；G4未过，全塔质量/模态/MAC/阻尼和动力验证未完成。"
+      },
+      "optional_for_scope": [
+        "wind",
+        "fragility"
+      ]
+    },
+    {
+      "id": "T21",
+      "title": "少量实际风场对照",
+      "priority": "P2",
+      "phase": "动力",
+      "owner_focus": "验证",
+      "status": "planned",
+      "depends_on": [
+        "T20",
+        "T03",
+        "T05"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "fluctuate_wind_simulate/opensees_simulate/wind_refactor_common.py",
+        "util/analysis/time_series.py"
+      ],
+      "proposed_artifacts": [
+        "wind_pilot_cases.json",
+        "wind_pilot_validation.md",
+        "time_step_sensitivity.csv"
+      ],
+      "acceptance": [
+        "先1样本；A/B最多3种子x2强度x2模型主运行，C先3种子x2强度分段模型主运行",
+        "输入物理与dt/2敏感性检查通过",
+        "未解释越界/局部失真则停止扩批"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T21",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "未启动本任务实现/物理试验。前置任务与所选路线尚未满足；具体依赖见depends_on/conditional_dependencies及PLAN.md。"
+      },
+      "optional_for_scope": [
+        "wind",
+        "fragility"
+      ]
+    },
+    {
+      "id": "T22",
+      "title": "损伤判据与易损性准入",
+      "priority": "P2",
+      "phase": "可选统计",
+      "owner_focus": "验证",
+      "status": "blocked",
+      "depends_on": [
+        "T21"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "fluctuate_wind_simulate/fragility_curve/main.py",
+        "util/analysis/run_manifest.py"
+      ],
+      "proposed_artifacts": [
+        "limit_states.json",
+        "sample_disposition.csv",
+        "fragility_validation_report.md"
+      ],
+      "acceptance": [
+        "阈值有独立物理依据",
+        "数值失败/越界不等于倒塌且不静默删除",
+        "样本质量、分母及不确定性完整报告"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T22",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/SAMPLE_ADMISSION.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "准入/流转工程准备和真实fragility提取入口已完成测试；70条历史审核正式0/70、显式探索70/70。物理判据/G5未通过，未拟合正式新材料易损性。"
+      },
+      "optional_for_scope": [
+        "fragility"
+      ]
+    },
+    {
+      "id": "T23",
+      "title": "9999网页版本与证据更新",
+      "priority": "P1",
+      "phase": "并行交付",
+      "owner_focus": "展示",
+      "status": "done",
+      "depends_on": [
+        "T03",
+        "T04"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [],
+      "existing_files": [
+        "py_view/results_dashboard/server.py",
+        "py_view/results_dashboard/static/index.html",
+        "py_view/results_dashboard/static/app.js",
+        "tests/test_results_dashboard.py"
+      ],
+      "proposed_artifacts": [
+        "dashboard_result_registry.json",
+        "dashboard_verification.md",
+        "py_view/README.md"
+      ],
+      "acceptance": [
+        "历史6/9与诊断9/9分别展示",
+        "版本/误差/范围由元数据驱动",
+        "临时端口API与实际浏览器验收后再按授权更新服务"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T23",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/DASHBOARD_VALIDATION.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": "2026-10-22T13:50:12.047822+00:00",
+        "notes": "20/20网页测试、Chromium v5 8组真实交互通过；followup质量摘要保留全部flags/首事件且大幅减小体积；9999由根加载最终补丁重启，health/overview及新报告/图下载200。"
+      }
+    },
+    {
+      "id": "T24",
+      "title": "最终图表、报告与AI交接",
+      "priority": "P2",
+      "phase": "交付",
+      "owner_focus": "协调",
+      "status": "in_progress",
+      "depends_on": [
+        "T18",
+        "T23"
+      ],
+      "applies_to_routes": [
+        "A",
+        "B",
+        "C"
+      ],
+      "conditional_dependencies": [
+        {
+          "when": {
+            "selected_route": [
+              "A",
+              "B"
+            ]
+          },
+          "requires": [
+            "T19"
+          ]
+        },
+        {
+          "when": {
+            "study_scope_includes": [
+              "wind"
+            ]
+          },
+          "requires": [
+            "T21"
+          ]
+        },
+        {
+          "when": {
+            "study_scope_includes": [
+              "fragility"
+            ]
+          },
+          "requires": [
+            "T22"
+          ]
+        }
+      ],
+      "existing_files": [
+        "initial_imperfection_material/REPORT.md",
+        "initial_imperfection_material/FULL_TOWER_CYCLIC_REPORT.md",
+        "literature/transmission_tower_wind/graduation_scope_benchmark.md"
+      ],
+      "proposed_artifacts": [
+        "VALIDATION_REPORT.md",
+        "MODEL_LIMITATIONS.md",
+        "REPRODUCE.md",
+        "figure_data_index.csv"
+      ],
+      "acceptance": [
+        "每项结论关联数据/运行/源码",
+        "已选路线与未验证范围明确",
+        "实际完成状态及下一AI入口可用"
+      ],
+      "detail_document": "PLAN.md",
+      "detail_section": "T24",
+      "execution": {
+        "run_ids": [],
+        "evidence_paths": [
+          "docs/ai_execution_plan/execution_20261022/execution_log.md",
+          "docs/ai_execution_plan/execution_20261022/RESULTS.md"
+        ],
+        "test_results": [],
+        "decision_reference": null,
+        "completed_at": null,
+        "notes": "五角色步骤/结果、完整全塔参考表图、三组数值回归及全部25项状态已整合RESULTS.md；最终研究路线/全幅物理门未通过，不能宣称整计划完成。"
+      }
+    }
+  ],
+  "execution_authorized": true,
+  "execution_batch": "execution_20261022",
+  "last_execution_update": "2026-10-22T14:42:59.247942+00:00",
+  "execution_results_index": "docs/ai_execution_plan/execution_20261022/RESULTS.md",
+  "latest_integration_tests": {
+    "passed": 264,
+    "total": 264,
+    "seconds": 16.44,
+    "log": "docs/ai_execution_plan/execution_20261022/integration_final_tests.log",
+    "physical_validation_implied": false
+  },
+  "execution_closure": {
+    "status": "partial_delivery_physical_gate_not_passed",
+    "report": "docs/ai_execution_plan/execution_20261022/RESULTS.md",
+    "all_25_tasks_completed": false,
+    "all_executed_tasks_have_steps_and_results": true
+  }
+}

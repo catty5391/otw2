@@ -1,0 +1,18 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "native_tests_enabled": true,
+  "returncode": 0,
+  "run": 468,
+  "skipped": 0,
+  "elapsed_seconds": 1269.762993842829,
+  "checked_at_utc": "2026-10-24T04:26:54.464498+00:00",
+  "log": "tests.log"
+}

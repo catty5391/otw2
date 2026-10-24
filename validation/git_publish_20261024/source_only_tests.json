@@ -1,0 +1,16 @@
+{
+  "run": 53,
+  "status": "passed",
+  "requires_saved_results": false,
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "tests.test_tian_ma_qu_material",
+    "tests.test_cyclic_protocol_contract",
+    "tests.test_result_quality",
+    "tests.test_tmq_insulator_audit",
+    "-v"
+  ],
+  "log": "source_only_tests.log"
+}

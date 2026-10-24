@@ -1,0 +1,14 @@
+{
+  "run": 7,
+  "passed": true,
+  "coverage": [
+    "lossless restore and idempotence",
+    "reject corrupt archive / preserve differing existing data",
+    "path containment",
+    "split gzip stream order",
+    "axial extension and compression",
+    "rigid-body translation / rotation",
+    "invalid geometry and nonfinite inputs"
+  ],
+  "log": "packaging_tests.log"
+}

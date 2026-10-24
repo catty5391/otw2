@@ -32,7 +32,31 @@ class FakeModel:
         }
 
 
+class FakeTrussOps(FakeOps):
+    def eleResponse(self, element_tag: int, response: str) -> list[float]:
+        if response == "localForce":
+            return []
+        if response == "axialForce":
+            return [12.5]
+        raise AssertionError(response)
+
+
 class TowerInternalForceRecorderTests(unittest.TestCase):
+    def test_truss_axial_force_is_expanded_to_beam_database_shape(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            model = FakeModel()
+            model.ops = FakeTrussOps()
+            recorder = TowerInternalForceRecorder(
+                model,
+                Path(directory) / "truss_recorded.sqlite",
+            )
+            recorder.capture(step=0)
+            history = recorder.close()
+            rows = list(history.iter_history())
+            self.assertEqual(rows[0]["p_i"], -12.5)
+            self.assertEqual(rows[0]["p_j"], 12.5)
+            self.assertEqual(rows[0]["vy_i"], 0.0)
+
     def test_record_query_snapshot_and_envelope(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             database = Path(directory) / "forces.sqlite"

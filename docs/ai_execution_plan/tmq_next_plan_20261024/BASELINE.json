@@ -1,0 +1,933 @@
+{
+  "schema": "otw2.tmq_plan_baseline.v1",
+  "captured_at_utc": "2026-10-23T16:21:39.516136+00:00",
+  "plan_date_local": "2026-10-24",
+  "timezone": "Asia/Shanghai",
+  "workspace": "/home/panqiheng/otw2",
+  "branch": "redevelop",
+  "head": "aa3272ce71b002b30b8a8062ed35bcfa2482ae60",
+  "working_tree_is_clean": false,
+  "identity_note": "HEAD alone does not include most current TMQ/modal/wind results; selected source and evidence hashes govern this snapshot",
+  "planning_only_no_new_FE": true,
+  "modal_cases": {
+    "bare_checked": {
+      "segments_per_span": 0,
+      "requested_modes": 20,
+      "gravity_total_mass_kg": 22265.046974897014,
+      "component_total_mass_kg": {
+        "tower": 22265.046974897014,
+        "cable": 0,
+        "insulator": 0
+      },
+      "free_mass_XYZ_kg": [
+        21932.400087991093,
+        21932.400087991093,
+        21932.400087991093
+      ],
+      "cumulative_mass_ratio_XYZ": [
+        0.7818836540957463,
+        0.8174480559349737,
+        0.30227162555894865
+      ],
+      "gravity_buckled_members": 0,
+      "gravity_tension_yield_members": 0,
+      "orthogonality_max_error": 1.03498421135455e-15,
+      "first_frequency_Hz": 2.102197227834238,
+      "highest_saved_frequency_Hz": 13.458723870030287
+    },
+    "coupled_20_checked": {
+      "segments_per_span": 20,
+      "requested_modes": 160,
+      "gravity_total_mass_kg": 24180.829361185548,
+      "component_total_mass_kg": {
+        "tower": 22265.046974897014,
+        "cable": 1815.7823862885352,
+        "insulator": 100
+      },
+      "free_mass_XYZ_kg": [
+        23802.641441936485,
+        23802.641441936485,
+        23802.641441936485
+      ],
+      "cumulative_mass_ratio_XYZ": [
+        0.7088991652972855,
+        0.6146139250963003,
+        0.07434011679703309
+      ],
+      "gravity_buckled_members": 0,
+      "gravity_tension_yield_members": 0,
+      "orthogonality_max_error": 1.1102230246251565e-15,
+      "first_frequency_Hz": 0.19488684347087362,
+      "highest_saved_frequency_Hz": 7.169203356764866
+    },
+    "coupled_40_checked": {
+      "segments_per_span": 40,
+      "requested_modes": 160,
+      "gravity_total_mass_kg": 24180.83576886116,
+      "component_total_mass_kg": {
+        "tower": 22265.046974897014,
+        "cable": 1815.7887939641498,
+        "insulator": 99.99999999999997
+      },
+      "free_mass_XYZ_kg": [
+        23825.412195921755,
+        23825.412195921755,
+        23825.412195921755
+      ],
+      "cumulative_mass_ratio_XYZ": [
+        0.4820692904413978,
+        0.6130746675608605,
+        0.0744117212509994
+      ],
+      "gravity_buckled_members": 0,
+      "gravity_tension_yield_members": 0,
+      "orthogonality_max_error": 1.0829011298785218e-15,
+      "first_frequency_Hz": 0.1950390076073701,
+      "highest_saved_frequency_Hz": 3.511040639735863
+    },
+    "coupled_80_checked": {
+      "segments_per_span": 80,
+      "requested_modes": 160,
+      "gravity_total_mass_kg": 24180.83737076545,
+      "component_total_mass_kg": {
+        "tower": 22265.046974897014,
+        "cable": 1815.7903958684358,
+        "insulator": 100.00000000000003
+      },
+      "free_mass_XYZ_kg": [
+        23836.800568650844,
+        23836.800568650844,
+        23836.800568650844
+      ],
+      "cumulative_mass_ratio_XYZ": [
+        0.4824298966203091,
+        0.6137590761975924,
+        0.07489667979771383
+      ],
+      "gravity_buckled_members": 0,
+      "gravity_tension_yield_members": 0,
+      "orthogonality_max_error": 1.1102230246251565e-15,
+      "first_frequency_Hz": 0.1950770601950342,
+      "highest_saved_frequency_Hz": 3.8003122891688603
+    }
+  },
+  "tower_matches": {
+    "coupled_20_checked": [
+      {
+        "mode": 97,
+        "frequency_Hz": 2.104214103530851,
+        "period_s": 0.47523681089391506,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.9999782629937349,
+        "cable_kinetic_share": 0.00002050553070428791,
+        "insulator_kinetic_share": 0.0000012314755607777849,
+        "native_effective_mass_ratio_RZ": 0.016739331986997796,
+        "effective_mass_X_kg": 3.9642788995339755e-22,
+        "effective_mass_ratio_X": 1.6654785601019657e-26,
+        "cumulative_mass_ratio_X": 0.0751620049532222,
+        "kinetic_share_X": 0.030908173862034764,
+        "effective_mass_Y_kg": 1.7210876407895542e-20,
+        "effective_mass_ratio_Y": 7.230658181311215e-25,
+        "cumulative_mass_ratio_Y": 0.0020607936554983917,
+        "kinetic_share_Y": 0.9690643707233191,
+        "effective_mass_Z_kg": 3.3201431614461516e-24,
+        "effective_mass_ratio_Z": 1.3948633262174781e-28,
+        "cumulative_mass_ratio_Z": 0.0724357089532495,
+        "kinetic_share_Z": 0.000027455414648426523,
+        "tower_MAC": 0.9999999991759018,
+        "reference_mode": 1,
+        "change_from_bare_percent": 0.09594131653816174
+      },
+      {
+        "mode": 114,
+        "frequency_Hz": 2.271493108664674,
+        "period_s": 0.44023906398195617,
+        "classification": "tower_dominated",
+        "dominant_translation": "X",
+        "tower_kinetic_share": 0.9053117833993275,
+        "cable_kinetic_share": 0.08860167030979457,
+        "insulator_kinetic_share": 0.006086546290877931,
+        "native_effective_mass_ratio_RZ": 7.949319654724247e-28,
+        "effective_mass_X_kg": 8877.952359465398,
+        "effective_mass_ratio_X": 0.37298181301104893,
+        "cumulative_mass_ratio_X": 0.45470008498422454,
+        "kinetic_share_X": 0.7198570401089203,
+        "effective_mass_Y_kg": 2.0200877186147476e-21,
+        "effective_mass_ratio_Y": 8.486821614073776e-26,
+        "cumulative_mass_ratio_Y": 0.0020735690750096586,
+        "kinetic_share_Y": 0.00044721622444673166,
+        "effective_mass_Z_kg": 3.744310904651561e-23,
+        "effective_mass_ratio_Z": 1.573065289323175e-27,
+        "cumulative_mass_ratio_Z": 0.0726041667144116,
+        "kinetic_share_Z": 0.2796957436666323,
+        "tower_MAC": 0.9999999843030161,
+        "reference_mode": 2,
+        "change_from_bare_percent": -0.36404400798750736
+      },
+      {
+        "mode": 155,
+        "frequency_Hz": 2.505671334378278,
+        "period_s": 0.3990946403384249,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.9999881291475519,
+        "cable_kinetic_share": 0.000010523351104197844,
+        "insulator_kinetic_share": 0.0000013475013439391712,
+        "native_effective_mass_ratio_RZ": 2.2596853679782938e-26,
+        "effective_mass_X_kg": 1.75014308921779e-21,
+        "effective_mass_ratio_X": 7.352726349666029e-26,
+        "cumulative_mass_ratio_X": 0.4808876210383059,
+        "kinetic_share_X": 0.00003617311303664926,
+        "effective_mass_Y_kg": 13103.361216269537,
+        "effective_mass_ratio_Y": 0.5505002983905597,
+        "cumulative_mass_ratio_Y": 0.5525823260074224,
+        "kinetic_share_Y": 0.992738200536107,
+        "effective_mass_Z_kg": 3.3488473067609907e-25,
+        "effective_mass_ratio_Z": 1.406922553083059e-29,
+        "cumulative_mass_ratio_Z": 0.07270818049151682,
+        "kinetic_share_Z": 0.00722562635085706,
+        "tower_MAC": 0.9999999976236155,
+        "reference_mode": 3,
+        "change_from_bare_percent": 0.03671073393116675
+      }
+    ],
+    "coupled_40_checked": [
+      {
+        "mode": 89,
+        "frequency_Hz": 2.10421444530092,
+        "period_s": 0.47523673370514846,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.9999806435348517,
+        "cable_kinetic_share": 0.000018167192965667175,
+        "insulator_kinetic_share": 0.0000011892721826119812,
+        "native_effective_mass_ratio_RZ": 0.016114187077949496,
+        "effective_mass_X_kg": 7.856393266551152e-22,
+        "effective_mass_ratio_X": 3.297484720073782e-26,
+        "cumulative_mass_ratio_X": 0.07936413905942312,
+        "kinetic_share_X": 0.030908247460024726,
+        "effective_mass_Y_kg": 5.855453626068107e-22,
+        "effective_mass_ratio_Y": 2.457650502714239e-26,
+        "cumulative_mass_ratio_Y": 0.0021174252804675,
+        "kinetic_share_Y": 0.9690665902532362,
+        "effective_mass_Z_kg": 1.6399464410263042e-25,
+        "effective_mass_ratio_Z": 6.883181820908924e-30,
+        "cumulative_mass_ratio_Z": 0.07346508672615681,
+        "kinetic_share_Z": 0.000025162286740080828,
+        "tower_MAC": 0.9999999991756914,
+        "reference_mode": 1,
+        "change_from_bare_percent": 0.09595757429288199
+      },
+      {
+        "mode": 98,
+        "frequency_Hz": 2.279384618908048,
+        "period_s": 0.43871490212961756,
+        "classification": "tower_dominated",
+        "dominant_translation": "X",
+        "tower_kinetic_share": 0.7618879097982013,
+        "cable_kinetic_share": 0.2330124537007213,
+        "insulator_kinetic_share": 0.0050996365010773925,
+        "native_effective_mass_ratio_RZ": 1.0672345598876474e-27,
+        "effective_mass_X_kg": 7448.961703620818,
+        "effective_mass_ratio_X": 0.31264775787996113,
+        "cumulative_mass_ratio_X": 0.4780182993308414,
+        "kinetic_share_X": 0.681919772779133,
+        "effective_mass_Y_kg": 7.387898140530151e-24,
+        "effective_mass_ratio_Y": 3.1008479852427288e-28,
+        "cumulative_mass_ratio_Y": 0.002156537402771321,
+        "kinetic_share_Y": 0.000841298726579881,
+        "effective_mass_Z_kg": 2.547839748849226e-24,
+        "effective_mass_ratio_Z": 1.069379084776273e-28,
+        "cumulative_mass_ratio_Z": 0.07346582501575898,
+        "kinetic_share_Z": 0.31723892849428276,
+        "tower_MAC": 0.9999999778829451,
+        "reference_mode": 2,
+        "change_from_bare_percent": -0.017893643577393537
+      },
+      {
+        "mode": 107,
+        "frequency_Hz": 2.505671353711638,
+        "period_s": 0.39909463725907435,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.9999876048068443,
+        "cable_kinetic_share": 0.000011050951906778303,
+        "insulator_kinetic_share": 0.0000013442412488782109,
+        "native_effective_mass_ratio_RZ": 6.497443346388674e-28,
+        "effective_mass_X_kg": 3.1961782684162614e-23,
+        "effective_mass_ratio_X": 1.3414996735978224e-27,
+        "cumulative_mass_ratio_X": 0.48040874416277357,
+        "kinetic_share_X": 0.00003617309334445003,
+        "effective_mass_Y_kg": 13103.363475408318,
+        "effective_mass_ratio_Y": 0.549974261417028,
+        "cumulative_mass_ratio_Y": 0.5521395580196421,
+        "kinetic_share_Y": 0.9927376922163261,
+        "effective_mass_Z_kg": 1.3740006174229213e-25,
+        "effective_mass_ratio_Z": 5.7669542340934265e-30,
+        "cumulative_mass_ratio_Z": 0.07382385439878462,
+        "kinetic_share_Z": 0.007226134690330404,
+        "tower_MAC": 0.99999999762354,
+        "reference_mode": 3,
+        "change_from_bare_percent": 0.036711505798470156
+      }
+    ],
+    "coupled_80_checked": [
+      {
+        "mode": 81,
+        "frequency_Hz": 2.104214013510793,
+        "period_s": 0.47523683122494836,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.9999787686765765,
+        "cable_kinetic_share": 0.000019987372534044313,
+        "insulator_kinetic_share": 0.0000012439508894208071,
+        "native_effective_mass_ratio_RZ": 0.015816212565002166,
+        "effective_mass_X_kg": 4.0192035556328283e-20,
+        "effective_mass_ratio_X": 1.686133818193166e-24,
+        "cumulative_mass_ratio_X": 0.0762744140603507,
+        "kinetic_share_X": 0.030908189488005784,
+        "effective_mass_Y_kg": 2.4390662221756807e-20,
+        "effective_mass_ratio_Y": 1.0232355702062793e-24,
+        "cumulative_mass_ratio_Y": 0.0021271035158963057,
+        "kinetic_share_Y": 0.9690648671834872,
+        "effective_mass_Z_kg": 2.5532794975839644e-24,
+        "effective_mass_ratio_Z": 1.0711502536720176e-28,
+        "cumulative_mass_ratio_Z": 0.07312948690560984,
+        "kinetic_share_Z": 0.000026943328510009088,
+        "tower_MAC": 0.9999999991759541,
+        "reference_mode": 1,
+        "change_from_bare_percent": 0.09593703434920275
+      },
+      {
+        "mode": 90,
+        "frequency_Hz": 2.269358181683532,
+        "period_s": 0.44065322436590687,
+        "classification": "tower_dominated",
+        "dominant_translation": "X",
+        "tower_kinetic_share": 0.88940889411948,
+        "cable_kinetic_share": 0.10460473320875435,
+        "insulator_kinetic_share": 0.005986372671765661,
+        "native_effective_mass_ratio_RZ": 6.170051536375918e-26,
+        "effective_mass_X_kg": 8662.020146020914,
+        "effective_mass_ratio_X": 0.36338853954304745,
+        "cumulative_mass_ratio_X": 0.44618627417731993,
+        "kinetic_share_X": 0.7165730991483854,
+        "effective_mass_Y_kg": 2.104394742151253e-21,
+        "effective_mass_ratio_Y": 8.828343955349714e-26,
+        "cumulative_mass_ratio_Y": 0.0021368721214400075,
+        "kinetic_share_Y": 0.0004269842869120022,
+        "effective_mass_Z_kg": 4.096572048897101e-24,
+        "effective_mass_ratio_Z": 1.7185914011818936e-28,
+        "cumulative_mass_ratio_Z": 0.07371286852252308,
+        "kinetic_share_Z": 0.28299991656470214,
+        "tower_MAC": 0.9999999770600955,
+        "reference_mode": 2,
+        "change_from_bare_percent": -0.45768967652499715
+      },
+      {
+        "mode": 99,
+        "frequency_Hz": 2.5056700976206354,
+        "period_s": 0.3990948373249903,
+        "classification": "tower_dominated",
+        "dominant_translation": "Y",
+        "tower_kinetic_share": 0.999259510846537,
+        "cable_kinetic_share": 0.0007388851071628108,
+        "insulator_kinetic_share": 0.0000016040463002200533,
+        "native_effective_mass_ratio_RZ": 3.02764981993615e-26,
+        "effective_mass_X_kg": 1.652816584470842e-23,
+        "effective_mass_ratio_X": 6.933886029338e-28,
+        "cumulative_mass_ratio_X": 0.479507715576895,
+        "kinetic_share_X": 0.000036146805933671385,
+        "effective_mass_Y_kg": 13096.47330591891,
+        "effective_mass_ratio_Y": 0.5494224473708456,
+        "cumulative_mass_ratio_Y": 0.5516072651104796,
+        "kinetic_share_Y": 0.9920183672083833,
+        "effective_mass_Z_kg": 2.1503229201223194e-20,
+        "effective_mass_ratio_Z": 9.021021566754782e-25,
+        "cumulative_mass_ratio_Z": 0.07371380981820182,
+        "kinetic_share_Z": 0.007945485985683232,
+        "tower_MAC": 0.9999999976282107,
+        "reference_mode": 3,
+        "change_from_bare_percent": 0.03666135747670829
+      }
+    ]
+  },
+  "mesh_checks": [
+    {
+      "from": "coupled_20_checked",
+      "to": "coupled_40_checked",
+      "first_six_max_frequency_change_percent": 0.08053265584939684,
+      "matched_tower_frequency_change_percent": [
+        0.000016242171763103386,
+        0.3474151082947019,
+        7.715840411037789e-7
+      ],
+      "matched_tower_kinetic_share_change": [
+        0.0000023805411167865387,
+        -0.14342387360112618,
+        -5.243407075194995e-7
+      ]
+    },
+    {
+      "from": "coupled_40_checked",
+      "to": "coupled_80_checked",
+      "first_six_max_frequency_change_percent": 0.020122277865408655,
+      "matched_tower_frequency_change_percent": [
+        -0.000020520252952405116,
+        -0.4398747425662264,
+        -0.000050129918316432764
+      ],
+      "matched_tower_kinetic_share_change": [
+        -0.0000018748582751859644,
+        0.12752098432127867,
+        -0.0007280939603073744
+      ]
+    }
+  ],
+  "modal_verification": {
+    "status": "complete",
+    "checked_at_utc": "2026-10-23T15:47:24.055858+00:00",
+    "published_cases": [
+      "bare_checked",
+      "coupled_20_checked",
+      "coupled_40_checked",
+      "coupled_80_checked"
+    ],
+    "finite_element_cases_passed": 4,
+    "all_gravity_equilibria_passed": true,
+    "all_gravity_states_unbuckled_and_unyielded": true,
+    "maximum_M_orthogonality_error": 1.1102230246251565e-15,
+    "maximum_eigen_equation_relative_residual": 5.692722803933296e-10,
+    "maximum_native_participation_difference_percentage_points": 4.263256414560601e-14,
+    "native_solver_frequency_crosscheck": {
+      "bare_checked": 6.283862319378386e-13,
+      "coupled_20_checked": 2.751132655021138e-13
+    },
+    "tests": {
+      "run": 51,
+      "passed": 51,
+      "skipped": 0,
+      "modal_specific": 9,
+      "existing_dashboard_and_wind_evidence_regressions": 42,
+      "command": "OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest tests.test_tmq_modal tests.test_results_dashboard tests.test_dashboard_quality tests.test_tmq_dashboard tests.test_directional_dashboard tests.test_tower_line_dashboard tests.test_wind_speed_evidence -q",
+      "log_sha256": "fff41d6030ee6e93bfcc090bda96112add4e59fd05bafc8f860ca5773b3e5b9d"
+    },
+    "browser": {
+      "passed": true,
+      "checks": [
+        "Homepage publishes actual coupled modal results",
+        "Report loads 160 mode shapes, three matched tower modes and scientific figures",
+        "Canvas animates saved eigenvectors and supports pause",
+        "Tower-shape shortcuts select matched global mode numbers",
+        "Model switching and mobile layout work without viewport overflow",
+        "No browser page errors"
+      ],
+      "errors": []
+    },
+    "browser_artifacts": "validation/tmq_modal_20261023_final",
+    "engineering_validation": false,
+    "high_order_mesh_convergence_or_dynamic_truncation_certified": false,
+    "excluded_attempt": {
+      "case": "coupled_40",
+      "reason": "Default ARPACK iteration limit, invalid final eigenpair/zero generalized mass; rejected, not used in figures or matches"
+    },
+    "notes": [
+      "Low cable-frequency groups converge closely; X tower/cable participation distribution remains mesh sensitive.",
+      "The saved equation matrices and node-to-equation mapping were independently tested; no mass perturbation was introduced.",
+      "No wind or previous pushover state is used; these are undamped gravity-tangent modes."
+    ]
+  },
+  "wind_key_cases": {
+    "single_45_disp": {
+      "classification": "sampled_path_peak_with_decline_not_certified_collapse",
+      "peak": {
+        "step": "86",
+        "wind_load_factor": "30.78981989312441",
+        "equivalent_wind_speed_m_s": 110.97715060880668,
+        "along_wind_displacement_m": "0.3066979046743622",
+        "along_wind_base_shear_N": "1336505.1525687552"
+      },
+      "last_control_drift_ratio": 0.01,
+      "accepted_steps": 149,
+      "status": "complete",
+      "stop_reason": null,
+      "source": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_disp/summary.json"
+    },
+    "single_45_fine": {
+      "classification": "numerical_boundary_not_collapse",
+      "peak": {
+        "step": "145",
+        "wind_load_factor": "30.96875",
+        "equivalent_wind_speed_m_s": 111.29914644776034,
+        "along_wind_displacement_m": "0.3069329150506591",
+        "along_wind_base_shear_N": "1344272.0381968843"
+      },
+      "last_control_drift_ratio": 0.0059107599980413195,
+      "accepted_steps": 145,
+      "status": "partial",
+      "stop_reason": "minimum_increment",
+      "source": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_fine/summary.json"
+    },
+    "tower_line_45_disp": {
+      "classification": "sampled_path_peak_with_decline_not_certified_collapse",
+      "peak": {
+        "step": "88",
+        "wind_load_factor": "29.376025097913622",
+        "equivalent_wind_speed_m_s": 108.39930829652673,
+        "along_wind_displacement_m": "0.30160021944871973",
+        "along_wind_base_shear_N": "1317011.353808686"
+      },
+      "last_control_drift_ratio": 0.008580168000944372,
+      "accepted_steps": 129,
+      "status": "partial",
+      "stop_reason": "minimum_increment",
+      "source": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_disp/summary.json"
+    },
+    "tower_line_45_fine": {
+      "classification": "numerical_boundary_not_collapse",
+      "peak": {
+        "step": "142",
+        "wind_load_factor": "29.640972137451172",
+        "equivalent_wind_speed_m_s": 108.88704631396918,
+        "along_wind_displacement_m": "0.3043206873572419",
+        "along_wind_base_shear_N": "1328889.1029449769"
+      },
+      "last_control_drift_ratio": 0.006098439964621569,
+      "accepted_steps": 142,
+      "status": "partial",
+      "stop_reason": "minimum_increment",
+      "source": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_fine/summary.json"
+    }
+  },
+  "wind_actual_execution_counts": {
+    "initial": 8,
+    "extended": 1,
+    "half_increment": 2,
+    "displacement_control": 2
+  },
+  "engineering_ultimate_wind_speed_established": false,
+  "wind_speed_interpretation": "Equivalent UNIFORM static wind under fixed uncalibrated aerodynamic assumptions, NOT 10-m terrain-adjusted wind or a turbulent dynamic collapse wind",
+  "wind_verification": {
+    "status": "complete",
+    "checked_at_utc": "2026-10-23T14:13:45.826930+00:00",
+    "case_count": 13,
+    "actual_execution_counts": {
+      "initial": 8,
+      "extended": 1,
+      "half_increment": 2,
+      "displacement_control": 2
+    },
+    "all_saved_evidence_valid": true,
+    "equilibrium": {
+      "states": 1528,
+      "all_passed": true,
+      "maximum_free_translational_residual_N": 0.003966030899391626,
+      "maximum_global_XYZ_reaction_balance_N": 0.00721426191739738
+    },
+    "tests": {
+      "mechanics_and_loading": {
+        "run": 94,
+        "passed": 94,
+        "skipped": 0
+      },
+      "dashboard_regressions": {
+        "run": 36,
+        "passed": 36,
+        "skipped": 0
+      },
+      "saved_evidence_and_publication": {
+        "run": 6,
+        "passed": 6,
+        "skipped": 0
+      },
+      "total_unique": 136,
+      "logs_sha256": {
+        "mechanics_tests.log": "380af6004df5ad6f61aaa3b2b0c40a8b9eb7e6a4639e7ee57e54db55b2d8338c",
+        "dashboard_tests.log": "ee7aa5917f0cabea82c63633169d5f173fe9d64bfbbad476a8f5b8648194435b",
+        "evidence_tests.log": "71857ce9f3c8b12346f8e63d86eac18dbdb5e4c3aaecf11aac5bfe420216c850"
+      }
+    },
+    "browser": {
+      "passed": true,
+      "case_count": 13,
+      "checks": [
+        "API exposes completed evidence without claiming engineering collapse",
+        "Homepage shows the actual calculation count and wind-speed plot",
+        "Report has every actual case, two plots, sensitivity checks and stopping-state diagnostics",
+        "Mobile report has no horizontal viewport overflow",
+        "No browser page errors"
+      ],
+      "errors": []
+    },
+    "browser_artifacts": "validation/tmq_wind_speed_20261023",
+    "legacy_elastic_replay": {
+      "complete": true,
+      "history_byte_identical": true,
+      "sha256": "64761c5eb374d60cf69b14652741d9a8091c01e5a1378f9044006222faa13263",
+      "reference": "initial_imperfection_material/tian_ma_qu/tower_results/elastic_control_02/history.csv",
+      "actual": "initial_imperfection_material/tian_ma_qu/wind_speed_results/validation/legacy_elastic_replay/history.csv"
+    },
+    "model_static_path_peak_with_decline_observed": true,
+    "engineering_ultimate_wind_speed_established": false,
+    "notes": [
+      "Complete means this exploration and verification workflow ended; it does not mean every analysis reached its target.",
+      "Single 45-degree displacement control completed 1% selected-X drift. Coupled 45-degree stopped at minimum increment after the sampled peak.",
+      "Lines connect discrete converged states. Abrupt drops are not a dynamically resolved, stability-certified collapse trajectory."
+    ]
+  },
+  "protected_files": [
+    {
+      "path": "Source/Z30103A6.s2k",
+      "size_bytes": 5323157,
+      "sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16"
+    },
+    {
+      "path": "model/tower_model_with_tian_ma_qu.py",
+      "size_bytes": 8147,
+      "sha256": "f9f61c8f1a855ae950d6e9c64fcad2d2c4ee03d9491e46541c925a5c6329144d"
+    },
+    {
+      "path": "model/tower_line_system_model.py",
+      "size_bytes": 36484,
+      "sha256": "451914f7705540abc6caba0285793846d66b9327aa7c98dbf4f1ccd8c0d70b1c"
+    },
+    {
+      "path": "model/.config/conductor_catalog.json",
+      "size_bytes": 1471,
+      "sha256": "bf298f100462b6c58313c5b768ff193932cd4fbcb5ef61eefc859b6c8cc78430"
+    },
+    {
+      "path": "model/.config/tower_line_with_insulators.json",
+      "size_bytes": 3390,
+      "sha256": "1a9c04673184a3d66be7a52f0a9e1f1ae4bd4d856da8cf779fe053751be1422e"
+    },
+    {
+      "path": "util/processing/directional_wind.py",
+      "size_bytes": 5176,
+      "sha256": "5f6fa7308bf8629bde95f68d396fc618629f2fb46b7cd61de8991dcbff7d0215"
+    },
+    {
+      "path": "util/processing/conductor_directional_wind.py",
+      "size_bytes": 22428,
+      "sha256": "0c5f12994fcc3c2d5a938313f5395326d87a12d5938d71217140b6555ec6dd13"
+    },
+    {
+      "path": "util/processing/tower_directional_wind.py",
+      "size_bytes": 18226,
+      "sha256": "9be89d6645970c4e58f4ef37979fc3b43565889128826c694114f18db55619be"
+    },
+    {
+      "path": "fluctuate_wind_simulate/opensees_simulate/wind_refactor_common.py",
+      "size_bytes": 25168,
+      "sha256": "540a56f6008e97f71ba4197bbc47497a4fe66df5f4a25e461a82eaaff0268c73"
+    },
+    {
+      "path": "util/postprocess/energy.py",
+      "size_bytes": 3587,
+      "sha256": "7acf3ae27c0e12697ea64509d6016ce7338b35a3faf39609f4ae75233cdbe8de"
+    },
+    {
+      "path": "docs/ai_execution_plan/TASKS.json",
+      "size_bytes": 40939,
+      "sha256": "ba119faed37b3da3ce6f666537d02abf76ddec92c3e6e2bd5674c6e42e377292"
+    },
+    {
+      "path": "docs/ai_execution_plan/PLAN.md",
+      "size_bytes": 60263,
+      "sha256": "722ba3b87be888ae203657cdd36e9de7e0f5f8194630e7b02d1e8c7f9b8b378b"
+    },
+    {
+      "path": "docs/ai_execution_plan/followup_plan_20261022/NEXT_TASKS.json",
+      "size_bytes": 21887,
+      "sha256": "523a987d85fea82ee221c2bf25655191b9073886cf16cac9a43369a59471ae73"
+    },
+    {
+      "path": "docs/ai_execution_plan/followup_plan_20261022/README.md",
+      "size_bytes": 13095,
+      "sha256": "e0af6869f4bcce0b7bdae93be4bbb92cd6a25b771edc61d2ffa3fed9571ce59a"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_analysis.py",
+      "size_bytes": 14643,
+      "sha256": "c88df6f995e0ad8c84377972d3a63a1b54717a2bc5d3dd15870988f228b8fa4a"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/publish_modal.py",
+      "size_bytes": 14494,
+      "sha256": "4130620f1e79806e07f5b66f83dfa4fff8309db3068e32792acad6b31603f978"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_viewer.html",
+      "size_bytes": 13111,
+      "sha256": "bf4a6d7fb18592e66208cffaec528d58b4f6142a10a4a3ef415f1fe351bea472"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/full_tower.py",
+      "size_bytes": 24259,
+      "sha256": "d6846587a4855ae9a91b00e7d3c5caf07bdcd3d52476a9c1dc916bf318a99d91"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_exploration.py",
+      "size_bytes": 29056,
+      "sha256": "d90a6d74d088040afad77864200950df7564f00184ea5c05c1ade5f82c52d29e"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/directional_loading.py",
+      "size_bytes": 10824,
+      "sha256": "f1e754028cd03733dbb435a2c398625ae840d3062ef8606f18510bf6086366f2"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/material.py",
+      "size_bytes": 16881,
+      "sha256": "124f868f456dd65939a9c950cf1ca5ea103bdee6314f2caf5d857c7efd3e11cd"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/experiment.py",
+      "size_bytes": 9117,
+      "sha256": "a57a42edca59baf025b54715d4eef61044510c85b259a2fe89fb6131ce16971b"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/REPORT.md",
+      "size_bytes": 12444,
+      "sha256": "2e5a8ba3134062f5efa1467fbcd3ea3e3f6180cc098d5d74fc222b4ec7289673"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/README.md",
+      "size_bytes": 20521,
+      "sha256": "e2e959898f09d96c7f6454e7df4661f983f7e4849f8e11b6f6b6af7eb8c2f866"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/summary.json",
+      "size_bytes": 621891,
+      "sha256": "2a231f515d72c4a53393e2ea214888f4b02f1d8c35884cdb5584cb771a617fdf"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/verification.json",
+      "size_bytes": 2377,
+      "sha256": "40467b0e1c117437638e6a7bd4baf7f034417eb53779d11980d4cb0a608cc975"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/summary.json",
+      "size_bytes": 2075970,
+      "sha256": "cc14633216d80e11d93011e0a85548eda8cc9e68e09164fd8b107f94d36ecbf9"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/verification.json",
+      "size_bytes": 2554,
+      "sha256": "2d546dab008c6a696e2e7a1ed3a6ac6358570df12a7234ae4c93aed5333ce4ae"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/summary.json",
+      "size_bytes": 23301,
+      "sha256": "834f4004102bc19b531cb4bd5ebd1344b24f62eab0e40afb29040c2f9f31b0a6"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/eigenvectors.npz",
+      "size_bytes": 845180,
+      "sha256": "aab2193b36f90aee46ef13d1695d9284dbeaa8e6103ea6d0b78c2955ea254227"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/equation_modes.npz",
+      "size_bytes": 441978,
+      "sha256": "6e05804c5f289e6a31c33a0aae36b5fa6218c707856cae95d91bbb84dbc96e19"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/stiffness.npz",
+      "size_bytes": 574762,
+      "sha256": "6e0104d1d000e3b670cc5708b79b6936d22392e527fca2f813d4f66969f436fb"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/mass.npz",
+      "size_bytes": 27099,
+      "sha256": "6eff590ec48db464302ce423e84a1683b9127cb070aae9deade29320d01f331c"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/bare_checked/modes.csv",
+      "size_bytes": 7775,
+      "sha256": "2e14924646b00012552c756e7112647c2d6f2415b547df4dbfee900cc6e1c255"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/summary.json",
+      "size_bytes": 172045,
+      "sha256": "5acb6f45fcdfa3b9cf6d57a5bb96231cc33af28d51729639934a2936fb980295"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/eigenvectors.npz",
+      "size_bytes": 8229787,
+      "sha256": "718f30781c09af8c09b9dac060ceaf9a70f43efd2af3519444164a1b8f5a9d28"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/equation_modes.npz",
+      "size_bytes": 4258736,
+      "sha256": "2aeb36809be3d8e28479a4e126d1621d269614de66dfe21f6cdd731a2d87f696"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/stiffness.npz",
+      "size_bytes": 623601,
+      "sha256": "6e117ba5d687744529a8e321cf17827fd86dc9cee27adfe55ab9a94e006f8920"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/mass.npz",
+      "size_bytes": 31091,
+      "sha256": "ab237daad2c77660fd3b2463c95b8b43350c9139771f9169303138925f77ed6f"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_20_checked/modes.csv",
+      "size_bytes": 66334,
+      "sha256": "a762b9014740d99416715f3499212d6ee3e8386e0f9d9532b56c111c8487d334"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/summary.json",
+      "size_bytes": 171813,
+      "sha256": "39ef8edb9823a0c39b2cb91cef1b2a2789e196397793b7aa5eebd7c6fceb8218"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/eigenvectors.npz",
+      "size_bytes": 8802662,
+      "sha256": "c9576e155e03df396ada14fb96bd95a7b4341056b550275203409a8ee924dbf0"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/equation_modes.npz",
+      "size_bytes": 4512683,
+      "sha256": "19226937bc40bf5137bd81f7072f22556754a3aae6bccb017ec5461935584f60"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/stiffness.npz",
+      "size_bytes": 630302,
+      "sha256": "65533c7422e4e5832d8b97b945219d4383f5a7047148edaa8f6ef5b6025807bd"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/mass.npz",
+      "size_bytes": 32672,
+      "sha256": "c25b319a880b7620279451417f56cab8c4a6ed93cfbba4a05536cf411b8b1bd7"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_40_checked/modes.csv",
+      "size_bytes": 66096,
+      "sha256": "0ba3aa440e2cb8b656ea2b0fdec7bc894f758e98bf68080b69a4e3b6bc6edfe1"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/summary.json",
+      "size_bytes": 171972,
+      "sha256": "1a0bff9ef27464bf344352b29923f4580723f40ad58065df12e243929d4bcba4"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/eigenvectors.npz",
+      "size_bytes": 9991439,
+      "sha256": "8a5e0aaaa3686328086f42921508e26dfeb5f7d88e22a5e5e03abcfd2abfef63"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/equation_modes.npz",
+      "size_bytes": 5029067,
+      "sha256": "8f8ea76c5ace4db77dabe1a4c766eda75828ece940ac7ae9ba57a2b430d527db"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/stiffness.npz",
+      "size_bytes": 641916,
+      "sha256": "10c6db71ee9a07fba36e65b30cdf8777f787278547f00caafac88784879abc9d"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/mass.npz",
+      "size_bytes": 35802,
+      "sha256": "9cce69dff9f22596e098f9717b54ff110734fdc60cedde350d4796b1a34366bd"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/modal_results/runs/coupled_80_checked/modes.csv",
+      "size_bytes": 66248,
+      "sha256": "b5b0d4de3b2f5f381a841b5d7a7f255397b8d30443682e5af81ee9058072cc2b"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_disp/summary.json",
+      "size_bytes": 12227,
+      "sha256": "a75a25f3c38af01208ec1d1543bf1195e39511db4201a5928e7cace29907f00a"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_disp/history.csv",
+      "size_bytes": 47592,
+      "sha256": "2c89482a8b0fa0e1c305547bc6e185a5de1e566dbf11522a356b46d91f890f71"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_disp/wind_config.json",
+      "size_bytes": 1299,
+      "sha256": "d7fd67baf328fccbfcbc8b2fb88cf173a6fdee7d0f93cddaa11317de8c4b9b9b"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_disp/wind_load_plan.json",
+      "size_bytes": 1891929,
+      "sha256": "7741a8711972b8d0fcf050732571c26f2af0fccf6285343a25eb12e25ae5a10f"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_disp/summary.json",
+      "size_bytes": 13644,
+      "sha256": "8f6dbe0aada4c7183c257fdb2a0b4abc064bdc7b97e57d578d21b0bec519b8d4"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_disp/history.csv",
+      "size_bytes": 44964,
+      "sha256": "7cd11bdc1649fb97ea10bb483fb05ff5f95958e3be258127935bf18556bce872"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_disp/wind_config.json",
+      "size_bytes": 1306,
+      "sha256": "944a16346af5ab80fb0d87952181cf509295c70b56416e68bf8ed7db5b091b58"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_disp/wind_load_plan.json",
+      "size_bytes": 1995347,
+      "sha256": "9ea9dd8f1b26b5d1e639768b5d777579311a811abe03c8cc343282ebf6601233"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_fine/summary.json",
+      "size_bytes": 13695,
+      "sha256": "571b2d75ffd4a00c61aeb9e6584e1c046ca04db211f49116b3ed8b97184b3934"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_fine/history.csv",
+      "size_bytes": 51373,
+      "sha256": "411e20d8c6b2c5fdcb11a446e18bc9a38296f30eb5f27483f958c174e664351f"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_fine/wind_config.json",
+      "size_bytes": 1299,
+      "sha256": "d7fd67baf328fccbfcbc8b2fb88cf173a6fdee7d0f93cddaa11317de8c4b9b9b"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/single_45_fine/wind_load_plan.json",
+      "size_bytes": 1891929,
+      "sha256": "7741a8711972b8d0fcf050732571c26f2af0fccf6285343a25eb12e25ae5a10f"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_fine/summary.json",
+      "size_bytes": 15026,
+      "sha256": "4c645197d56661e8060c5eafd515682a91a87e3b6bca1102d6761421a4344eb2"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_fine/history.csv",
+      "size_bytes": 54392,
+      "sha256": "757bbe8f3df0ff00ab74af081d98d74d0ff5d8b2b7e4abfa78e7d358147b5a03"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_fine/wind_config.json",
+      "size_bytes": 1306,
+      "sha256": "944a16346af5ab80fb0d87952181cf509295c70b56416e68bf8ed7db5b091b58"
+    },
+    {
+      "path": "initial_imperfection_material/tian_ma_qu/wind_speed_results/runs/tower_line_45_fine/wind_load_plan.json",
+      "size_bytes": 1995347,
+      "sha256": "9ea9dd8f1b26b5d1e639768b5d777579311a811abe03c8cc343282ebf6601233"
+    }
+  ],
+  "source_documentation": [
+    {
+      "url": "https://opensees.github.io/OpenSeesDocumentation/user/manual/model/damping/rayleigh.html",
+      "accessed_local_date": "2026-10-24",
+      "use": "damping form and assignment semantics"
+    },
+    {
+      "url": "https://openseespydoc.readthedocs.io/en/latest/src/corotTruss.html",
+      "accessed_local_date": "2026-10-24",
+      "use": "corotTruss/Section doRayleigh default flag"
+    }
+  ]
+}

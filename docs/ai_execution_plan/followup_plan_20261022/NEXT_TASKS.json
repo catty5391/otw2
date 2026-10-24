@@ -1,0 +1,805 @@
+{
+  "schema": "otw2.followup_plan.v1",
+  "created_date": "2026-10-22",
+  "integrated_date": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "plan_only": true,
+  "execution_started": false,
+  "selected_route": null,
+  "selected_study_scope": null,
+  "project_root": "/home/panqiheng/otw2",
+  "branch_at_review": "redevelop",
+  "head_at_review": "aa3272ce71b002b30b8a8062ed35bcfa2482ae60",
+  "planning_agents": [
+    "followup_mechanics_plan",
+    "followup_execution_plan"
+  ],
+  "recommended_first_batch": [
+    "F00",
+    "F01",
+    "F02",
+    "F03"
+  ],
+  "original_tasks_unchanged": true,
+  "original_task_status_counts": {
+    "done": 9,
+    "blocked": 6,
+    "in_progress": 2,
+    "planned": 8
+  },
+  "current_G1": "not_passed",
+  "historical_tests": {
+    "passed": 264,
+    "total": 264,
+    "rerun_in_this_planning_turn": false
+  },
+  "dependency_semantics": {
+    "depends_on": "前置已有可审查处理结论；不是必须物理成功。completed/failed_assessed/not_needed/not_applicable_with_evidence必须附结果，不能仅靠字符串解锁。",
+    "physical_guards": "这些是实际计算或成果准入的必要条件；不满足不得执行相应正式计算或声明通过。评审结束≠G1/G3/G4通过。",
+    "conditional_dependencies": "仅匹配所选route/scope时追加；未选任务not_selected，不标done。",
+    "status_note": "本清单全部planned，实际实施后再登记。原TASKS状态不因新计划改变。",
+    "no_bootstrap_cycle": "用于建立新范围G1的参考诊断不要求该范围事先passed；用于候选标定/验证必须passed。F07新范围与F06原塔史范围分别认证。",
+    "negative_route": "可信不可辨识可让F08/F09候选分支not_applicable_with_evidence后进入F10；未知/不完整参考不是不可辨识，C不能绕过G1。",
+    "scopes": [
+      "static",
+      "wind",
+      "fragility"
+    ],
+    "routes": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "invariants": [
+    "不覆盖旧结果/缓存/上一批证据",
+    "不重复旧587步或877三组",
+    "不把六杆观测当全塔屈服普查",
+    "不把±1%往复协议结束当不收敛或极限",
+    "不从JSONL恢复未保存的材料状态",
+    "不为制造下降段无上限增载",
+    "已见数据不能改名独立留出"
+  ],
+  "evidence_anchors": [
+    {
+      "path": "docs/ai_execution_plan/TASKS.json",
+      "sha256": "ba119faed37b3da3ce6f666537d02abf76ddec92c3e6e2bd5674c6e42e377292"
+    },
+    {
+      "path": "docs/ai_execution_plan/execution_20261022/acceptance_profile.json",
+      "sha256": "a7aefd986749a36afdf8788cacda404e42fe2b472ef76444e2a09dd390b73608"
+    },
+    {
+      "path": "docs/ai_execution_plan/execution_20261022/execution_summary.json",
+      "sha256": "0886daf59e40586a9c182df1cc69578cf3fd9bc109be3b5dd886efe9d280f1f7"
+    },
+    {
+      "path": "Source/Z30103A6.s2k",
+      "sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16"
+    },
+    {
+      "path": "initial_imperfection_material/results/convergence_diagnosis/fine_sparse/member_metadata.json",
+      "sha256": "f274ce6b1fa4f51d6891cd537caa4950257a4bea874757bc47fbac83dc22fbbb"
+    },
+    {
+      "path": "initial_imperfection_material/protocols/t10_pre_frozen_v1.json",
+      "sha256": "4c2bc05baeefc7d80ac9728b92ed15d73e7de7dc3675292ffe470d608ca724a2"
+    }
+  ],
+  "canonical_protocol_hash": {
+    "algorithm": "sorted_compact_json_fingerprint",
+    "sha256": "cef191cf7111125dcfd2ec461c8bbc206a3050089ac068bae24d724b5d647e7a",
+    "not_file_byte_hash": true
+  },
+  "resource_policy": {
+    "long_fe_parallelism": 1,
+    "repeated_old_cases": 0,
+    "new_full_tower_reference_limit_F05": 1,
+    "monotonic_is_later_separate_batch": true,
+    "disk_available_observed_gib": 26,
+    "limits_are_planning_not_existing_cli_capabilities": true
+  },
+  "tasks": [
+    {
+      "id": "F00",
+      "title": "核验当前证据身份并建立增量批次",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T00",
+        "T24"
+      ],
+      "depends_on": [],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M01"
+        },
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E01"
+        }
+      ],
+      "acceptance": [
+        "原97项基线与新followup来源分开",
+        "S2K/metadata/规范化设计哈希不混用",
+        "不重做旧FE"
+      ],
+      "failure_exit": "来源异常保留实际指纹，暂停依赖它的计算",
+      "budget": {
+        "fe": 0,
+        "output_mib": 100
+      }
+    },
+    {
+      "id": "F01",
+      "title": "只读定位877失配并解释整体近直线与局部屈服",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T04",
+        "T07",
+        "T08"
+      ],
+      "depends_on": [
+        "F00"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M02"
+        }
+      ],
+      "acceptance": [
+        "逐父记录映射且复核既有2.15446%指标",
+        "全局偏差与六杆事件同步，明确未监测范围",
+        "区分协议结束/不收敛/越界"
+      ],
+      "failure_exit": "已有档案不足则列缺失量；不启动第四组相同全幅重放",
+      "budget": {
+        "fe": 0,
+        "minutes": 90,
+        "rss_mib": 1024,
+        "output_mib": 250
+      }
+    },
+    {
+      "id": "F02",
+      "title": "纤维同物理点分析及既有825密峰值复核",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T08"
+      ],
+      "depends_on": [
+        "F00"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M07"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M08"
+        }
+      ],
+      "acceptance": [
+        "原生极值与同点运动学结果分开",
+        "稀点失败与密峰通过并存",
+        "缺截面前史不外推材料应力"
+      ],
+      "failure_exit": "保持partial/unknown；需新细化先声明一档，不自动全塔加密",
+      "budget": {
+        "fe": 0,
+        "conditional_fiber_cases_max": 2,
+        "conditional_prefix_substep_cases_max": 1,
+        "new_fe_requires_evidence": true
+      }
+    },
+    {
+      "id": "F03",
+      "title": "来源字节核验、参考/候选与负结果契约",
+      "status": "planned",
+      "owner": "engineering",
+      "original_tasks": [
+        "T09",
+        "T10",
+        "T11",
+        "T20"
+      ],
+      "depends_on": [
+        "F00"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E02"
+        },
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E03"
+        }
+      ],
+      "acceptance": [
+        "真实证据字节/范围检查",
+        "参考诊断不依赖候选成功",
+        "负结果允许选路但不准入正式候选",
+        "可并行只读质量与风输入清单"
+      ],
+      "failure_exit": "旧v1门控继续拒绝；不手写passed绕过实现缺口",
+      "budget": {
+        "fe": 0,
+        "implementation_hours_estimate": [
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "id": "F04",
+      "title": "最小机制控制及必要记录增强",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T04",
+        "T06",
+        "T08"
+      ],
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M03"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M04"
+        }
+      ],
+      "acceptance": [
+        "每个小试验有可区分假设",
+        "失败后状态与直接成功后续路径比较",
+        "记录开/关不改变下一实际提交步",
+        "缺材料内变量如实披露"
+      ],
+      "failure_exit": "无新增可检验假设则not_needed；不重复旧三组877",
+      "budget": {
+        "small_controls_max": 8,
+        "small_controls_minutes_total": 45,
+        "recording_smoke_max": 2,
+        "recording_smoke_minutes_each": 10,
+        "full_tower_runs": 0
+      }
+    },
+    {
+      "id": "F05",
+      "title": "有条件的唯一新全塔参考及同网格复核",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T07",
+        "T08"
+      ],
+      "depends_on": [
+        "F04"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M05"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M06"
+        }
+      ],
+      "acceptance": [
+        "运行前唯一配置和缺口/预算",
+        "原模型参数保持可追溯，从初态及重力开始",
+        "同网格1e-6检查保留实际指标",
+        "新全塔完成不自动通过G1"
+      ],
+      "failure_exit": "无需要则not_needed；一次仍失败停止扩试，保留差异与未知",
+      "budget": {
+        "full_tower_runs_max": 1,
+        "wall_seconds_management_cap": 7200,
+        "output_gib_max": 2,
+        "new_matching_replay_max": 1,
+        "new_matching_replay_minutes_max": 45
+      }
+    },
+    {
+      "id": "F06",
+      "title": "范围化参考G1评审",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T08"
+      ],
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M09"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M10"
+        }
+      ],
+      "acceptance": [
+        "杆/边界/钢材/缺陷/完整前史/量/范围全绑定",
+        "必需检查逐项passed/failed/unknown",
+        "前缀力史不解锁零载3%单调"
+      ],
+      "failure_exit": "评审可完成但G1失败；只形成停止/有限域继续的决定",
+      "budget": {
+        "fe": 0
+      }
+    },
+    {
+      "id": "F07",
+      "title": "两组实际零载3D参考与边界可辨识性",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T08",
+        "T09",
+        "T11"
+      ],
+      "depends_on": [
+        "F06",
+        "F03"
+      ],
+      "physical_guards": [],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E04"
+        }
+      ],
+      "acceptance": [
+        "新参考范围自行完成收敛证据",
+        "完整统一solver与100%已提交覆盖",
+        "同轴向前史两种有来源边界的差异表",
+        "至少两边界/5%预筛按实际工具解释"
+      ],
+      "failure_exit": "参考缺失与真实不可辨识分开；不可辨识形成负证据，不自动Perry",
+      "budget": {
+        "monotonic_main_cases_max": 4,
+        "seconds_per_case_initial_cap": 900,
+        "first_case_required_before_expansion": true
+      }
+    },
+    {
+      "id": "F08",
+      "title": "限定两组实际骨架重构",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T09"
+      ],
+      "depends_on": [
+        "F07"
+      ],
+      "physical_guards": [
+        "target_reference_G1_passed",
+        "identifiability_supported",
+        "reference_coverage_100_percent"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E05"
+        }
+      ],
+      "acceptance": [
+        "峰误差≤3%、NRMSE≤5%",
+        "v2子库范围真实，训练/独立验证分开",
+        "未支持组保留分段"
+      ],
+      "failure_exit": "不支持时unsupported或not_applicable_with_evidence；禁止伪称calibration_completed",
+      "budget": {
+        "new_fe": 0,
+        "groups_max": 2,
+        "minutes": 10
+      }
+    },
+    {
+      "id": "F09",
+      "title": "参考循环、训练诊断与独立留出冻结",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T10"
+      ],
+      "depends_on": [
+        "F07",
+        "F08",
+        "F03"
+      ],
+      "physical_guards": [
+        "candidate_phase_requires_supported_calibration_and_scoped_G1"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E06"
+        }
+      ],
+      "acceptance": [
+        "先C0/C1，不编造幅值",
+        "诊断可先于候选，不能发布候选passed",
+        "已见塔史不当holdout",
+        "留出评分到F12才揭示，F10不使用"
+      ],
+      "failure_exit": "缺锚点保持unresolved；可信负证据供F10，不强制标定成功",
+      "budget": {
+        "initial_logical_cases_max": 4,
+        "design_logical_cases_total": 16,
+        "independent_holdouts_reserved": 4
+      }
+    },
+    {
+      "id": "F10",
+      "title": "基于证据选择A/B/C及研究范围",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T11"
+      ],
+      "depends_on": [
+        "F06",
+        "F07",
+        "F08",
+        "F09"
+      ],
+      "physical_guards": [
+        "formal_route_admission_requires_credible_reference_scope"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E07"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M10"
+        }
+      ],
+      "acceptance": [
+        "选择一个主路线和static/wind/fragility范围",
+        "unsupported可排除A，不等于G1通过",
+        "B须非空有效等效子集",
+        "C仍需自身参考/全塔验证"
+      ],
+      "failure_exit": "G1未通过可作管理优先级决定，G2/G4不设passed",
+      "budget": {
+        "fe": 0
+      }
+    },
+    {
+      "id": "F11",
+      "title": "仅实现选定A状态材料或B混合表示",
+      "status": "planned",
+      "owner": "engineering_and_mechanics",
+      "original_tasks": [
+        "T12",
+        "T13",
+        "T14"
+      ],
+      "depends_on": [
+        "F10"
+      ],
+      "physical_guards": [
+        "route_A_or_B",
+        "training_evidence_supports_selected_mechanism"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E08"
+        }
+      ],
+      "acceptance": [
+        "A状态可提交/回滚/复制且切线一致",
+        "B准入规则/标签/传力/质量/缺陷一次计入",
+        "不同时全面开发互斥路线"
+      ],
+      "failure_exit": "成本或训练验证失败回路线评审；C记not_selected",
+      "budget": {
+        "prototype_workdays_initial_cap": 1
+      },
+      "routes": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "F12",
+      "title": "构件独立留出及适用域G3",
+      "status": "planned",
+      "owner": "mechanics",
+      "original_tasks": [
+        "T16"
+      ],
+      "depends_on": [
+        "F11",
+        "F09"
+      ],
+      "physical_guards": [
+        "route_A_or_B",
+        "candidate_frozen",
+        "holdout_not_used_for_fit_or_route_selection"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E09"
+        }
+      ],
+      "acceptance": [
+        "峰力/刚度≤5%、NRMSE≤10%及冻结残余/功阈值",
+        "有效域按钢级/长度/边界/幅值/次数记录",
+        "无隐式越界"
+      ],
+      "failure_exit": "若用留出修模型则该例失去留出资格；C记not_selected",
+      "budget": {
+        "initial_holdout_cases_max": 4
+      },
+      "routes": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "F13",
+      "title": "塔段/全塔往复与独立单调承载力",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T17",
+        "T18"
+      ],
+      "depends_on": [
+        "F10",
+        "F06"
+      ],
+      "physical_guards": [
+        "declared_reference_scope_credible",
+        "A_B_requires_G3",
+        "monotonic_from_fresh_initial_state_and_gravity"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E10"
+        },
+        {
+          "document": "MECHANICS_PLAN.md",
+          "task_card": "M11"
+        }
+      ],
+      "acceptance": [
+        "局部/整体/失效区域同时验收",
+        "原9目标与单调推覆分别清单",
+        "单调逐段扩展且不得超正式材料/参考域",
+        "未见可信峰后仅报告已观测最大力",
+        "不直接运行顶层11例旧pushover脚本"
+      ],
+      "failure_exit": "失败/越界/预算/协议结束独立分类；探索域不发布极限/倒塌",
+      "budget": {
+        "first_tower_segment_cases_max": 1,
+        "first_full_tower_cases_max": 1,
+        "monotonic_separate_batch": true,
+        "monotonic_first_cases_max": 1,
+        "monotonic_seconds_cap": 7200,
+        "monotonic_steps_cap": 2500,
+        "monotonic_attempts_cap": 10000,
+        "monotonic_output_gib": 2
+      },
+      "conditional_dependencies": [
+        {
+          "routes": [
+            "A",
+            "B"
+          ],
+          "tasks": [
+            "F12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F14",
+      "title": "同精度同工作量性能评估",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T19"
+      ],
+      "depends_on": [
+        "F13"
+      ],
+      "physical_guards": [
+        "route_A_or_B",
+        "G4_passed",
+        "same_protocol_scope_recording_and_accuracy"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E10"
+        }
+      ],
+      "acceptance": [
+        "串行至少3次热缓存",
+        "冷标定/建模/求解/I/O/内存分别列出"
+      ],
+      "failure_exit": "无有效候选则不做加速比；不拿本轮并发计时作论文数据",
+      "budget": {
+        "warm_runs_minimum": 3,
+        "parallel_fe": 1
+      },
+      "routes": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "F15",
+      "title": "实际动力质量/模态/阻尼和小批风振G5",
+      "status": "planned",
+      "owner": "engineering_and_mechanics",
+      "original_tasks": [
+        "T20",
+        "T21"
+      ],
+      "depends_on": [
+        "F13",
+        "F03"
+      ],
+      "physical_guards": [
+        "scope_wind_or_fragility",
+        "G4_passed"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E11"
+        }
+      ],
+      "acceptance": [
+        "频率≤3%、MAC≥0.95",
+        "线性峰/RMS≤5%、非线性主要量≤10%",
+        "样本初态隔离、真实动力账本、dt/2",
+        "先一例后最多三种子两强度"
+      ],
+      "failure_exit": "G5失败保留静力交付；不扩70样本",
+      "budget": {
+        "A_B_main_runs_max": 12,
+        "C_main_runs_max": 6,
+        "representative_dt_half_cases": 1,
+        "measure_first_case_before_scheduling": true
+      },
+      "scopes": [
+        "wind",
+        "fragility"
+      ]
+    },
+    {
+      "id": "F16",
+      "title": "有物理判据与分母的正式易损性G6",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T22"
+      ],
+      "depends_on": [
+        "F15"
+      ],
+      "physical_guards": [
+        "scope_fragility",
+        "G5_passed",
+        "physical_limit_states_frozen"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E12"
+        }
+      ],
+      "acceptance": [
+        "等效量与纤维判据映射有依据",
+        "数值失败/未知/越界保留分母",
+        "统计方案/不确定性先冻结",
+        "既有正式入口仅准入导出，不冒称已实现拟合"
+      ],
+      "failure_exit": "不足则只交已验证静力/风响应，不发布正式易损性",
+      "budget": {
+        "new_samples_before_statistical_design": 0
+      },
+      "scopes": [
+        "fragility"
+      ]
+    },
+    {
+      "id": "F17",
+      "title": "分批及最终报告/网页/AI交接",
+      "status": "planned",
+      "owner": "coordinator",
+      "original_tasks": [
+        "T23",
+        "T24"
+      ],
+      "depends_on": [
+        "F13"
+      ],
+      "physical_guards": [
+        "final_claims_require_selected_scope_gates"
+      ],
+      "detail_refs": [
+        {
+          "document": "EXECUTION_PLAN.md",
+          "task_card": "E12"
+        }
+      ],
+      "acceptance": [
+        "每批步骤/实际结果/原数据/测试/范围一起交付",
+        "264只是上一批测试，不当新回归",
+        "只在网页源改动且测试后更新9999",
+        "未做任务与失败证据保留"
+      ],
+      "failure_exit": "阶段报告可提前交付；最终物理结论按scope条件阻塞",
+      "budget": {
+        "fe": 0
+      },
+      "conditional_dependencies": [
+        {
+          "routes": [
+            "A",
+            "B"
+          ],
+          "tasks": [
+            "F14"
+          ]
+        },
+        {
+          "scopes": [
+            "wind",
+            "fragility"
+          ],
+          "tasks": [
+            "F15"
+          ]
+        },
+        {
+          "scopes": [
+            "fragility"
+          ],
+          "tasks": [
+            "F16"
+          ]
+        }
+      ]
+    }
+  ]
+}

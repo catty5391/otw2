@@ -1,0 +1,21 @@
+{
+  "schema": "otw2.plan_consistency_check.v1",
+  "checked_at_utc": "2026-10-23T16:28:20.395703+00:00",
+  "passed": true,
+  "structure_only": false,
+  "counts": {
+    "tasks": 24,
+    "criteria": 32,
+    "tasks_with_gate_expanded_dependencies_checked": 24,
+    "maximum_conditional_full_tower_cases": 43,
+    "maximum_conditional_full_tower_process_minutes": 645.0,
+    "first_batch_full_tower_FE": 0,
+    "local_links_checked": 25,
+    "existing_code_entries_checked": 9,
+    "protected_source_and_evidence_files_checked": 68
+  },
+  "errors": [],
+  "new_FE_runs": 0,
+  "new_mechanics_tests_run": 0,
+  "interpretation": "document, dependencies, budgets and evidence consistency only; not new mechanics validation"
+}
