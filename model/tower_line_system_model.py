@@ -13,6 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 from model.conductor_properties import resolve_conductor_mass, tributary_lengths
 from model.transmission_line_formfinding import TransmissionLineFormFinder
+from model.insulator_mechanics import axial_contract, register_axial_material, v_geometry
 
 try:
     import openseespy.opensees as ops
@@ -462,7 +463,11 @@ class TowerLineSystemModel:
             ea = self._as_float(material.get("EA", material.get("ea", 1.0e8)), f"{insulator_id}.material.EA")
             area = self._as_float(material.get("area", material.get("A", 1.0)), f"{insulator_id}.material.area")
             mass = self._as_float(material.get("mass", 0.0), f"{insulator_id}.material.mass")
-            e_modulus = ea / area if area != 0.0 else ea
+            if ea <= 0 or area <= 0 or mass < 0:
+                raise ValueError("Insulator EA/area must be positive and mass nonnegative")
+            contract = axial_contract(material)
+            geometry = v_geometry(upper_coords, lower_coord)
+            e_modulus = ea / area
 
             lower_node_tag = self._create_node(
                 lower_coord,
@@ -476,7 +481,7 @@ class TowerLineSystemModel:
                 mass=mass,
             )
             mat_tag = self.tag_manager.get_next_tag(namespace="material")
-            self.ops.uniaxialMaterial("Elastic", mat_tag, e_modulus)
+            register_axial_material(self.ops, mat_tag, ea, area, material)
             self.material_tag_map[mat_tag] = {
                 "mat_tag": mat_tag,
                 "component": "insulator",
@@ -485,6 +490,7 @@ class TowerLineSystemModel:
                 "EA": ea,
                 "area": area,
                 "E": e_modulus,
+                **contract,
             }
 
             element_tags: list[int] = []
@@ -516,6 +522,8 @@ class TowerLineSystemModel:
                 "mat_tag": mat_tag,
                 "EA": ea,
                 "area": area,
+                **contract,
+                **geometry,
             }
         return self.insulator_map
 

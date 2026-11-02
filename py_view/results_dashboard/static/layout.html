@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" href="data:,">
+  <title>{{title}} · Z30103A6 研究成果</title>
+  <link rel="stylesheet" href="/static/styles.css?v=modules-20261028">
+</head>
+<body data-page="{{page}}">
+  <a class="skip-link" href="#pageContent">跳到页面内容</a>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <aside class="sidebar" id="siteSidebar">
+    <a class="brand" href="/" aria-label="返回成果首页"><span class="brand-mark"><i></i><i></i><i></i></span><span><strong>OTW²</strong><small>OpenSees Tower Lab</small></span></a>
+    <nav aria-label="模块导航">{{navigation}}</nav>
+    <div class="sidebar-foot"><div class="live-dot"><i></i> 本地成果库</div><span id="servicePort">PORT 9999</span></div>
+  </aside>
+  <button class="menu-backdrop" id="menuBackdrop" aria-label="关闭导航" tabindex="-1" hidden></button>
+  <main id="pageContent">
+    <header class="topbar">
+      <button class="menu-button" id="menuButton" aria-label="打开导航" aria-controls="siteSidebar" aria-expanded="false">☰</button>
+      <div class="breadcrumb" aria-label="当前位置">{{breadcrumb}}</div>
+      <span class="engine">Z30103A6 · OpenSees</span>
+    </header>
+    <p id="pageError" class="page-error" role="alert" hidden></p>
+    {{body}}
+    <footer class="page-footer"><span>OTW² · Z30103A6 Research Workspace</span><a href="/">返回成果首页 ↑</a></footer>
+  </main>
+  <script src="/static/site.js?v=modules-20261028" defer></script>
+  {{application}}
+</body>
+</html>

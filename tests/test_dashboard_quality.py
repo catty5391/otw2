@@ -146,8 +146,11 @@ class DashboardHttpTests(unittest.TestCase):
         self.assertIn('runs', self.get_json('/api/followup'))
         with self.opener.open(self.base + '/', timeout=10) as response:
             html = response.read().decode()
-            self.assertIn('diagnosticCases', html)
+            self.assertIn('/modules/tower/', html)
+            self.assertNotIn('id="diagnosticCases"', html)
             self.assertNotIn('共同验证区间', html)
+        with self.opener.open(self.base + '/modules/diagnostics/', timeout=10) as response:
+            self.assertIn('id="diagnosticCases"', response.read().decode())
 
     def test_query_allowlists_and_nonfinite_values(self):
         for path in ('/api/diagnostics/curve?case=../../secret',

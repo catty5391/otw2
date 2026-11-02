@@ -1,0 +1,47 @@
+body[data-page="rain"]::before,body[data-page="rain"] .ambient {display:none}
+.rain-study {padding:36px clamp(20px,4vw,64px) 60px;max-width:1580px;margin:auto;overflow-wrap:anywhere}
+.rain-hero {max-width:1000px;padding:20px 0 18px}
+.rain-hero h1 {font-size:clamp(33px,4.5vw,62px);font-weight:500;line-height:1.17;letter-spacing:-.045em;margin:20px 0}
+.rain-hero h1 em {font-style:normal;color:var(--cyan)}
+.rain-hero>p {max-width:850px;color:var(--muted);font-size:15px;line-height:1.9}
+.rain-status {display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:22px 0 12px;font-size:12px}
+#rainStatus {display:inline-block;padding:7px 13px;border:1px solid var(--line-strong);border-radius:6px;color:var(--cyan);background:var(--cyan-soft)}
+#rainDate {color:var(--muted)}
+.rain-hero p.rain-boundary {font-size:12px;max-width:900px;padding:10px 15px;border-left:2px solid var(--orange);color:#b3bfca}
+.rain-jumps {display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 42px}
+.rain-jumps a {border:1px solid var(--line);padding:8px 13px;border-radius:6px;color:var(--muted);font-size:12px}
+.rain-jumps a:hover,.rain-downloads a:hover {border-color:var(--cyan);color:var(--cyan)}
+.rain-section {padding:0 0 45px;scroll-margin-top:30px;min-width:0}
+.rain-heading {margin:14px 0 24px}
+.rain-heading>span {font:10px ui-monospace,monospace;letter-spacing:.15em;color:var(--cyan)}
+.rain-heading h2 {font-size:clamp(23px,2.5vw,34px);font-weight:500;letter-spacing:-.03em;margin:8px 0}
+.rain-concept-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.rain-concept {background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:23px;min-width:0}
+.rain-concept b {font-size:14px;font-weight:500}.rain-concept strong {display:block;color:var(--cyan);font:28px ui-monospace,monospace;margin:14px 0}
+.rain-concept p {font-size:12px;color:var(--muted);line-height:1.9;margin:0}
+.rain-lead {font-size:13px;color:var(--muted);line-height:1.9;max-width:1000px}
+.rain-steps {list-style:none;counter-reset:rain-step;margin:22px 0;padding:0;display:grid;gap:10px}
+.rain-steps li {counter-increment:rain-step;position:relative;padding:18px 20px 18px 65px;background:var(--panel);border:1px solid var(--line);border-radius:9px}
+.rain-steps li:before {content:counter(rain-step,decimal-leading-zero);position:absolute;left:20px;top:20px;color:var(--cyan);font:14px ui-monospace,monospace}
+.rain-steps h3 {font-size:14px;font-weight:500;margin:0 0 5px}.rain-steps p {font-size:12px;line-height:1.9;margin:0;color:var(--muted)}
+.rain-equations {display:grid;gap:12px}.rain-equation {padding:20px;border:1px solid var(--line);border-radius:9px}
+.rain-equation h3 {font-size:14px;margin:0 0 10px}.rain-equation pre {white-space:pre-wrap;font-size:13px;color:var(--cyan);overflow-wrap:anywhere;word-break:break-word}.rain-equation p {color:var(--muted);font-size:12px}
+.rain-findings {display:grid;gap:9px;margin:0 0 22px}.rain-finding {padding:14px 20px;background:var(--cyan-soft);border-left:2px solid var(--cyan);font-size:13px;line-height:1.9;border-radius:0 7px 7px 0}
+.rain-empty {color:var(--orange);border:1px dashed var(--line-strong);padding:18px;font-size:13px;border-radius:8px}
+.rain-table-block {margin:24px 0;min-width:0}.rain-table-block h3 {font-size:15px;font-weight:500;margin:12px 0}
+.rain-table-scroll {max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.rain-study table {font-size:12px;min-width:480px}.rain-study th {color:var(--muted);background:var(--panel)}
+.rain-study td:last-child {font-family:inherit;color:inherit}.rain-study td,.rain-study th {padding:13px 16px;line-height:1.7;white-space:normal;min-width:90px;max-width:360px;text-align:left}
+.rain-study table.check-table {min-width:600px}.rain-study table.check-table td:nth-child(2) {min-width:80px;white-space:nowrap}
+.rain-check-pass {color:var(--cyan)}.rain-check-fail {color:var(--orange)}.rain-check-unknown {color:var(--muted)}
+.rain-figures {display:grid;grid-template-columns:1fr;gap:24px}
+.rain-figure {background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:0;overflow:hidden;min-width:0}
+.rain-figure h3 {margin:0;padding:18px 22px;font-size:16px;font-weight:500}.rain-figure img {display:block;width:100%;height:auto;background:#fff}
+.rain-figure figcaption {font-size:12px;color:var(--muted);line-height:1.9;padding:17px 22px}.rain-figure figcaption a {color:var(--cyan);margin-left:12px;white-space:nowrap}
+.rain-assumption-box {padding:22px;background:rgba(255,157,92,.05);border:1px solid rgba(255,157,92,.25);border-radius:12px;margin-top:24px}
+.rain-assumption-box h3 {font-size:15px;font-weight:500;margin:0 0 12px;color:var(--orange)}.rain-assumption-box ul {padding-left:20px;margin:0;color:var(--muted);font-size:12px;line-height:1.9}.rain-assumption-box li+li {margin-top:8px}
+.rain-sources {display:grid;gap:10px;margin:0 0 25px}.rain-source {padding:15px 18px;border:1px solid var(--line);border-radius:9px}.rain-source a {font-size:13px;color:var(--cyan)}.rain-source p {font-size:12px;color:var(--muted);margin:7px 0 0;line-height:1.8}
+.rain-downloads {display:flex;flex-wrap:wrap;gap:10px}.rain-downloads a {padding:11px 15px;border:1px solid var(--line-strong);border-radius:7px;font-size:12px;overflow-wrap:anywhere}
+.rain-study h3 {font-weight:500}.rain-study a:focus-visible {outline:2px solid var(--cyan);outline-offset:3px}
+@media(max-width:900px){.rain-concept-grid{grid-template-columns:1fr}.rain-concept{display:grid;grid-template-columns:1fr auto;column-gap:18px}.rain-concept p{grid-column:1/-1}.rain-concept strong{font-size:22px;margin:0 0 12px}.rain-concept b{align-self:center}.rain-study{padding-top:12px}.rain-hero{padding-top:5px}}
+@media(max-width:600px){.rain-study{padding-left:18px;padding-right:18px}.rain-hero>p{font-size:13px}.rain-section{padding-bottom:28px}.rain-jumps{margin-bottom:28px;gap:6px}.rain-jumps a{padding:7px 9px;font-size:11px}.rain-steps li{padding:16px 16px 16px 52px}.rain-steps li:before{left:15px}.rain-figure h3,.rain-figure figcaption{padding:14px}.rain-downloads a{width:100%}}

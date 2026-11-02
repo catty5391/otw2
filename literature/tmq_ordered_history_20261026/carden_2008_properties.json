@@ -1,0 +1,767 @@
+{
+  "schema": "otw2.carden_2008_source_properties.v1",
+  "date": "2026-10-26",
+  "source": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+  "original_2006": "https://ej.aisc.org/index.php/engj/article/download/875/874",
+  "physical_validation": false,
+  "production_parameters_changed": false,
+  "coupon_material_evidence_newly_confirmed": true,
+  "specimens": [
+    {
+      "specimen_id": "Carden_A",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted",
+      "gusset_2006_nominal_in": 0.5,
+      "K_assumed_in_table": 1.0,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 93,
+      "source_plot_figure": "3-9",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_B",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 94,
+      "source_plot_figure": "3-10",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_C",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 94,
+      "source_plot_figure": "3-11",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_D",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted_reinforced",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 95,
+      "source_plot_figure": "3-12",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_E",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted_reinforced",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 95,
+      "source_plot_figure": "3-13",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_F",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 96,
+      "source_plot_figure": "3-14",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_G",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 96,
+      "source_plot_figure": "3-15",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_H",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted_reinforced",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 97,
+      "source_plot_figure": "3-16",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_I",
+      "coupon_batch": 1,
+      "measured_coupon_E_Pa": 206000000000.0,
+      "measured_coupon_fy_Pa": 386000000.0,
+      "measured_coupon_fu_Pa": 578000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "bolted_reinforced",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 97,
+      "source_plot_figure": "3-17",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_J",
+      "coupon_batch": 2,
+      "measured_coupon_E_Pa": 220000000000.0,
+      "measured_coupon_fy_Pa": 316000000.0,
+      "measured_coupon_fu_Pa": 475000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 98,
+      "source_plot_figure": "3-18",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_K",
+      "coupon_batch": 2,
+      "measured_coupon_E_Pa": 220000000000.0,
+      "measured_coupon_fy_Pa": 316000000.0,
+      "measured_coupon_fu_Pa": 475000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 40.5,
+      "length_2006_converted_m": 1.0287,
+      "length_2008_rounded_mm": 1030,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 98,
+      "source_plot_figure": "3-19",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_L",
+      "coupon_batch": 2,
+      "measured_coupon_E_Pa": 220000000000.0,
+      "measured_coupon_fy_Pa": 316000000.0,
+      "measured_coupon_fu_Pa": 475000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 99,
+      "source_plot_figure": "3-20",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_M",
+      "coupon_batch": 2,
+      "measured_coupon_E_Pa": 220000000000.0,
+      "measured_coupon_fy_Pa": 316000000.0,
+      "measured_coupon_fu_Pa": 475000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1.75,
+        1.75,
+        0.25
+      ],
+      "length_2006_declared_in": 22.5,
+      "length_2006_converted_m": 0.5715,
+      "length_2008_rounded_mm": 570,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 99,
+      "source_plot_figure": "3-21",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_N",
+      "coupon_batch": 3,
+      "measured_coupon_E_Pa": 218000000000.0,
+      "measured_coupon_fy_Pa": 338000000.0,
+      "measured_coupon_fu_Pa": 514000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1,
+        1,
+        0.1875
+      ],
+      "length_2006_declared_in": 50.5,
+      "length_2006_converted_m": 1.2827,
+      "length_2008_rounded_mm": 1280,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 100,
+      "source_plot_figure": "3-22",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_O",
+      "coupon_batch": 3,
+      "measured_coupon_E_Pa": 218000000000.0,
+      "measured_coupon_fy_Pa": 338000000.0,
+      "measured_coupon_fu_Pa": 514000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1,
+        1,
+        0.1875
+      ],
+      "length_2006_declared_in": 50.5,
+      "length_2006_converted_m": 1.2827,
+      "length_2008_rounded_mm": 1280,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 100,
+      "source_plot_figure": "3-23",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ]
+    },
+    {
+      "specimen_id": "Carden_P",
+      "coupon_batch": 3,
+      "measured_coupon_E_Pa": 218000000000.0,
+      "measured_coupon_fy_Pa": 338000000.0,
+      "measured_coupon_fu_Pa": 514000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1,
+        1,
+        0.1875
+      ],
+      "length_2006_declared_in": 25.4,
+      "length_2006_converted_m": 0.64516,
+      "length_2008_rounded_mm": 640,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "compression",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": false,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 101,
+      "source_plot_figure": "3-24",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ],
+      "force_crosscheck": {
+        "report_2008": {
+          "table_tension": "3-3",
+          "tension_printed_page": 72,
+          "tension_pdf_page": 102,
+          "measured_tensile_yield_kN": 74,
+          "measured_tensile_ultimate_kN": 92,
+          "coupon_based_yield_force_kN": 74,
+          "table_buckling": "3-4",
+          "buckling_printed_page": 74,
+          "buckling_pdf_page": 104,
+          "measured_maximum_buckling_force_kN": 53,
+          "buckling_column_header": "kip",
+          "buckling_unit_interpretation": "numeric values are rounded kN as checked against 2006 Table 4; source header is inconsistent"
+        },
+        "journal_2006": {
+          "table": "4",
+          "printed_page": 120,
+          "pdf_page": 10,
+          "measured_tensile_yield_kip": 16.6,
+          "measured_tensile_ultimate_kip": 20.7,
+          "coupon_based_yield_force_kip": 16.7,
+          "measured_maximum_buckling_force_kip": 12.0
+        },
+        "coupon_force_basis": "Calculated Ag times coupon fy, not an independent measured member force or area"
+      },
+      "conditional_nominal_geometry": {
+        "admission_mode_proposed": "conditional_nominal_geometry",
+        "nominal_sharp_corner_area_m2": 0.00021925359374999997,
+        "reported_length_m": 0.64516,
+        "length_source": "2006 Table 1, printed p112 / PDF2; visually confirmed 25.4 in, not 25.2 in",
+        "rounded_2008_length_difference_mm": 5.16,
+        "strict_measured_geometry_admitted": false,
+        "fit_role_proposed": "training",
+        "parameter_validation_scope": "same nominal section and reported length; different initial loading direction; actuator displacement and author PDF path conditional representation"
+      }
+    },
+    {
+      "specimen_id": "Carden_Q",
+      "coupon_batch": 3,
+      "measured_coupon_E_Pa": 218000000000.0,
+      "measured_coupon_fy_Pa": 338000000.0,
+      "measured_coupon_fu_Pa": 514000000.0,
+      "coupon_source": {
+        "url": "https://www.eng.buffalo.edu/mceer-reports/08/08-0002.pdf",
+        "printed_page": 55,
+        "pdf_page": 85,
+        "table": "3-1",
+        "method": "same heat ASTM A370 flat coupon"
+      },
+      "section_2006_nominal_in": [
+        1,
+        1,
+        0.1875
+      ],
+      "length_2006_declared_in": 25.4,
+      "length_2006_converted_m": 0.64516,
+      "length_2008_rounded_mm": 640,
+      "length_basis": "2006 Table 1; text defines between connection centroids; not independently measured physical gauge length",
+      "area_measured_m2": null,
+      "area_basis": "A numeric measured member area was not located. Nominal geometry or Ag inferred from rounded nominal yield force must be separately declared.",
+      "first_direction_2006_table1": "tension",
+      "prior_tensile_yield_before_buckling_report_2008_table3_4": true,
+      "prior_yield_flag_interpretation": "True = explicitly footnoted in original Table 3-4; False = no footnote, not independent proof of virgin state",
+      "connection": "balanced_welded",
+      "gusset_2006_nominal_in": 1.0,
+      "K_assumed_in_table": 0.7,
+      "displacement_measurement": "actuator; 2006 printed p114 / PDF4; member-to-gusset connection deformation included",
+      "source_plot_pdf_page": 101,
+      "source_plot_figure": "3-25",
+      "raw_instrument_history_obtained": false,
+      "strict_ordered_fit_admitted": false,
+      "notes": [
+        "2008 table3-2 unit labels in conflict with SI numeric entries; use 2006 inch table and disclose rounding",
+        "2008 prose 13mm increment conflicts with 2006 prose 0.25in increment; do not synthesize sequence from either"
+      ],
+      "force_crosscheck": {
+        "report_2008": {
+          "table_tension": "3-3",
+          "tension_printed_page": 72,
+          "tension_pdf_page": 102,
+          "measured_tensile_yield_kN": 78,
+          "measured_tensile_ultimate_kN": 100,
+          "coupon_based_yield_force_kN": 74,
+          "table_buckling": "3-4",
+          "buckling_printed_page": 74,
+          "buckling_pdf_page": 104,
+          "measured_maximum_buckling_force_kN": 48,
+          "buckling_column_header": "kip",
+          "buckling_unit_interpretation": "numeric values are rounded kN as checked against 2006 Table 4; source header is inconsistent"
+        },
+        "journal_2006": {
+          "table": "4",
+          "printed_page": 120,
+          "pdf_page": 10,
+          "measured_tensile_yield_kip": 17.6,
+          "measured_tensile_ultimate_kip": 22.5,
+          "coupon_based_yield_force_kip": 16.7,
+          "measured_maximum_buckling_force_kip": 10.7
+        },
+        "coupon_force_basis": "Calculated Ag times coupon fy, not an independent measured member force or area"
+      },
+      "conditional_nominal_geometry": {
+        "admission_mode_proposed": "conditional_nominal_geometry",
+        "nominal_sharp_corner_area_m2": 0.00021925359374999997,
+        "reported_length_m": 0.64516,
+        "length_source": "2006 Table 1, printed p112 / PDF2; visually confirmed 25.4 in, not 25.2 in",
+        "rounded_2008_length_difference_mm": 5.16,
+        "strict_measured_geometry_admitted": false,
+        "fit_role_proposed": "held_out",
+        "parameter_validation_scope": "same nominal section and reported length; different initial loading direction; actuator displacement and author PDF path conditional representation"
+      }
+    }
+  ],
+  "file_sha256": {
+    "literature/tmq_ordered_history_20261026/papers/02_Carden_Itani_Buckle_2008_MCEER_08_0002.pdf": "420f3d5bc93e1b0638f6d5c81e82395b341c063578f8d10d355c42991625815d",
+    "literature/tmq_ordered_history_20261026/papers/03_Tatsumi_Kishiki_2017_angle_connection_cyclic_tests.pdf": "6130afbdbb78b8794ac5049cfd94912160dc95b407a48035da8b2f1d04f75414"
+  }
+}

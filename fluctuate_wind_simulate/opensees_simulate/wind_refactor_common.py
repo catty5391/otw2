@@ -123,6 +123,11 @@ def apply_wind_load_for_sample(
     load_dof: int = 2,
     start_time: float = 0.0,
 ) -> tuple[list[int], list[int]]:
+    # Legacy floor files store total force in N. Keep their 1 N reference
+    # convention while using the same installation/rollback layer as rain.
+    from util.analysis.time_series import read_numeric_series
+    from util.processing.nodal_loads import apply_nodal_loads
+
     floor_names = sorted(node_config.keys(), key=get_floor_index)
     ts_tags: list[int] = []
     pattern_tags: list[int] = []
@@ -138,23 +143,28 @@ def apply_wind_load_for_sample(
             counts = {int(node): len(ops.nodeDisp(int(node))) for node in node_list}
             if any(not 1 <= load_dof <= count for count in counts.values()):
                 raise ValueError(f"load DOF {load_dof} not available at every node in {floor_name}")
-            ts_tag, pattern_tag = force_control.get_next_tag_pair(
-                time_series_name=f"{sample_prefix}_{floor_name}_ts",
-                pattern_name=f"{sample_prefix}_{floor_name}_pattern",
-            )
+            class FloorTags:
+                def get_next_tag(self, namespace):
+                    if namespace == "timeSeries":
+                        return force_control.get_next_time_series_tag(name=f"{sample_prefix}_{floor_name}_ts")
+                    if namespace == "pattern":
+                        return force_control.get_next_pattern_tag(name=f"{sample_prefix}_{floor_name}_pattern")
+                    raise ValueError(namespace)
+
             node_factor = 1.0 / len(node_list)
             # Analysis stops at the input endpoint. Preserve its specified last
             # value when floating-point indexing falls on/outside that sample;
             # otherwise changing only the domain time offset can change force.
-            ops.timeSeries("Path", ts_tag, "-dt", dt, "-filePath", floor_file.as_posix(),
-                           "-startTime", start_time, "-useLast")
-            ts_tags.append(ts_tag)
-            ops.pattern("Plain", pattern_tag, ts_tag)
-            pattern_tags.append(pattern_tag)
+            loads={}
             for node_tag, count in counts.items():
                 vector = [0.0] * count
                 vector[load_dof - 1] = node_factor
-                ops.load(node_tag, *vector)
+                loads[node_tag]=tuple(vector)
+            handle=apply_nodal_loads(loads,FloorTags(),ops,name=f"{sample_prefix}_{floor_name}",
+                time_series_type="Path",path_values=read_numeric_series(floor_file),dt=dt,
+                start_time=start_time,hold_last=True,allow_nonzero_initial=True)
+            ts_tags.append(handle.time_series_tag)
+            pattern_tags.append(handle.pattern_tag)
     except BaseException:
         remove_wind_load(ts_tags, pattern_tags)
         raise

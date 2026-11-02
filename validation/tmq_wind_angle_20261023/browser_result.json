@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "Homepage wind panel reports actual 8/8 and loads its plot",
+    "Standalone report has 8 verified cases, two actual figures and limits",
+    "API publishes verification without claiming engineering calibration",
+    "Mobile page has no horizontal viewport overflow",
+    "No browser page errors"
+  ],
+  "errors": []
+}

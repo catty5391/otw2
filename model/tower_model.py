@@ -1256,7 +1256,8 @@ class OpenSeesModel:
 
         rows = self._read_csv_rows(self.output_dir / "materials.csv")
         for row in rows:
-            if mat_tag is not None and int(row["mat_tag"]) == int(mat_tag):
+            if ((mat_tag is not None and int(row["mat_tag"]) == int(mat_tag))
+                    or (material_name is not None and row["material_name"] == material_name)):
                 return {
                     "mat_tag": int(row["mat_tag"]),
                     "material_name": row["material_name"],
@@ -1267,18 +1268,10 @@ class OpenSeesModel:
                     "density": float(row["density"]),
                     "b": float(row["b"]),
                     "ops_type": row["ops_type"],
-                }
-            if material_name is not None and row["material_name"] == material_name:
-                return {
-                    "mat_tag": int(row["mat_tag"]),
-                    "material_name": row["material_name"],
-                    "fy": float(row["fy"]),
-                    "e0": float(row["e0"]),
-                    "g": float(row["g"]),
-                    "nu": float(row["nu"]),
-                    "density": float(row["density"]),
-                    "b": float(row["b"]),
-                    "ops_type": row["ops_type"],
+                    # Old exports omit these columns; do not invent their values.
+                    **{key: float(row[key]) for key in
+                       ("R0", "cR1", "cR2", "a1", "a2", "a3", "a4", "sig_init")
+                       if row.get(key) not in (None, "")},
                 }
         key = mat_tag if mat_tag is not None else material_name
         raise KeyError(f"未找到材料 {key}")

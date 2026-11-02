@@ -1,0 +1,24 @@
+<section id="cyclic" class="section" aria-labelledby="cyclicTitle">
+      <div class="section-heading">
+        <div><div class="section-index">02 / FULL-TOWER CYCLIC</div><h2 id="cyclicTitle">全塔准静力往复</h2></div>
+        <p>同一控制节点、同一荷载路径，对比等效材料模型与四分段几何初缺陷参考模型。</p>
+      </div>
+      <div class="split-grid cyclic-layout">
+        <article class="panel chart-panel large">
+          <div class="panel-head"><div><span>BASE SHEAR–DISPLACEMENT</span><h3>基底剪力—塔顶位移</h3></div><div class="legend" id="cyclicLegend"></div></div>
+          <div class="chart-wrap cyclic-chart"><canvas id="cyclicChart"></canvas><div class="chart-tooltip" id="cyclicTooltip"></div></div>
+        </article>
+        <aside class="result-stack">
+          <article class="result-card cyan"><span>历史共同完成范围</span><strong id="commonCoverage">—</strong><p>只说明目标覆盖；不授予全塔局部验证。</p></article>
+          <article class="result-card"><span>目标点最大剪力误差</span><strong id="towerShearError">—</strong><p>旧共同目标点整体反力统计。</p></article>
+          <article class="result-card"><span>历史轴力包络 NRMSE</span><strong id="towerAxialError">—</strong><p>按全塔最大轴力归一化，不能代表小杆逐杆误差。</p></article>
+          <article class="warning-card"><i>!</i><div><b>当前研究边界</b><p>原步长6/9停止；细步长9/9完成。877/878在−0.6%目标轴压力约低79%，−1%压应变约4.103%超过实际骨架终点。计算完成与物理通过分别判断。</p></div></article>
+        </aside>
+      </div>
+      <article class="panel target-panel">
+        <div class="panel-head"><div><span>HISTORICAL CHECKPOINTS</span><h3>旧基线共同目标点核对</h3></div><a href="/download?key=target-comparison">下载 CSV ↓</a></div>
+        <div class="table-scroll"><table><thead><tr><th>阶段</th><th>目标位移</th><th>等效模型</th><th>四分段参考</th><th>误差</th></tr></thead><tbody id="targetTable"></tbody></table></div>
+      </article>
+
+
+    </section>

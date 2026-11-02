@@ -1,0 +1,9 @@
+<section id="diagnostics" class="section"><div class="section-heading"><div><div class="section-index">ANALYSIS RECORDS</div><h2>全塔收敛与关键杆诊断</h2></div><p>对照原步长、细步长和弹性消融案例，追踪关键杆的已提交状态。</p></div><article class="panel target-panel">
+        <div class="panel-head"><div><span>DIAGNOSTIC EVIDENCE</span><h3>三个历史查因案例</h3></div><a href="/download?key=convergence-report">查因报告 ↓</a></div>
+        <p class="quality-note">下列状态由只读历史摘要、逐杆骨架与已提交历程派生。Elastic消融仅定位原因；旧文件保持原样。阶段坐标是准静力协议进度。</p>
+        <div id="diagnosticCases" class="diagnostic-cases"></div>
+        <div class="diagnostic-controls"><label>案例<select id="diagnosticCase"><option value="baseline">原步长 baseline</option><option value="fine_sparse" selected>细步长 fine_sparse</option><option value="elastic_877_878">Elastic查因消融</option></select></label><label>关键原杆<select id="diagnosticMember"><option>877</option><option>878</option><option>825</option><option>828</option><option>917</option><option>920</option></select></label><button class="ghost-button" id="diagnosticLoad">读取案例</button></div>
+        <p class="quality-note" id="diagnosticMemberInfo">正在读取关键杆证据…</p>
+        <div class="diagnostic-chart-grid"><div class="chart-wrap"><canvas id="diagnosticCurveChart"></canvas></div><div class="chart-wrap"><canvas id="diagnosticMemberChart"></canvas></div><div class="chart-wrap"><canvas id="diagnosticStrainChart"></canvas></div></div>
+        <p class="quality-note" id="diagnosticReference">参考对照仅包含已有同阶段检查点；当前诊断不是全分量空间内力库，没有位移历史动画。</p>
+      </article></section>

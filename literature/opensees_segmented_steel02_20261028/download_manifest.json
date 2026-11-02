@@ -1,0 +1,35 @@
+[
+  {
+    "file": "jeddi_2020_kns.pdf",
+    "url": "https://www.kns.org/files/pre_paper/44/20A-443-%EA%B9%80%EB%AF%BC%EA%B7%9C.pdf",
+    "status": "downloaded",
+    "bytes": 1027762,
+    "sha256": "0ff19e1c2488a69e57bbf29c4048205203f0deadd3838a4874b59cca0209e933"
+  },
+  {
+    "file": "uriz_mahin_2008_peer.pdf",
+    "url": "https://peer.berkeley.edu/sites/default/files/web_peer808_uriz_patxi_uriz_stephen_a._mahin.pdf",
+    "status": "downloaded",
+    "bytes": 18212814,
+    "sha256": "0e183d161f42d370ea64b8c85e5d7e21c736df43dc492855edd0472f98b24ed1"
+  },
+  {
+    "file": "salawdeh_goggins_2013.pdf",
+    "url": "https://staff-old.najah.edu/sites/default/files/Numerical_Simulation_for_Steel_Brace_Members_Incorporating_a_Fatigue_Model.pdf",
+    "status": "unavailable",
+    "error": "520 Server Error: <none> for url: https://staff-old.najah.edu/sites/default/files/Numerical_Simulation_for_Steel_Brace_Members_Incorporating_a_Fatigue_Model.pdf"
+  },
+  {
+    "file": "jeddi_2022_publisher.html",
+    "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/eqe.3735",
+    "status": "unavailable",
+    "error": "403 Client Error: Forbidden for url: https://onlinelibrary.wiley.com/doi/full/10.1002/eqe.3735"
+  },
+  {
+    "file": "steel02_official.html",
+    "url": "https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/Steel02.html",
+    "status": "downloaded",
+    "bytes": 24697,
+    "sha256": "f0f1444bf83857b18407733b30375560ef33b834de881175f81f03734b272e9d"
+  }
+]

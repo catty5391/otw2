@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-26",
+  "task": "jain_primary_evidence",
+  "documents": [
+    {
+      "file": "papers/02_Jain_Hanson_1980_WCEE_hysteresis_models.pdf",
+      "url": "https://www.iitk.ac.in/nicee/wcee/article/7_vol6_463.pdf",
+      "bytes": 954427,
+      "sha256": "9839c2869605cd4457c25812de65df6f0d0b9edf397da8fe65a30adc0c294d59",
+      "evidence_kind": "original_author_fulltext",
+      "reviewed_scope": "Printed pp.463-470; all 8 pages visually inspected"
+    },
+    {
+      "file": "papers/04_Medhekar_1997_seismic_evaluation_CBF.pdf",
+      "url": "https://central.bac-lac.gc.ca/.item?app=Library&id=nq23034&oclc_number=46554080&op=pdf",
+      "bytes": 19886483,
+      "sha256": "4d14033917b1529b0d428203f4e70282117630b02b6f068b945e9b96ce05394a",
+      "evidence_kind": "secondary_review_of_Jain",
+      "reviewed_scope": "Printed p.19, PDF p.41, section3.2.2.2; title page and preloading statement visually checked"
+    },
+    {
+      "file": "papers/05_Shaback_2001_square_HSS_braces.pdf",
+      "url": "https://central.bac-lac.gc.ca/.item?app=Library&id=MQ65011&oclc_number=1006813498&op=pdf",
+      "bytes": 8363033,
+      "sha256": "13b13241a5fa2ef2a250eb273ca67ddc68dbc4365261ffb0f6a212756928f291",
+      "evidence_kind": "secondary_review_of_Jain",
+      "reviewed_scope": "Printed pp.16-18, PDF pp.34-36, section2.1.2; text extracted"
+    }
+  ],
+  "physical_identification_admitted": false,
+  "production_changed": false,
+  "access_results": [
+    {
+      "url": "https://hdl.handle.net/api/handles/2027.42/127507",
+      "status": 200,
+      "resolved_url": "https://deepblue.lib.umich.edu/items/68209a26-9710-4365-8d3f-21c13df6da91"
+    },
+    {
+      "url": "https://deepblue.lib.umich.edu/items/68209a26-9710-4365-8d3f-21c13df6da91",
+      "status": 403,
+      "full_text_acquired": false
+    },
+    {
+      "url": "https://ascelibrary.org/doi/10.1061/JSDEAG.0005498",
+      "status": "publisher abstract only; paid full text not acquired"
+    },
+    {
+      "url": "https://nehrpsearch.nist.gov/static/files/NSF/PB80127129.pdf",
+      "status": "web tool full text available; direct PDF download 403",
+      "reviewed": "Printed p.2 / PDF p.6; tube-only earlier experimental program"
+    },
+    {
+      "url": "https://nehrpsearch.nist.gov/static/files/NSF/PB80142250.pdf",
+      "status": "web PDF too large; direct download403"
+    },
+    {
+      "url": "https://nehrpsearch.nist.gov/static/files/NSF/PB81120081.pdf",
+      "status": "web PDF too large; direct download403"
+    }
+  ]
+}

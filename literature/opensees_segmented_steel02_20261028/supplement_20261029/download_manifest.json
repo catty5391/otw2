@@ -1,0 +1,16 @@
+[
+  {
+    "file": "du_ssrc_2022.pdf",
+    "url": "https://cloud.aisc.org/SSRC/2022/Du_et_al_SSRC_2022.pdf",
+    "status": "downloaded",
+    "bytes": 1740310,
+    "sha256": "a43597a63a0a25ff838516b886d9b66ad4215d3b209d77618841648a1e100071"
+  },
+  {
+    "file": "vettoretto_2023_buildings.pdf",
+    "url": "https://mdpi-res.com/d_attachment/buildings/buildings-13-00513/article_deploy/buildings-13-00513.pdf",
+    "status": "downloaded",
+    "bytes": 3279009,
+    "sha256": "f20ccd13bb29809a4556799eab1ad63caedc95e5afc1d5ee3ae9aa8a1c4a3ebc"
+  }
+]

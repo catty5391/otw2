@@ -16,6 +16,10 @@ __all__ = [
 	"GravityLoadResult",
 	"TowerInternalForceRecorder",
 	"TowerInternalForceHistory",
+	"apply_nodal_loads",
+	"apply_nodal_load_history",
+	"current_nodal_loads",
+	"remove_nodal_loads",
 ]
 
 _LAZY_IMPORTS = {
@@ -34,6 +38,10 @@ _LAZY_IMPORTS = {
 	"GravityLoadResult": ("processing.gravity_load", "GravityLoadResult"),
 	"TowerInternalForceRecorder": ("processing.internal_force_recorder", "TowerInternalForceRecorder"),
 	"TowerInternalForceHistory": ("processing.internal_force_recorder", "TowerInternalForceHistory"),
+	"apply_nodal_loads": ("processing.nodal_loads", "apply_nodal_loads"),
+	"apply_nodal_load_history": ("processing.nodal_loads", "apply_nodal_load_history"),
+	"current_nodal_loads": ("processing.nodal_loads", "current_nodal_loads"),
+	"remove_nodal_loads": ("processing.nodal_loads", "remove_nodal_loads"),
 }
 
 

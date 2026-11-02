@@ -50,6 +50,7 @@ function setupCanvas(canvas) {
 }
 
 function drawLineChart(canvas, data, options = {}) {
+  canvas._plotData=data;canvas._plotOptions=options;
   const { ctx, width, height } = setupCanvas(canvas);
   const padding = options.compact ? { l: 42, r: 12, t: 12, b: 30 } : { l: 58, r: 22, t: 18, b: 43 };
   const all = Object.values(data).flat();
@@ -119,29 +120,19 @@ function makeLegend(target, names) {
 
 function populateOverview(data) {
   overviewData = data; const m=data.member, t=data.tower;
-  $('#heroMembers').textContent = t.physical_members.toLocaleString('zh-CN');
-  $('#commonDrift').textContent = `±${fmt(t.common_drift_percent,1)}%`;
-  $('#axialCorrelation').textContent = fmt(t.axial_correlation,5);
-  $('#speedup').textContent = t.runtime_comparison_valid ? `${fmt(t.speedup,2)}×` : '待评估';
-  $('#commonCoverage').textContent = `${t.common_target_count}/${t.requested_targets ?? 'unknown'} 目标`;
-  $('.engine').textContent = data.project.analysis_engine;
-  $('#servicePort').textContent = `PORT ${window.location.port || 'default'}`;
-  $('#dbSize').textContent = `${fmt(data.project.database_size_mb,0)} MB`;
-  $('#memberMetrics').innerHTML = `
+  const setText=(selector,value)=>{const node=$(selector);if(node)node.textContent=value;};
+  setText('#commonCoverage',`${t.common_target_count}/${t.requested_targets ?? 'unknown'} 目标`);
+  if ($('#memberMetrics')) $('#memberMetrics').innerHTML = `
     <article class="metric-card"><span>参考峰值</span><strong>${fmt(m.peak_force_kn,1)}</strong><small> kN</small></article>
     <article class="metric-card"><span>曲线 NRMSE</span><strong>${fmt(m.nrmse_percent,2)}</strong><small> %</small></article>
     <article class="metric-card"><span>该算例峰前卸载</span><strong>${m.pre_yield_unloading_passed === true ? '通过' : m.pre_yield_unloading_passed === false ? '未通过' : 'unknown'}</strong><small> 不代表空间循环验证</small></article>
     <article class="metric-card"><span>参考网格</span><strong>${m.reference_divisions}</strong><small> 分段</small></article>`;
-  $('#memberErrorText').textContent = `${fmt(m.nrmse_percent,2)}%`;
-  $('#memberRange').textContent = `${m.screening.count ?? 'unknown'} 根 · λ ${fmt(m.screening.minimum_slenderness,0)}–${fmt(m.screening.maximum_slenderness,0)}`;
-  $('#validationLengths').textContent = m.actual_validation.map(v=>`${fmt(v.length_m,2)} m`).join(' / ');
-  $('#towerShearError').textContent = `${fmt(t.base_shear_error_percent,3)}%`;
-  $('#towerAxialError').textContent = `${fmt(t.axial_nrmse_percent,3)}%`;
-  $('#paperCount').textContent = `${data.project.paper_count} 篇 PDF`;
-  $('#unloadingState').textContent = m.pre_yield_unloading_passed === true ? '该历史算例通过' : '未通过或unknown';
-  $('#lastUpdated').textContent = `RESULT SNAPSHOT · ${data.project.result_updated ? new Date(data.project.result_updated*1000).toLocaleString('zh-CN') : 'unknown'}`;
-  populateDiagnostics(data.diagnostics);
-  populateFollowup(data.followup);
+  setText('#memberErrorText',`${fmt(m.nrmse_percent,2)}%`);
+  setText('#memberRange',`${m.screening.count ?? 'unknown'} 根 · λ ${fmt(m.screening.minimum_slenderness,0)}–${fmt(m.screening.maximum_slenderness,0)}`);
+  setText('#validationLengths',m.actual_validation.map(v=>`${fmt(v.length_m,2)} m`).join(' / '));
+  setText('#towerShearError',`${fmt(t.base_shear_error_percent,3)}%`);
+  setText('#towerAxialError',`${fmt(t.axial_nrmse_percent,3)}%`);
+  setText('#unloadingState',m.pre_yield_unloading_passed === true ? '该历史算例通过' : '未通过或unknown');
 }
 
 function populateDiagnostics(data) {
@@ -178,27 +169,19 @@ async function loadDiagnostic() {
 }
 
 async function loadCharts() {
-  const [pushover, cyclic] = await Promise.all([api('/api/pushover'), api('/api/cyclic')]);
-  drawLineChart($('#pushoverChart'), pushover.series, {xLabel: pushover.x_label, yLabel: pushover.y_label});
-  makeLegend($('#pushoverLegend'), Object.keys(pushover.series));
-  attachChartTooltip($('#pushoverChart'), $('#pushoverTooltip'));
-  drawLineChart($('#cyclicChart'), cyclic.series, {xLabel: cyclic.x_label, yLabel: cyclic.y_label});
-  makeLegend($('#cyclicLegend'), Object.keys(cyclic.series));
-  attachChartTooltip($('#cyclicChart'), $('#cyclicTooltip'));
-  $('#targetTable').innerHTML = cyclic.targets.map((r,i)=>`<tr><td>目标 ${i+1} · ${r.displacement_mm>0?'+':''}${fmt(r.displacement_mm,1)} mm</td><td>${r.displacement_mm>0?'+':''}${fmt(r.displacement_mm,1)} mm</td><td>${fmt(r.equivalent_kn,2)} kN</td><td>${fmt(r.reference_kn,2)} kN</td><td>${r.error_percent>0?'+':''}${fmt(r.error_percent,3)}%</td></tr>`).join('');
-}
-
-function drawHeroTower() {
-  const canvas=$('#heroTower'), {ctx,width,height}=setupCanvas(canvas); ctx.clearRect(0,0,width,height);
-  const cx=width*.53, top=height*.12, bottom=height*.9;
-  const levels=[0,.13,.28,.43,.58,.72,.85,1];
-  const half=t=>width*(.06 + t*.22);
-  ctx.strokeStyle='rgba(51,214,208,.7)'; ctx.lineWidth=1.15; ctx.shadowColor='rgba(51,214,208,.25)'; ctx.shadowBlur=8;
-  const pt=(side,t)=>[cx+side*half(t), top+t*(bottom-top)];
-  for (const side of [-1,1]) { ctx.beginPath(); levels.forEach((t,i)=>{const p=pt(side,t); i?ctx.lineTo(...p):ctx.moveTo(...p)}); ctx.stroke(); }
-  levels.forEach((t,i)=>{ const l=pt(-1,t),r=pt(1,t); ctx.beginPath();ctx.moveTo(...l);ctx.lineTo(...r);ctx.stroke(); if(i){const prev=levels[i-1],lp=pt(-1,prev),rp=pt(1,prev);ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(...lp);ctx.lineTo(...r);ctx.moveTo(...rp);ctx.lineTo(...l);ctx.stroke();ctx.globalAlpha=1;} });
-  for (const t of [.05,.19,.35]) { const y=top+t*(bottom-top), span=width*(.18-t*.12); ctx.beginPath();ctx.moveTo(cx-span,y);ctx.lineTo(cx+span,y);ctx.stroke(); }
-  ctx.shadowBlur=0; ctx.fillStyle='#33d6d0'; ctx.beginPath();ctx.arc(cx,top,3,0,Math.PI*2);ctx.fill();
+  if ($('#pushoverChart')) {
+    const data=await api('/api/pushover');
+    drawLineChart($('#pushoverChart'),data.series,{xLabel:data.x_label,yLabel:data.y_label});
+    makeLegend($('#pushoverLegend'),Object.keys(data.series));
+    attachChartTooltip($('#pushoverChart'),$('#pushoverTooltip'));
+  }
+  if ($('#cyclicChart')) {
+    const data=await api('/api/cyclic');
+    drawLineChart($('#cyclicChart'),data.series,{xLabel:data.x_label,yLabel:data.y_label});
+    makeLegend($('#cyclicLegend'),Object.keys(data.series));
+    attachChartTooltip($('#cyclicChart'),$('#cyclicTooltip'));
+    $('#targetTable').innerHTML=data.targets.map((r,i)=>`<tr><td>目标 ${i+1} · ${r.displacement_mm>0?'+':''}${fmt(r.displacement_mm,1)} mm</td><td>${fmt(r.displacement_mm,1)} mm</td><td>${fmt(r.equivalent_kn,2)} kN</td><td>${fmt(r.reference_kn,2)} kN</td><td>${fmt(r.error_percent,3)}%</td></tr>`).join('');
+  }
 }
 
 function componentMeta() { return forceMeta.components[$('#forceComponent').value]; }
@@ -251,97 +234,46 @@ async function loadForceData() {
 
 async function loadResources() {
   const data=await api('/api/resources');
-  const item=(r,type)=>`<div class="resource-item"><span class="file-icon">${type}</span><div><b title="${r.name}">${r.name}</b><small>${r.type||`${fmt(r.size_mb,1)} MB`}</small></div><a href="/download?key=${encodeURIComponent(r.key)}" title="下载">↓</a></div>`;
+  $('#paperCount').textContent=`${data.papers.length} 篇 PDF`;
+  const item=(r,type)=>`<div class="resource-item"><span class="file-icon">${type}</span><div><b title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</b><small>${r.type||`${fmt(r.size_mb,1)} MB`}</small></div><a href="/download?key=${encodeURIComponent(r.key)}" title="下载">↓</a></div>`;
   $('#reportList').innerHTML=data.reports.map(r=>item(r,'MD')).join('');$('#paperList').innerHTML=data.papers.map(r=>item(r,'PDF')).join('');
 }
 
-async function loadTianMaQu() {
-  try {
-    const data = await api('/api/tian-ma-qu');
-    if (data.b1_diagnostics) {
-      const b = data.b1_diagnostics;
-      $('#tmqB1Status').textContent = `${b.initial_state_matches}/${b.initial_state_comparisons} 个历史风速工况重力初态与同网格模态一致。40→80段静态位移已较稳定；160阶对部分挂点位移仍有明显截断误差。查看逐风向、逐位置的通过与未通过项目。`;
-      $('#tmqB1Panel').classList.remove('hidden');
-    }
-    if (data.modal_analysis) {
-      const m = data.modal_analysis, c = m.cases[m.primary_case], matched = m.tower_matches[m.primary_case];
-      $('#tmqModalStatus').textContent = `导线最低频率 ${fmt(c.modes[0].frequency_Hz,5)} Hz；塔身扭转 / X侧摆 / Y侧摆 ${matched.map(v=>fmt(v.frequency_Hz,4)).join(' / ')} Hz。采用80段/档结果，并保留20、40段对照；横向耦合参与分配仍有网格敏感性。`;
-      $('#tmqModalImage').src = '/tmq/modal_results/frequency_comparison.svg';
-      $('#tmqModalPanel').classList.remove('hidden');
-    }
-    if (data.wind_speed) {
-      const w = data.wind_speed, valid = w.cases.filter(c => c.evidence_valid).length;
-      $('#tmqSpeedStatus').textContent = `${w.workflow_status === 'complete' ? '本批计算结束' : '复核进行中'} · ${w.coarse_case_count} 个初始工况，已收录 ${w.cases.length} 次计算（含扩展和复核）· ${valid} 次记录与平衡检查通过 · 首次压屈、曲线最大荷载和数值停止点分别列出。`;
-      $('#tmqSpeedImage').src = '/tmq/wind_speed_results/wind_response.svg';
-      $('#tmqSpeedPanel').classList.remove('hidden');
-    }
-    if (data.directional_wind) {
-      const w = data.directional_wind, completed = w.cases.filter(c => c.passed).length;
-      $('#tmqWindStatus').textContent = `${completed}/${w.case_count} 个工况通过 · 0°/30°/45°/90° · 单塔与一塔四档分别计算 · 每例独立重力和材料历史。状态：${w.passed ? '加载与小幅接入验收通过' : '尚有未通过工况'}；不等于工程气动力标定通过。`;
-      $('#tmqWindImage').src = '/tmq/directional_results_v2/small_cycles.svg';
-      $('#tmqWindPanel').classList.remove('hidden');
-    }
-    if (data.weakness) {
-      const w = data.weakness, p = w.primary_max_isdr_y, g = w.geometric_max_isdr_y;
-      $('#tmqWeaknessStatus').textContent = `首批压屈位于 33 m 塔身水平杆（825、828、917、920）。修正位移角最大：节点转角法 ${p.z_lower}–${p.z_upper} m，${fmt(100*p.isdr_y_abs_max,4)}%；几何拟合法 ${g.z_lower}–${g.z_upper} m，${fmt(100*g.geometric_isdr_y_abs_max,4)}%。新增记录重跑 ${w.run.accepted_steps} 步，与原响应${w.replay_check.passed ? '逐步一致' : '尚未核对一致'}。`;
-      $('#tmqWeaknessImage').src = '/tmq/weakness_results/weakness_locations.svg';
-      $('#tmqWeaknessPanel').classList.remove('hidden');
-    }
-    if (data.full_tower) {
-      const t = data.full_tower.run, extended = data.full_tower.extended_run;
-      $('#tmqTowerStatus').textContent = `${t.elements} 根杆件 · ${t.completed_targets}/${t.targets_drift.length} 个目标 · ${t.accepted_steps} 个接受步 · 状态 ${t.status} · 曾压屈 ${t.max_buckled_members || 0} 根 · 曾进入拉向强化 ${t.max_tensile_yield_members || 0} 根。` + (extended ? ` 更大幅值试算：${extended.status}，实际停止漂移 ${(100*extended.last_point.drift_ratio).toFixed(4)}%，原因 ${extended.stop_reason}。` : '');
-      $('#tmqTowerImage').src = '/tmq/tower_results/full_tower_hysteresis.svg';
-      $('#tmqTowerPanel').classList.remove('hidden');
-    }
-    if (!data.available) { $('#tmqStatus').textContent = data.reason; return; }
-    const s = data.summary, cases = s.cases;
-    const native = cases.map(c => c.opensees).filter(Boolean);
-    const completed = native.reduce((total, c) => total + (c.completed_steps || 0), 0);
-    const requested = native.reduce((total, c) => total + (c.requested_steps || 0), 0);
-    const allChecked = cases.length > 0 && cases.every(c => c.checks?.passed === true && c.opensees?.passed === true);
-    const metrics = [
-      ['管试件参数组', String(cases.length), 'P102 两组参数行 + P89'],
-      ['OpenSees 总步数', native.length ? `${fmt(completed,0)} / ${fmt(requested,0)}` : '未运行', '各工况完成度见下表'],
-      ['数值与适配检查', allChecked ? '全部通过' : '未全部通过', '不等于原试验标定通过'],
-      ['力学验证身份', '文献原型', '尚未完成原试验定量标定']
-    ];
-    $('#tmqMetrics').innerHTML = metrics.map(([title,value,note]) => `<article class="metric-card"><span>${escapeHtml(title)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small></article>`).join('');
-    const ids = new Set(['p102_row_a','p102_row_b','p89_pf']);
-    const magnitude = value => typeof value === 'number' ? fmt(Math.abs(value),2) : 'unknown';
-    $('#tmqCases').innerHTML = cases.map(c => {
-      const id = c.case?.key, n = c.opensees;
-      const links = ids.has(id) ? `<a href="/tmq/results/${id}/history.csv" download>材料 CSV</a><a href="/tmq/results/${id}/events.json" download>折点</a>${n ? `<a href="/tmq/results/${id}/opensees_history.csv" download>OpenSees CSV</a>` : ''}` : '不可用';
-      const coverage = n ? `${n.completed_steps} / ${n.requested_steps}${n.complete === true ? ' · 完成' : ' · 未完成'}` : '未运行';
-      const check = c.checks?.passed === true && n?.passed === true ? '通过（非试验标定）' : '未全部通过';
-      return `<tr><td>${escapeHtml(c.case?.label)}</td><td>${escapeHtml(coverage)}</td><td>${magnitude(c.first_buckling_kN)}</td><td>${magnitude(c.subsequent_buckling_kN)}</td><td>${fmt(c.peak_tension_kN,2)}</td><td>${escapeHtml(check)}</td><td>${links}</td></tr>`;
-    }).join('');
-    $('#tmqStatus').textContent = `结果生成：${s.created_utc || '未知'} · ${s.complete === true ? '当前批次计算及数值检查完成' : '当前批次未全部完成'} · 独立单杆，不是全塔结果。`;
-    $('#tmqHysteresis').src = '/tmq/results/full_hysteresis.svg';
-    $('#tmqContent').classList.remove('hidden');
-  } catch (error) {
-    $('#tmqStatus').textContent = `Tian–Ma–Qu 结果读取失败：${error.message}`;
-    $('#tmqContent').classList.add('hidden');
+function setupInteractions() {
+  if ($('#diagnosticLoad')) {
+    for (const [selector,event] of [['#diagnosticLoad','click'],['#diagnosticCase','change'],['#diagnosticMember','change']]) $(selector).addEventListener(event,loadDiagnostic);
   }
+  if ($('#forceMap')) {
+    $('#forceMode').addEventListener('change',()=>{$('#snapshotControls').classList.toggle('hidden',$('#forceMode').value!=='snapshot');$('#envelopeControls').classList.toggle('hidden',$('#forceMode').value!=='envelope');});
+    $('#forceTime').addEventListener('input',()=>$('#forceTimeOutput').textContent=$('#forceTime').value);
+    $('#forceModel').addEventListener('change',async()=>{forceMeta=null;await loadForceData();});
+    $('#forceLoad').addEventListener('click',loadForceData);$('#forceProjection').addEventListener('change',drawForceMap);
+    const map=$('#forceMap'),tip=$('#mapTooltip');
+    map.addEventListener('mousemove',e=>{const hit=findMapMember(e);if(!hit){tip.style.display='none';return;}const m=hit.member,rect=map.getBoundingClientRect();tip.style.display='block';tip.style.left=`${Math.min(rect.width-165,hit.x+12)}px`;tip.style.top=`${Math.max(8,hit.y-62)}px`;tip.innerHTML=`<b>杆件 #${m.element}</b><br>${escapeHtml(m.section)}<br>${fmt(forceUnitValue(m.value),3)} ${componentMeta().unit}`;});
+    map.addEventListener('mouseleave',()=>tip.style.display='none');
+    map.addEventListener('click',e=>{const hit=findMapMember(e);if(hit)selectMember(hit.member).catch(showPageError);});
+  }
+  let resizeTimer;
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{
+    if(forcePayload)drawForceMap();
+    $$('canvas').forEach(canvas=>{if(canvas._plotData)drawLineChart(canvas,canvas._plotData,canvas._plotOptions);});
+  },180);});
 }
 
-function setupInteractions() {
-  const observer=new IntersectionObserver(entries=>entries.forEach(e=>e.target.classList.toggle('visible',e.isIntersecting)),{threshold:.08});$$('.reveal').forEach(el=>observer.observe(el));
-  const navObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){$$('.nav-link').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${e.target.id}`));}}),{rootMargin:'-20% 0px -65%'});['overview','tianmaqu','member','cyclic','forces','resources'].forEach(id=>navObserver.observe(document.getElementById(id)));
-  $('#menuButton').addEventListener('click',()=>$('.sidebar').classList.toggle('open'));$$('.nav-link').forEach(a=>a.addEventListener('click',()=>$('.sidebar').classList.remove('open')));
-  $('#forceMode').addEventListener('change',()=>{$('#snapshotControls').classList.toggle('hidden',$('#forceMode').value!=='snapshot');$('#envelopeControls').classList.toggle('hidden',$('#forceMode').value!=='envelope');});
-  $('#forceTime').addEventListener('input',()=>$('#forceTimeOutput').textContent=$('#forceTime').value);
-  $('#diagnosticLoad').addEventListener('click',loadDiagnostic);
-  $('#diagnosticCase').addEventListener('change',loadDiagnostic);
-  $('#diagnosticMember').addEventListener('change',loadDiagnostic);
-  $('#forceModel').addEventListener('change',async()=>{forceMeta=null;await loadForceMeta();await loadForceData();});$('#forceLoad').addEventListener('click',loadForceData);$('#forceProjection').addEventListener('change',drawForceMap);
-  const map=$('#forceMap'),tip=$('#mapTooltip');map.addEventListener('mousemove',e=>{const hit=findMapMember(e);if(!hit){tip.style.display='none';return;}const m=hit.member,rect=map.getBoundingClientRect();tip.style.display='block';tip.style.left=`${Math.min(rect.width-165,hit.x+12)}px`;tip.style.top=`${Math.max(8,hit.y-62)}px`;tip.innerHTML=`<b>杆件 #${m.element}</b><br>${m.section}<br>${fmt(forceUnitValue(m.value),3)} ${componentMeta().unit}`;});map.addEventListener('mouseleave',()=>tip.style.display='none');map.addEventListener('click',e=>{const hit=findMapMember(e);if(hit)selectMember(hit.member).catch(console.error);});
-  let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{drawHeroTower();if(forcePayload)drawForceMap();loadCharts().catch(console.error);if(selectedMapMember)selectMember(selectedMapMember).catch(console.error);},180);});
+function showPageError(error) {
+  const target=$('#pageError');target.hidden=false;target.textContent=`读取本模块数据失败：${error.message||error}`;
 }
 
 async function boot() {
-  setupInteractions(); drawHeroTower();
-  try { const overview=await api('/api/overview');populateOverview(overview); } catch(error) { console.error(error); $('#diagnosticCases').textContent=error.message; }
-  await Promise.allSettled([loadCharts(),loadResources(),loadDiagnostic(),loadTianMaQu()]);
-  await loadForceData();
+  setupInteractions();
+  const page=document.body.dataset.page, tasks=[];
+  if (page==='member'||page==='cyclic') tasks.push(api('/api/overview').then(populateOverview),loadCharts());
+  if (page==='resources') tasks.push(loadResources());
+  if (page==='diagnostics') tasks.push(api('/api/diagnostics').then(populateDiagnostics),loadDiagnostic());
+  if (page==='followup') tasks.push(api('/api/followup').then(populateFollowup));
+  if (page==='forces') tasks.push(loadForceData());
+  const results=await Promise.allSettled(tasks);
+  results.filter(result=>result.status==='rejected').forEach(result=>showPageError(result.reason));
+  document.body.dataset.ready=results.every(result=>result.status==='fulfilled')?'true':'error';
 }
 boot();

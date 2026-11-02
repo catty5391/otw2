@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "case_count": 13,
+  "checks": [
+    "API exposes completed evidence without claiming engineering collapse",
+    "Homepage shows the actual calculation count and wind-speed plot",
+    "Report has every actual case, two plots, sensitivity checks and stopping-state diagnostics",
+    "Mobile report has no horizontal viewport overflow",
+    "No browser page errors"
+  ],
+  "errors": []
+}

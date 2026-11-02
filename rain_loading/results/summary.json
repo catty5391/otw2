@@ -1,0 +1,636 @@
+{
+  "schema": "otw2.rain_loading.v1",
+  "date": "2026-11-02",
+  "title": "雨谱、雨荷载与塔线作用验证",
+  "subtitle": "从粒径数浓度到节点力：文献调查、守恒基线、随机冲量和全塔静力对照",
+  "status": "numerical_verified",
+  "scope": "独立研究模块：数值实现验证，不代表气象、雨滴撞击或本塔湿态气动的物理标定。",
+  "literature_report_available": true,
+  "findings": [
+    "M–P雨谱是粒径分布N(D)，不是雨强时间谱。时间变化还需要R(t)、雨滴速度及空间关系。",
+    "雨强50 mm/h时，当前原始M–P + Atlas + 有限粒径窗回算约54.1 mm/h；已保留原谱并另设显式水量闭合选项。",
+    "30 m/s、100 mm/h、γ=1的法向平板守恒冲击约3.68 Pa，是Cd=1干风压力的约0.67%；该比例不是全塔或所有暴雨的通用放大系数。",
+    "文献冲击模型与动量基线系数存在差异；2018式对应π/2倍。本模块并列报告而未隐式混用。",
+    "导线水膜会改变气动性质，可能比单纯雨滴冲击更重要；现有资料不足以给本型号确定湿态Cd。",
+    "已经检查粒径积分、水量、泊松冲量和节点荷载守恒；全塔结果只收录实际收敛且通过平衡检查的状态。",
+    "已完善风雨共用的节点加载接口：支持独立方向/节点时程、选择性移除、失败回滚；旧风入口保留。实际全塔回归与独立弹簧动力验证见新增图和接口报告。"
+  ],
+  "assumptions": [
+    "角度从全局+X转向+Y，表示流向：0°横线方向，90°沿线方向；独立导线的水平弦沿Y轴。",
+    "粒径0.2–5.8 mm、240格；Atlas终速；空气密度1.225 kg/m³、水密度1000 kg/m³；不考虑竖向风。",
+    "默认按输入雨强归一化；γ=1为对照假设，0.6/1/1.2为敏感性，不是拟合出的轨迹参数。",
+    "杆/线采用投影宽度内横向动量完全截获的collector近似；严格光滑曲面仅局部法向停止给出2/3系数，真实湿态相互作用待试验。",
+    "角钢以腿宽代理圆柱直径，无遮挡或真实迎雨截面校准；导线27.6 mm外径取项目参数表。",
+    "塔身荷载集中到原始物理杆两端，未施加到四分段内部节点；本轮验证整体传力，不验证局部均布雨载弯矩分布。",
+    "雨滴不作为永久附加质量；本轮没有积水、雨凇、接触脉冲形状、湿态Cd或雨线舞动模型。",
+    "合成时程无实测雨强谱/风雨联合分布，导线仅荷载映射，全塔仅静力；尚未完成塔线风雨耦合时程与易损性。"
+  ],
+  "steps": [
+    {
+      "title": "1. 文献溯源",
+      "detail": "区分粒径谱、雨速、雨强时程和冲击力定义；保留未取得公式/参数的缺口。"
+    },
+    {
+      "title": "2. 粒径与水量",
+      "detail": "M–P数浓度→终速→回算雨强；原谱与水量闭合分开。"
+    },
+    {
+      "title": "3. 雨滴到荷载",
+      "detail": "到达率乘单滴冲量，分别处理平板法向、杆/线横向与竖向分量。"
+    },
+    {
+      "title": "4. 独立数值核对",
+      "detail": "解析粒径矩、泊松随机冲量、步长方差及映射合力/力矩交叉验证。"
+    },
+    {
+      "title": "5. 现有模型接入",
+      "detail": "真实塔几何与代表导线输出节点力；四分段Steel02完成静力加雨对照。"
+    },
+    {
+      "title": "6. 后续物理验证",
+      "detail": "取得当地高频雨强/粒径数据及本型号导线湿态Cd，再做空间风雨时程和塔线耦合。"
+    },
+    {
+      "title": "7. 通用加载接口验证",
+      "detail": "节点力与物理荷载生成分开；静力、比例时程和非比例多节点时程共用安装层，并核验风雨独立叠加。"
+    }
+  ],
+  "equations": [
+    {
+      "name": "粒径谱",
+      "expression": "N(D)=8000 exp[-4.1 R^(-0.21) D]",
+      "description": "D:mm；N:m⁻³ mm⁻¹；R:mm/h。"
+    },
+    {
+      "name": "水量闭合",
+      "expression": "R_calc=3.6×10^6 ∫ (π/6)(10^-3 D)^3 vt(D) N(D) dD",
+      "description": "dD仍按mm积分；体积计算必须将直径转换为m。"
+    },
+    {
+      "name": "法向平板动量通量",
+      "expression": "p=∫ m(D) N(D) |vn(D)| vn(D) dD",
+      "description": "单位Pa；到达率乘单滴冲量，不是把单滴峰值直接相加。"
+    },
+    {
+      "name": "杆/线投影收集器",
+      "expression": "q=b ∫ m(D) N(D) |v_perp(D)| v_perp(D) dD",
+      "description": "单位N/m；v_perp=v−(v·e)e，雨滴竖向速度仍保留；不是严格圆柱曲面接触解。"
+    },
+    {
+      "name": "节点力",
+      "expression": "F_i += q L/2 ; F_j += q L/2",
+      "description": "均匀直线段荷载的端点集中映射，保持合力与力矩；不是梁一致荷载向量。"
+    }
+  ],
+  "figures": [
+    {
+      "title": "雨滴粒径谱与质量贡献",
+      "file": "drop_spectrum.png",
+      "caption": "横轴是雨滴直径，不是频率。左为原始M–P数浓度；右为雨强闭合后的质量谱。200 mm/h仅为敏感性工况，不能证明M–P适合当地强对流暴雨。"
+    },
+    {
+      "title": "输入雨强与谱积分回算雨强",
+      "file": "rain_flux_closure.png",
+      "caption": "归一化选项通过调整整个数浓度使水量闭合；其有效N0改变，不能仍称原参数M–P谱。"
+    },
+    {
+      "title": "雨滴冲击与湿态风阻敏感性",
+      "file": "load_sensitivity.png",
+      "caption": "左图是同一投影面积、Cd=1的法向平板。γ为人为敏感性输入，可能大于1。右图±10%湿态Cd只是示例，不是本塔导线的试验参数；总效应可能由气动变化主导。"
+    },
+    {
+      "title": "从风速时程和雨强包络得到雨荷载时程",
+      "file": "synthetic_history.png",
+      "caption": "风速用单点Kaimal谱合成；雨强包络人为指定，未拟合降雨时间谱、风雨联合概率或空间相干性。该图是荷载时程，不是全塔风雨动力响应。"
+    },
+    {
+      "title": "从风速谱推得条件雨荷载谱",
+      "file": "load_power_spectrum.png",
+      "caption": "固定R=50 mm/h，p(t)=LWC·U(t)²。虚线近似Sp≈(2LWC·Umean)²Su，仅对小脉动适用；实线为本合成序列Welch估计。这里没有叠加离散雨滴接触脉冲，不是实测或通用雨强PSD。"
+    },
+    {
+      "title": "离散雨滴冲量与连续平均荷载交叉检查",
+      "file": "poisson_verification.png",
+      "caption": "独立泊松到达是假设，仅用于检验粒径→碰撞频次→冲量的实现。时间格内平均力的方差随dt变化，不能把这些格内峰值当作物理接触峰值或真实雨谱。"
+    },
+    {
+      "title": "作用到塔身与导线的方向分量",
+      "file": "tower_line_loads.png",
+      "caption": "U=30 m/s、R=100 mm/h、γ=1。塔用实际1528根杆几何和角钢腿宽代理；线为27.6 mm、300 m跨、8 m初始抛物线弧垂的独立荷载映射。导线含竖向雨滴冲击；这不是完整塔线耦合响应。"
+    },
+    {
+      "title": "现有四分段Steel02全塔静力对照",
+      "file": "tower_response.png",
+      "caption": "实际OpenSees求解：重力→30 m/s干风→100 mm/h雨滴冲击。采用共同的杆件法向圆柱代理荷载，与既有推覆的面板/风向插值荷载定义不同；结果不能用于修改既有极限风速或损伤阈值。"
+    },
+    {
+      "title": "通用荷载接口：动力叠加与精确解验证",
+      "file": "loading_interface_validation.png",
+      "caption": "已知M=2kg、K=200N/m、C=0.4N·s/m弹簧模型，验证风雨时程输入、独立叠加与步长收敛；不是全塔风雨动力响应。0°实际全塔静力接口回归另记在接口报告中。"
+    }
+  ],
+  "tables": [
+    {
+      "title": "雨强闭合检查",
+      "columns": [
+        {
+          "key": "rain_mm_h",
+          "label": "输入 mm/h"
+        },
+        {
+          "key": "raw_recovered_mm_h",
+          "label": "原始回算 mm/h"
+        },
+        {
+          "key": "closed_recovered_mm_h",
+          "label": "归一化回算 mm/h"
+        },
+        {
+          "key": "scale",
+          "label": "数浓度缩放"
+        },
+        {
+          "key": "LWC_g_m3",
+          "label": "含水量 g/m³"
+        }
+      ],
+      "rows": [
+        {
+          "rain_mm_h": 10,
+          "raw_recovered_mm_h": 11.635517478768588,
+          "closed_recovered_mm_h": 9.999999999999998,
+          "scale": 0.8594374954313009,
+          "LWC_g_m3": 0.5277268164197104
+        },
+        {
+          "rain_mm_h": 25,
+          "raw_recovered_mm_h": 28.139639837502422,
+          "closed_recovered_mm_h": 25.000000000000004,
+          "scale": 0.8884264384465169,
+          "LWC_g_m3": 1.1767341408124512
+        },
+        {
+          "rain_mm_h": 50,
+          "raw_recovered_mm_h": 54.072177315154924,
+          "closed_recovered_mm_h": 49.99999999999999,
+          "scale": 0.9246899696414924,
+          "LWC_g_m3": 2.1816737596695788
+        },
+        {
+          "rain_mm_h": 100,
+          "raw_recovered_mm_h": 101.99412874572313,
+          "closed_recovered_mm_h": 99.99999999999999,
+          "scale": 0.9804485927744468,
+          "LWC_g_m3": 4.086435564727866
+        },
+        {
+          "rain_mm_h": 200,
+          "raw_recovered_mm_h": 187.5179572557942,
+          "closed_recovered_mm_h": 199.99999999999997,
+          "scale": 1.0665645196165345,
+          "LWC_g_m3": 7.736321196235644
+        }
+      ]
+    },
+    {
+      "title": "30 m/s时的独立冲击基线",
+      "columns": [
+        {
+          "key": "rain_mm_h",
+          "label": "雨强 mm/h"
+        },
+        {
+          "key": "gamma",
+          "label": "γ"
+        },
+        {
+          "key": "momentum_pressure_Pa",
+          "label": "动量基线 Pa"
+        },
+        {
+          "key": "tian2018_factor_pressure_Pa",
+          "label": "2018系数模型 Pa"
+        },
+        {
+          "key": "impact_over_dry_percent",
+          "label": "基线/干风 %"
+        }
+      ],
+      "rows": [
+        {
+          "wind_m_s": 30,
+          "rain_mm_h": 10,
+          "gamma": 1.0,
+          "wind_pressure_Pa": 551.25,
+          "momentum_pressure_Pa": 0.47495413477773946,
+          "tian2018_factor_pressure_Pa": 0.7460562103049214,
+          "impact_over_dry_percent": 0.08615948023178947
+        },
+        {
+          "wind_m_s": 30,
+          "rain_mm_h": 25,
+          "gamma": 1.0,
+          "wind_pressure_Pa": 551.25,
+          "momentum_pressure_Pa": 1.0590607267312064,
+          "tian2018_factor_pressure_Pa": 1.6635686994021128,
+          "impact_over_dry_percent": 0.1921198597244819
+        },
+        {
+          "wind_m_s": 30,
+          "rain_mm_h": 50,
+          "gamma": 1.0,
+          "wind_pressure_Pa": 551.25,
+          "momentum_pressure_Pa": 1.9635063837026214,
+          "tian2018_factor_pressure_Pa": 3.0842686151584084,
+          "impact_over_dry_percent": 0.3561916342317681
+        },
+        {
+          "wind_m_s": 30,
+          "rain_mm_h": 100,
+          "gamma": 1.0,
+          "wind_pressure_Pa": 551.25,
+          "momentum_pressure_Pa": 3.6777920082550795,
+          "tian2018_factor_pressure_Pa": 5.777062177282705,
+          "impact_over_dry_percent": 0.6671731534249576
+        },
+        {
+          "wind_m_s": 30,
+          "rain_mm_h": 200,
+          "gamma": 1.0,
+          "wind_pressure_Pa": 551.25,
+          "momentum_pressure_Pa": 6.9626890766120795,
+          "tian2018_factor_pressure_Pa": 10.936966426157204,
+          "impact_over_dry_percent": 1.263072848365003
+        }
+      ]
+    },
+    {
+      "title": "塔身/导线荷载映射",
+      "columns": [
+        {
+          "key": "component",
+          "label": "对象"
+        },
+        {
+          "key": "angle_deg",
+          "label": "风向 °"
+        },
+        {
+          "key": "dry_horizontal_N",
+          "label": "干风沿风力 N"
+        },
+        {
+          "key": "rain_horizontal_N",
+          "label": "雨沿风力 N"
+        },
+        {
+          "key": "rain_downward_N",
+          "label": "雨向下力 N"
+        },
+        {
+          "key": "ratio_percent",
+          "label": "沿风增量 %"
+        }
+      ],
+      "rows": [
+        {
+          "component": "tower",
+          "angle_deg": 0,
+          "rain_horizontal_N": 410.52863054137464,
+          "rain_downward_N": 78.85771233783342,
+          "dry_horizontal_N": 60235.040958300364,
+          "ratio_percent": 0.6815445362203311
+        },
+        {
+          "component": "conductor",
+          "angle_deg": 0,
+          "rain_horizontal_N": 31.325580047188147,
+          "rain_downward_N": 7.0906191319062115,
+          "dry_horizontal_N": 4572.969131329358,
+          "ratio_percent": 0.6850162147952621
+        },
+        {
+          "component": "tower",
+          "angle_deg": 45,
+          "rain_horizontal_N": 438.73451912102416,
+          "rain_downward_N": 82.97706235675605,
+          "dry_horizontal_N": 64353.349996577635,
+          "ratio_percent": 0.6817586328362959
+        },
+        {
+          "component": "conductor",
+          "angle_deg": 45,
+          "rain_horizontal_N": 11.41962038786842,
+          "rain_downward_N": 5.178270937842323,
+          "dry_horizontal_N": 1625.9306288911466,
+          "ratio_percent": 0.7023436415400072
+        },
+        {
+          "component": "tower",
+          "angle_deg": 90,
+          "rain_horizontal_N": 511.7950034066935,
+          "rain_downward_N": 87.44119708516247,
+          "dry_horizontal_N": 75220.13512528478,
+          "ratio_percent": 0.6803962829291127
+        },
+        {
+          "component": "conductor",
+          "angle_deg": 90,
+          "rain_horizontal_N": 0.051871885934171164,
+          "rain_downward_N": 1.7688644209260223,
+          "dry_horizontal_N": 1.3676465418082047,
+          "ratio_percent": 3.7927844913489017
+        }
+      ]
+    },
+    {
+      "title": "全塔静力响应与独立平衡检查",
+      "columns": [
+        {
+          "key": "angle_deg",
+          "label": "风向 °"
+        },
+        {
+          "key": "dry_displacement_mm",
+          "label": "干风位移 mm"
+        },
+        {
+          "key": "wet_displacement_mm",
+          "label": "加雨位移 mm"
+        },
+        {
+          "key": "increase_percent",
+          "label": "增量 %"
+        },
+        {
+          "key": "max_force_residual_N",
+          "label": "合力残差 N"
+        },
+        {
+          "key": "max_moment_residual_Nm",
+          "label": "力矩残差 Nm"
+        }
+      ],
+      "rows": [
+        {
+          "angle_deg": 0,
+          "wind_m_s": 30.0,
+          "rain_mm_h": 100.0,
+          "dry_displacement_mm": 11.963280731786055,
+          "wet_displacement_mm": 12.04486197560911,
+          "increase_percent": 0.681930363853267,
+          "max_force_residual_N": 9.683571988716722e-08,
+          "max_moment_residual_Nm": 1.5158856569996715e-07
+        },
+        {
+          "angle_deg": 45,
+          "wind_m_s": 30.0,
+          "rain_mm_h": 100.0,
+          "dry_displacement_mm": 14.319586218101453,
+          "wet_displacement_mm": 14.41743358623929,
+          "increase_percent": 0.6833114214861213,
+          "max_force_residual_N": 7.447670213878155e-08,
+          "max_moment_residual_Nm": 3.1276479717234906e-07
+        },
+        {
+          "angle_deg": 90,
+          "wind_m_s": 30.0,
+          "rain_mm_h": 100.0,
+          "dry_displacement_mm": 18.354792807760163,
+          "wet_displacement_mm": 18.479861709895403,
+          "increase_percent": 0.681396425691938,
+          "max_force_residual_N": 9.818898760727279e-08,
+          "max_moment_residual_Nm": 9.346265841259083e-07
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "checks": [
+      {
+        "name": "雨强水量闭合",
+        "passed": true,
+        "value": "最大绝对误差 < 1e-9 mm/h",
+        "criterion": "所有5档雨强回算正确"
+      },
+      {
+        "name": "粒径积分独立解析检查",
+        "passed": true,
+        "value": "240格相对误差 3.25e-06",
+        "criterion": "截断Gamma矩解析式，相对误差 < 1e-5"
+      },
+      {
+        "name": "合成风有限频带方差",
+        "passed": true,
+        "value": "时域方差 8.513402，谱离散积分 8.513402",
+        "criterion": "Parseval一致；没有偷偷缩放到无限频带方差9"
+      },
+      {
+        "name": "泊松雨滴冲量均值 dt=0.01s",
+        "passed": true,
+        "value": "偏差 0.609 个标准误",
+        "criterion": "均值与动量通量差 < 5个标准误"
+      },
+      {
+        "name": "泊松雨滴冲量方差 dt=0.01s",
+        "passed": true,
+        "value": "实测/解析 0.9953",
+        "criterion": "方差相对差 < 10%"
+      },
+      {
+        "name": "泊松雨滴冲量均值 dt=0.02s",
+        "passed": true,
+        "value": "偏差 0.348 个标准误",
+        "criterion": "均值与动量通量差 < 5个标准误"
+      },
+      {
+        "name": "泊松雨滴冲量方差 dt=0.02s",
+        "passed": true,
+        "value": "实测/解析 0.9966",
+        "criterion": "方差相对差 < 10%"
+      },
+      {
+        "name": "泊松雨滴冲量均值 dt=0.1s",
+        "passed": true,
+        "value": "偏差 0.677 个标准误",
+        "criterion": "均值与动量通量差 < 5个标准误"
+      },
+      {
+        "name": "泊松雨滴冲量方差 dt=0.1s",
+        "passed": true,
+        "value": "实测/解析 0.9648",
+        "criterion": "方差相对差 < 10%"
+      },
+      {
+        "name": "tower 0°荷载映射",
+        "passed": true,
+        "value": "合力误差 4e-13 N；力矩误差 2.7e-11 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "conductor 0°荷载映射",
+        "passed": true,
+        "value": "合力误差 1.8e-15 N；力矩误差 1.8e-12 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "tower 45°荷载映射",
+        "passed": true,
+        "value": "合力误差 6.8e-13 N；力矩误差 4.5e-12 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "conductor 45°荷载映射",
+        "passed": true,
+        "value": "合力误差 8.9e-16 N；力矩误差 1.1e-13 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "tower 90°荷载映射",
+        "passed": true,
+        "value": "合力误差 5.7e-13 N；力矩误差 7.3e-12 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "conductor 90°荷载映射",
+        "passed": true,
+        "value": "合力误差 2.2e-16 N；力矩误差 5.7e-14 Nm",
+        "criterion": "保留均布段荷载合力及初始坐标下力矩"
+      },
+      {
+        "name": "Steel02全塔 0°完成与平衡",
+        "passed": true,
+        "value": "completed",
+        "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+      },
+      {
+        "name": "Steel02全塔 45°完成与平衡",
+        "passed": true,
+        "value": "completed",
+        "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+      },
+      {
+        "name": "Steel02全塔 90°完成与平衡",
+        "passed": true,
+        "value": "completed",
+        "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+      },
+      {
+        "name": "通用接口：风雨时程叠加与零雨回归",
+        "passed": true,
+        "value": "叠加误差 1.25e-16 m；零雨回归 0 m",
+        "criterion": "同一线性模型，最大差 < 1e-11 m"
+      },
+      {
+        "name": "通用接口：实际荷载与动力平衡",
+        "passed": true,
+        "value": "账本最大误差 2.13e-13 N；动力残差 3.47e-15 N",
+        "criterion": "外力=Ma+Cv+Ku，含已平衡预载"
+      },
+      {
+        "name": "通用接口：独立精确解与步长收敛",
+        "passed": true,
+        "value": "最细步长相对误差 0.00033；细/粗误差比 0.0625",
+        "criterion": "分段线性输入的矩阵指数精确解；细步误差 < 0.1%，且明显下降"
+      },
+      {
+        "name": "通用接口：实际Steel02全塔回归",
+        "passed": true,
+        "value": "位移差 0 mm；反力差 0 N",
+        "criterion": "0°、30m/s、100mm/h，接口替换前后同模型同荷载"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Marshall & Palmer (1948): The distribution of raindrops with size",
+      "url": "https://doi.org/10.1175/1520-0469(1948)005<0165:TDORWS>2.0.CO;2",
+      "note": "指数粒径谱来源；不是雨强时间功率谱。"
+    },
+    {
+      "title": "Atlas et al. (1973): Doppler radar characteristics of precipitation at vertical incidence",
+      "url": "https://doi.org/10.1029/RG011i001p00001",
+      "note": "终速指数近似；本算例限D=0.2–5.8 mm。"
+    },
+    {
+      "title": "Tian, Zeng & Fu (2018): Velocity Ratio of Wind-Driven Rain",
+      "url": "https://doi.org/10.1061/(ASCE)CF.1943-5509.0001210",
+      "note": "雨滴速度比、运动方程与经验冲击模型。常数gamma示例不等于复现其轨迹模型。"
+    },
+    {
+      "title": "Fu & Li (2017): Rain load for transmission tower-line system",
+      "url": "https://objectext.auckland.ac.nz/figshare/9808657/Fu_Rainloadfortransmissiontowerlinesystem.pdf",
+      "note": "公开会议全文；区分雨滴脉冲与湿态导线气动系数。"
+    },
+    {
+      "title": "Fu, Li & Yi (2015): Research on motion of wind-driven rain and rain load acting on transmission tower",
+      "url": "https://doi.org/10.1016/j.jweia.2015.01.008",
+      "note": "原研究提醒关注雨造成的气动性质改变；不能追求固定响应放大比例。"
+    },
+    {
+      "title": "Fu & Li (2016): Dynamic analysis of transmission tower-line system subjected to wind and rain loads",
+      "url": "https://doi.org/10.1016/j.jweia.2016.08.010",
+      "note": "塔线雨荷载和湿态导线气动问题的直接参考。"
+    },
+    {
+      "title": "DTU HAWC2 manual: Kaimal spectrum",
+      "url": "https://www.hawc2.dk/-/media/sites/hawc2/hawc2-download/hawc2-manual/manual_version_4-7.pdf",
+      "note": "用于合成风速谱；不把它命名为雨强谱。"
+    },
+    {
+      "title": "Fu et al. (2021): Joint probability distribution of wind speed and rain intensity",
+      "url": "https://doi.org/10.1016/j.engstruct.2021.111913",
+      "note": "以后进行风险计算需要实际气象联合分布及时间尺度一致性。"
+    }
+  ],
+  "artifacts": [
+    {
+      "title": "完整研究与复现报告",
+      "file": "REPORT.md"
+    },
+    {
+      "title": "验证记录",
+      "file": "verification.json"
+    },
+    {
+      "title": "全塔静力结果",
+      "file": "case_summary.csv"
+    },
+    {
+      "title": "粒径谱数据",
+      "file": "droplet_spectrum.csv"
+    },
+    {
+      "title": "合成荷载时程",
+      "file": "synthetic_history.csv"
+    },
+    {
+      "title": "条件荷载功率谱",
+      "file": "stationary_load_spectrum.csv"
+    },
+    {
+      "title": "荷载敏感性",
+      "file": "pressure_sweep.csv"
+    },
+    {
+      "title": "塔身节点荷载",
+      "file": "tower_nodal_loads.csv"
+    },
+    {
+      "title": "导线节点荷载",
+      "file": "conductor_nodal_loads.csv"
+    },
+    {
+      "title": "通用加载接口说明与实测验证",
+      "file": "loading_interface.md"
+    },
+    {
+      "title": "接口验证JSON",
+      "file": "loading_interface_verification.json"
+    },
+    {
+      "title": "接口验证时程",
+      "file": "loading_interface_history.csv"
+    }
+  ]
+}

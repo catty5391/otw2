@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "black_1980": {
+    "source_url": "https://nehrpsearch.nist.gov/static/files/NSF/PB81154312.pdf",
+    "rows": [
+      {
+        "specimen_no": 8,
+        "shape_original_inch_units": "2-L6x3.5x0.375",
+        "end_condition": "PP",
+        "length_m_reported": 2.83,
+        "effective_slenderness_ratio_KL_over_r": 80,
+        "fy_ksi_reported": 40.8,
+        "fy_mpa_exact_conversion": 281.3060975612544,
+        "fy_measurement_basis": "average_coupon_yield",
+        "first_buckling_load_kip_reported": 197,
+        "first_buckling_load_kn_exact_conversion": 876.2996582063184,
+        "area_measured_mm2": null,
+        "source_table1_pdf_page": 59,
+        "source_table2_pdf_page": 61
+      },
+      {
+        "specimen_no": 20,
+        "shape_original_inch_units": "2-L6x3.5x0.375",
+        "end_condition": "PF",
+        "length_m_reported": 4.04,
+        "effective_slenderness_ratio_KL_over_r": 80,
+        "fy_ksi_reported": 40.8,
+        "fy_mpa_exact_conversion": 281.3060975612544,
+        "fy_measurement_basis": "average_coupon_yield",
+        "first_buckling_load_kip_reported": 180,
+        "first_buckling_load_kn_exact_conversion": 800.6798907468899,
+        "area_measured_mm2": null,
+        "source_table1_pdf_page": 59,
+        "source_table2_pdf_page": 61
+      },
+      {
+        "specimen_no": 14,
+        "shape_original_inch_units": "Pipe4_Std",
+        "end_condition": "PP",
+        "length_m_reported": 3.07,
+        "effective_slenderness_ratio_KL_over_r": 80,
+        "fy_ksi_reported": 47.5,
+        "fy_mpa_exact_conversion": 327.50097142548003,
+        "fy_measurement_basis": "first_yield_in_strut_test",
+        "first_buckling_load_kip_reported": 114,
+        "first_buckling_load_kn_exact_conversion": 507.09726413969696,
+        "area_measured_mm2": null,
+        "source_table1_pdf_page": 59,
+        "source_table2_pdf_page": 61
+      },
+      {
+        "specimen_no": 15,
+        "shape_original_inch_units": "Pipe4_Std",
+        "end_condition": "PP",
+        "length_m_reported": 3.07,
+        "effective_slenderness_ratio_KL_over_r": 80,
+        "fy_ksi_reported": 47.5,
+        "fy_mpa_exact_conversion": 327.50097142548003,
+        "fy_measurement_basis": "first_yield_in_strut_test",
+        "first_buckling_load_kip_reported": 110,
+        "first_buckling_load_kn_exact_conversion": 489.304377678655,
+        "area_measured_mm2": null,
+        "source_table1_pdf_page": 59,
+        "source_table2_pdf_page": 61
+      },
+      {
+        "specimen_no": 24,
+        "shape_original_inch_units": "Pipe3.5_Std",
+        "end_condition": "PF",
+        "length_m_reported": 3.89,
+        "effective_slenderness_ratio_KL_over_r": 80,
+        "fy_ksi_reported": 46.3,
+        "fy_mpa_exact_conversion": 319.2272626736784,
+        "fy_measurement_basis": "first_yield_in_strut_test",
+        "first_buckling_load_kip_reported": 85,
+        "first_buckling_load_kn_exact_conversion": 378.0988372971425,
+        "area_measured_mm2": null,
+        "source_table1_pdf_page": 59,
+        "source_table2_pdf_page": 61
+      }
+    ],
+    "not_included": "No ordered experimental displacement-force time series reconstructed."
+  },
+  "zhang_2014": {
+    "doi": "10.6052/j.issn.1000-4750.2013.05.0505",
+    "group": "L1_unexposed",
+    "number_of_specimens": 2,
+    "section_leg_mm": 70,
+    "section_thickness_mm": 5,
+    "nominal_grade": "Q345",
+    "coupon_fy_mpa": 394.48,
+    "coupon_E_gpa": 212.2,
+    "group_reported_yield_load_kn": 212.746,
+    "group_reported_tensile_peak_kn": 228.13,
+    "group_reported_compression_peak_magnitude_kn": 201.662,
+    "compression_peak_is_confirmed_first_buckling": false,
+    "length_m": null,
+    "effective_length_factor": null,
+    "measured_area_mm2": null,
+    "figures": {
+      "hysteresis": "Fig8(a), printed page58, specimen L12",
+      "skeleton": "Fig9, printed page58"
+    },
+    "tables": {
+      "geometry": "section2.1,printed55",
+      "coupon": "table4,printed56",
+      "capacities": "table5,printed59"
+    },
+    "ready_for_full_hysteresis_fit": false,
+    "limitations": [
+      "No ordered curve points obtained.",
+      "Compression peak is not established as first buckling.",
+      "Length, end-restraint idealization and displacement gauge length require further confirmation."
+    ]
+  }
+}

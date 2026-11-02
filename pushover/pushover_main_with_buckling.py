@@ -14,7 +14,9 @@ import openseespy.opensees as ops
 for i in range(11):
     random_disp_ratio = i * 1 / 1000
     ops.wipe()
-    model = OpenSeesModelWithBuckling("Source/Z30103A6.s2k", random_disp_ratio=random_disp_ratio)
+    # Keep the same member directions while varying only the bow amplitude.
+    model = OpenSeesModelWithBuckling("Source/Z30103A6.s2k", random_disp_ratio=random_disp_ratio,
+                                    member_divisions=4, imperfection_seed=30103)
     model.model_tower()
     tag_manager = TagManager(
     start_tag = {

@@ -1,0 +1,61 @@
+{
+  "scope": "independent_formula_and_units_audit_not_site_or_structural_validation",
+  "diameter_range_mm": [
+    0.2,
+    5.8
+  ],
+  "rain_spectrum": "original_unscaled_Marshall_Palmer",
+  "terminal_velocity": "Atlas_9.65_minus_10.3_exp_minus_0.6_Dmm",
+  "terminal_at_D01_m_s": -0.05017469591776269,
+  "positive_terminal_diameter_threshold_mm": 0.10864329980782592,
+  "rows": [
+    {
+      "input_rain_rate_mm_h": 10.0,
+      "raw_implied_rain_rate_mm_h": 11.635497334050486,
+      "concentration_kg_m3": 0.0006140317244397258,
+      "analytic_concentration_kg_m3": 0.0006140317244397261,
+      "analytic_relative_error": 5.297131056908106e-16,
+      "mass_flux_rescale_to_input": 0.8594389833888479,
+      "raw_normal_collector_pressure_pa_at_U30": 0.5526285519957532,
+      "wind_reference_pa_at_U30_CD1": 551.25,
+      "pressure_ratio_percent_CD1": 0.10025007745954706
+    },
+    {
+      "input_rain_rate_mm_h": 50.0,
+      "raw_implied_rain_rate_mm_h": 54.07213129500764,
+      "concentration_kg_m3": 0.0023593493282925947,
+      "analytic_concentration_kg_m3": 0.0023593493282925955,
+      "analytic_relative_error": 3.676275181412379e-16,
+      "mass_flux_rescale_to_input": 0.9246907566341184,
+      "raw_normal_collector_pressure_pa_at_U30": 2.1234143954633353,
+      "wind_reference_pa_at_U30_CD1": 551.25,
+      "pressure_ratio_percent_CD1": 0.38519989033348484
+    },
+    {
+      "input_rain_rate_mm_h": 100.0,
+      "raw_implied_rain_rate_mm_h": 101.99402860368707,
+      "concentration_kg_m3": 0.004167914583708224,
+      "analytic_concentration_kg_m3": 0.004167914583708225,
+      "analytic_relative_error": 2.081044898037966e-16,
+      "mass_flux_rescale_to_input": 0.9804495554201985,
+      "raw_normal_collector_pressure_pa_at_U30": 3.7511231253374016,
+      "wind_reference_pa_at_U30_CD1": 551.25,
+      "pressure_ratio_percent_CD1": 0.6804758504013427
+    },
+    {
+      "input_rain_rate_mm_h": 200.0,
+      "raw_implied_rain_rate_mm_h": 187.51772776616505,
+      "concentration_kg_m3": 0.0072534816059628224,
+      "analytic_concentration_kg_m3": 0.007253481605962823,
+      "analytic_relative_error": 1.1957867753816002e-16,
+      "mass_flux_rescale_to_input": 1.0665658249091006,
+      "raw_normal_collector_pressure_pa_at_U30": 6.5281334453665405,
+      "wind_reference_pa_at_U30_CD1": 551.25,
+      "pressure_ratio_percent_CD1": 1.1842418948510731
+    }
+  ],
+  "cylinder_smooth_frictionless_normal_only_factor": 0.6666666666666666,
+  "cylinder_projected_transverse_capture_factor": 1.0,
+  "pi_squared_over_12_to_pi_over_6_ratio": 1.5707963267948966,
+  "interpretation": "Pressure is for U_r=30m/s normal to a unit collector; no shielding, wet Cd or velocity amplification."
+}

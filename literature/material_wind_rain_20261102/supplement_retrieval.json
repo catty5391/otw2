@@ -1,0 +1,12 @@
+{
+  "R01": {
+    "error": "HTTPSConnectionPool(host='techno-press.org', port=443): Read timed out. (read timeout=30)"
+  },
+  "R10": {
+    "url": "https://objectext.auckland.ac.nz/figshare/9808657/Fu_Rainloadfortransmissiontowerlinesystem.pdf",
+    "final_url": "https://objectext.auckland.ac.nz/figshare/9808657/Fu_Rainloadfortransmissiontowerlinesystem.pdf",
+    "status": 200,
+    "bytes": 569857,
+    "temporary_path": "/tmp/R10_rain_check.pdf"
+  }
+}

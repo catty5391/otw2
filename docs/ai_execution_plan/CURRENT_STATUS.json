@@ -1,0 +1,302 @@
+{
+  "schema": "otw2.current_task_status.v1",
+  "updated_at_utc": "2026-10-26T02:09:14.443123+00:00",
+  "latest_batch": "parameter_identification_20261026",
+  "batch_execution_status": "complete",
+  "whole_plan_complete": false,
+  "physical_validation": "unvalidated",
+  "task_status_values": [
+    "complete",
+    "partial",
+    "planned",
+    "blocked"
+  ],
+  "tasks": [
+    {
+      "id": "N00",
+      "title": "冻结当前证据和执行工作区",
+      "task_status": "complete",
+      "assessment": "pass",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N01",
+      "title": "静力模态动力共用模型声明",
+      "task_status": "complete",
+      "assessment": "pass",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N02",
+      "title": "成组模态与子空间复核",
+      "task_status": "complete",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N03",
+      "title": "实际风荷载投影与静柔度截断",
+      "task_status": "complete",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N04",
+      "title": "阻尼策略和瞬态接口审计",
+      "task_status": "complete",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N05",
+      "title": "首批诊断发布与发布器参数化",
+      "task_status": "complete",
+      "assessment": "pass",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md"
+      ],
+      "note": "B1执行完成；其限定结论和历史指纹保留。"
+    },
+    {
+      "id": "N06",
+      "title": "有界扩阶加密与频响验证",
+      "task_status": "complete",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/frequency_response/REPORT.md"
+      ],
+      "note": "300阶及候选C频响已评估；逐输出有通过范围，全局G1/实际C/G2未通过。"
+    },
+    {
+      "id": "N07",
+      "title": "独立空间瞬态适配与解析小试验",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N08",
+      "title": "全塔小扰动衰减与谐波验收",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N09",
+      "title": "风场单位时间空间相关核验",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N10",
+      "title": "小幅单塔塔线风振试点",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N11",
+      "title": "时间步空间网格与截断收敛",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N12",
+      "title": "线系统边界与气动力物理依据",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md"
+      ],
+      "note": "导线来源复核及绝缘子假设问题已有证据；真实几何、串型、气动与边界未确认。"
+    },
+    {
+      "id": "N13",
+      "title": "论文TMQ与循环机制核验",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "literature/tmq_parameter_identification_20261026/README.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/parameter_identification_20261026/INTEGRATION.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/ordered_history_20261026/REPORT.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/carden_conditional_20261026/REPORT.md"
+      ],
+      "note": "取得Carden P/Q作者有序矢量曲线9589点和实测E/fy，以名义几何完成条件分阶段识别及后续拉伸ρ细化。φ=0.72058、ρ=0.002819；P/Q全回线NRMSE36.77%/32.19%，κ不可辨、边界碰限、常η及首峰位置失配，未通过完整物理验证。Jain前史/边界仍待原文确认。"
+    },
+    {
+      "id": "N14",
+      "title": "真实角钢参考标定留出及塔段验证",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "literature/tmq_parameter_identification_20261026/README.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/parameter_identification_20261026/INTEGRATION.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/ordered_history_20261026/REPORT.md",
+        "initial_imperfection_material/tian_ma_qu/followup_results/carden_conditional_20261026/REPORT.md"
+      ],
+      "note": "取得Carden P/Q作者有序矢量曲线9589点和实测E/fy，以名义几何完成条件分阶段识别及后续拉伸ρ细化。φ=0.72058、ρ=0.002819；P/Q全回线NRMSE36.77%/32.19%，κ不可辨、边界碰限、常η及首峰位置失配，未通过完整物理验证。Jain前史/边界仍待原文确认。"
+    },
+    {
+      "id": "N15",
+      "title": "已有峰值下降段与数值停止复核",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N16",
+      "title": "薄弱位置与全局响应关联",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N17",
+      "title": "物理假设敏感性和模型选择",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md"
+      ],
+      "note": "已完成三种V串假设及40/80段静态对照；最终物理模型和非线性材料适用域未选定。"
+    },
+    {
+      "id": "N18",
+      "title": "准入后的有限非线性风振",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N19",
+      "title": "有平衡残余状态的切线模态",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N20",
+      "title": "易损性准入审查与统计设计",
+      "task_status": "planned",
+      "assessment": "not_assessed",
+      "physical_validation": "unvalidated",
+      "evidence": [],
+      "note": "本计划任务未结项；既有原型或前期结果不能替代该任务的全部验收。"
+    },
+    {
+      "id": "N21",
+      "title": "每批网页科学图和说明",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md"
+      ],
+      "note": "B1、绝缘子敏感性和B2均有网页与报告；按后续批次持续更新。"
+    },
+    {
+      "id": "N22",
+      "title": "性能记录与预算选择",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md"
+      ],
+      "note": "保存本批实际耗时、线程和输出范围；尚无同物理精度的完整性能结论。"
+    },
+    {
+      "id": "N23",
+      "title": "适用域论文素材与交接",
+      "task_status": "partial",
+      "assessment": "limited",
+      "physical_validation": "unvalidated",
+      "evidence": [
+        "initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md"
+      ],
+      "note": "本批步骤、结果和交接完成；整条研究路线尚未最终结项。"
+    }
+  ],
+  "task_counts": {
+    "complete": 7,
+    "planned": 10,
+    "partial": 7
+  },
+  "gates": {
+    "G0": "historical identity and B2 protected input checks passed",
+    "G1": "limited candidate-C output scope; global gate not passed",
+    "G2": "not_passed_actual_C_and_transient_pending",
+    "G4": "unvalidated"
+  },
+  "additional_completed_batch": "4 strict tension-only static grid runs; 10742 common-state comparisons passed; no dynamic mesh certification",
+  "historical_routes": {
+    "T_tasks": {
+      "done": 9,
+      "in_progress": 2,
+      "blocked": 6,
+      "planned": 8,
+      "status_source": "docs/ai_execution_plan/TASKS.json"
+    },
+    "F_tasks": {
+      "planned_snapshot_count": 18,
+      "scope": "old equivalent-material route; not re-executed as a whole, no retrospective pass"
+    }
+  },
+  "next_batch": [
+    "N13/N14: verify actuator/member displacement and initial geometric softening; freeze/check conditional rho from later P tensile branches; audit original TMQ repeated-peak recursion and minor-reversal closure; compare an isolated, source-supported change against complete P/Q histories before any tower use."
+  ],
+  "conditional_next": [
+    "N08 only after declared model/output scope and adapter checks; verify actual C and revisit N06"
+  ],
+  "raw_data_policy": "local only; no Git push in this batch",
+  "deferred_parallel_route": [
+    "N07: spatial transient adapter and analytic small-model verification",
+    "N09: units, mean/fluctuating wind and shared spatial field audit"
+  ]
+}

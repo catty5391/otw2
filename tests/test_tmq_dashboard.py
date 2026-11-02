@@ -61,11 +61,16 @@ class TMQDashboardTests(unittest.TestCase):
                 self.assertEqual(response.headers['Cache-Control'], 'no-cache')
                 text = response.read().decode()
                 if url == '/':
-                    self.assertIn('id="tianmaqu"', text)
-                    self.assertIn('旧版等效材料', text)
-                    self.assertIn('/tmq/results/index.html', text)
-                    self.assertIn('已接入独立全塔试验', text)
-                    self.assertIn('id="tmqTowerPanel"', text)
+                    self.assertIn('/modules/materials/', text)
+                    self.assertIn('/modules/tower/', text)
+                    self.assertNotIn('id="tmqTowerPanel"', text)
+                    self.assertNotIn('<canvas', text)
+        with self.opener.open(self.base+'/modules/materials/', timeout=10) as response:
+            text=response.read().decode()
+            self.assertIn('旧版等效材料', text)
+            self.assertIn('/tmq/results/index.html', text)
+        with self.opener.open(self.base+'/modules/tower/', timeout=10) as response:
+            self.assertIn('/tmq/tower_results/index.html',response.read().decode())
 
     def test_standalone_viewer_redirect_and_all_relative_assets_work(self):
         with self.opener.open(self.base+'/tmq/', timeout=10) as response:

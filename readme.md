@@ -1,5 +1,40 @@
 # 易损性分析流程
 
+## 阶段同步与最新入口（2026-11-02）
+
+后续在完成并验证一个阶段后提交、推送到 `redevelop`。同步代码、测试、方法、结论报告、文献索引和必要的小型参数文件；
+大型静态资源、论文全文、逐步计算数据和重复代码快照保留本地。提交前检查暂存清单和文件大小，避免直接 `git add .`。
+已有 Git 历史中的资源不重写、不删除；本地重算产生的历史已跟踪数据变化也不随本轮上传。
+
+- [Steel01 / Steel02 四分段与 TMQ 全塔推覆：实际曲线及停止原因](initial_imperfection_material/tower_material_pushover/README.md)
+- [单角钢曲线型材料原型](initial_imperfection_material/liu_angle_phm/README.md)与[四分段初始缺陷核查](initial_imperfection_material/segmented_member_validation/README.md)
+- [雨谱、塔线雨荷载及静力验证](rain_loading/results/REPORT.md)
+- [风雨通用节点荷载接口：单位、时程、叠加及移除](util/processing/NODAL_LOADS.md)
+- [新材料、输电塔风荷载和风雨荷载文献索引](literature/material_wind_rain_20261102/README.md)
+
+当前工作区的 9999 网页继续使用本地完整结果。新克隆包含网页代码及文字结论，图表、时程和部分证据复核测试需要按各模块说明重算或另行取得数据。
+文献表中的本地 PDF 链接只对原工作区有效；GitHub 阅读时使用同表的 DOI 或出版入口。
+
+本轮发布前另对去除已保存结果的源码副本进行检查：53项测试通过；3项历史证据测试和1个雨荷载证据测试类因本地结果未附而跳过，无失败。
+这不替代原工作区已完成的66项相关回归，也不代表全部研究模块已重新计算。[发布检查记录](validation/git_publish_20261102/summary.json)。
+
+## 四分段初始缺陷验证（2026-10-29）
+
+三根真实塔杆完成63个空间单杆数值工况，分别检查长度分段、截面纤维、完整往复和缺陷方向/幅值。四段相对32段最大压力偏高约0.56%～5.08%；此结论限于所测独立铰接单杆。全塔与新试验已共用完整Steel02参数，默认初弯曲改为L/1000，历史结果保留。
+
+[步骤、结果和复现方法](initial_imperfection_material/segmented_member_validation/README.md) · [9999独立结果页](http://localhost:9999/segmented-validation/)。
+
+## TMQ参数识别进展（2026-10-26）
+
+已核实遗传算法参数来源，整理两组双角钢与三组管件候选；实际完成10件先压单角钢的条件容量比、
+5件Black试件首峰比识别。GA与局部精修的完整滞回恢复属于合成算法检验，本塔完整循环参数尚未标定，生产默认值未改。
+当前按用户要求优先推进材料参数，塔线动力任务保留在原计划中。
+
+[文献文件夹](literature/tmq_parameter_identification_20261026/README.md) ·
+[参数采用结论与全部步骤](initial_imperfection_material/tian_ma_qu/followup_results/parameter_identification_20261026/INTEGRATION.md) ·
+[9999结果页](http://localhost:9999/tmq/followup_results/parameter_identification_20261026/index.html) ·
+[统一任务进度](docs/ai_execution_plan/CURRENT_STATUS.md)。新增参数及证据测试24项通过，35项HTTP检查及桌面/移动端显示通过。
+
 ## 当前成果总览（2026-10-24，redevelop）
 
 本次整理上传从等效初始缺陷材料到 Tian–Ma–Qu（TMQ）单杆、全塔和单塔四跨导线模型的代码、
@@ -16,11 +51,15 @@
 | 风攻角与风速探索 | 单塔和单塔四跨导线分开；45°推覆峰值换算风速约110.98/108.40 m/s，仅代表当前假设下的静态曲线 | [风向加载](initial_imperfection_material/tian_ma_qu/README.md#多风角加载单塔与单塔导线体系)、[风速结论](initial_imperfection_material/tian_ma_qu/README.md#等效风速探索) |
 | 塔线模态与B1诊断 | 40→80段指定静位移最大非近零差0.1824%；80段160阶对部分挂点位移重构仍有约14%误差；实际阻尼/瞬态尚未验证 | [B1报告](initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md)、[模态方法](initial_imperfection_material/tian_ma_qu/README.md#加导线后的初步模态分析) |
 | 绝缘子受压复核（新增） | 已有0°/45°保存状态中，约46.03/65.36 m/s首次记录到V串一肢受压；45°峰值处约−10.96 kN，现有模型未模拟松弛或压屈 | [复核方法](initial_imperfection_material/tian_ma_qu/insulator_audit.py)、[小型结论汇总](initial_imperfection_material/tian_ma_qu/followup_results/insulator_audit_20261024/summary.json) |
+| V串松弛敏感性（后续完成） | 三种轴向假设×0°/45°共6组均完成至100 m/s；仅受拉使控制点位移增加约3.12%/0.58%，挂点沿风位移幅值却由0.147/0.096 m增至0.966/0.562 m | [步骤、结果与复现](initial_imperfection_material/tian_ma_qu/README.md#v串受压与松弛敏感性2026-10-24)、[完整报告](initial_imperfection_material/tian_ma_qu/followup_results/insulator_sensitivity_20261024/REPORT.md) |
+| B2网格与N06频响（最新） | 仅受拉40→80段41项静态输出逐点通过；旧弹性V串300阶挂点静柔度误差降至1.57%/1.20%；实际动力阻尼未验证 | [本批结果](initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md)、[24项最新进度](docs/ai_execution_plan/CURRENT_STATUS.md) |
 
-**下一步优先核对实际挂线与绝缘子几何、受压行为，再重算0°/45°对照。** 当前V串每肢长约9.55 m，
+**已完成受压假设和仅受拉模型40/80段静态网格对照；下一步推进N07瞬态小模型与N09风场核验，同时补实际挂线资料。** 当前V串每肢长约9.55 m，
 配置中4 m是垂向落差；当前仅两路单根导线、共四跨、远端固定。实际相线/分裂数/地线、邻塔柔度、
 垂度与张力条件仍需核实。模态扩阶可改善截断误差，但不能解决上述物理假设问题。
-此前B1提出的N06数值计划保留，当前物理核查优先级见[TMQ说明](initial_imperfection_material/tian_ma_qu/README.md#当前塔线模型的物理适用范围2026-10-24)。
+此前B1的诊断结果保留，当前物理核查范围见[TMQ说明](initial_imperfection_material/tian_ma_qu/README.md#当前塔线模型的物理适用范围2026-10-24)。
+N06已由B2完成有范围的数值检查，尚不放行实际阻尼或全塔非线性风振。B2另发现0°约92.64～93.18 m/s首次超过导线目录123.04 kN计算拉断力，
+当前模型无导线断裂机制，不能把100 m/s仍收敛解释成实际线路完好。
 
 ### 发布范围与运行
 
@@ -46,11 +85,14 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 TMQ_TEST_NATIVE=1 CXX=/usr/bin/g++-13 \
   --output /tmp/otw2_insulator_audit_new
 ```
 
-本地完整回归468项通过、0跳过；另有7项定向检查，其中6项重复，合计469项独立测试通过。
+上一轮发布时本地完整回归468项通过、0跳过；另有7项定向检查，其中6项重复，合计469项独立测试通过。
 见[测试汇总](validation/git_publish_20261024/tests.json)、[去重清单](validation/git_publish_20261024/tests_aggregate.json)
 及[完整日志](validation/git_publish_20261024/tests.log)。这些结果不表示缺少本地数据的新克隆可直接运行全部证据复核测试。
 原生编译缓存和Python字节码不提交，原生桥源码、构建逻辑及固定来源校验保留。
 历史报告中的绝对路径记录原计算环境，跨机器运行使用仓库相对路径命令。
+前一批V串扩展另完成74项相关测试（0失败、0跳过），并核对六组算例全部786个保存状态的平衡和3144条肢杆轴力；
+不将上一轮全量测试视作本轮重新执行。新结果入口为9999网页“V形绝缘子受压与松弛对照”。
+最新B2整合回归115项通过、0跳过，见[B2验证记录](initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/verification.json)。
 
 通用分析基础模块及使用说明见
 [`util/analysis/README.md`](util/analysis/README.md)，包含循环协议、自适应求解、风荷载预检查、
@@ -132,3 +174,5 @@ ops.section("Aggregator", 1, 4, "P", 2, "Mz", 3, "My", 5, "T")
 
 3.输电线模态分析
 <img src="static/2026_05_27/modes_3x2.png">
+
+2026-10-29全塔位移控制推覆已形成独立模块：[方法、复现与本轮结论](initial_imperfection_material/tower_material_pushover/README.md)。完成Steel01/Steel02四分段及TMQ整杆等效、四风角共12次尝试，首次Newton失败即停止留证；网页入口为 [全塔推覆结果](http://localhost:9999/tower-pushover/)。0°钢材方案已观察到屈服及峰后下降，TMQ的截断前缀尚不能作为极限容量；本轮未指定易损性等级。

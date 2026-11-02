@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "access_date": "2026-10-26",
+  "source_doi": "10.1016/j.jobe.2021.103798",
+  "coefficient_units": "dimensionless",
+  "coefficient_order": [
+    "alpha",
+    "beta",
+    "phi",
+    "tau",
+    "mu",
+    "nu",
+    "eta",
+    "theta",
+    "kappa"
+  ],
+  "notes": [
+    "Candidate priors only; no production material defaults changed.",
+    "P102 duplicate rows are not uniquely mapped to Black14/15.",
+    "Double-angle PF section-label 125 conflicts with ID152; Black table1 supports six-inch leg.",
+    "Missing author parameters are deliberately null/unassigned, not filled by project demo assumptions."
+  ],
+  "candidates": [
+    {
+      "id": "double_angle_152_89_9p5_sr80_pp",
+      "paper_member_id": "2L152×89×9.5SR80PP",
+      "cross_section_family": "built_up_double_unequal_angle",
+      "end_condition": "PP",
+      "length_m": 2.83,
+      "paper_slenderness_ratio": 80,
+      "paper_fy_mpa": 281.11,
+      "coefficients": {
+        "alpha": 1.298,
+        "beta": 0.012,
+        "phi": 0.571,
+        "tau": 1.615,
+        "mu": 0.439,
+        "nu": 1.727,
+        "eta": 0.305,
+        "theta": 0.012,
+        "kappa": 0.001
+      },
+      "missing_author_parameters": [
+        "E",
+        "rho",
+        "gamma",
+        "zeta"
+      ],
+      "black_specimen_id_by_geometry": 8,
+      "source": "JBE2022_table2_p15",
+      "source_quality": "public_transcription_pending_publisher_pdf_verification",
+      "calibrated_to_Z30103A6": false,
+      "production_default_approved": false
+    },
+    {
+      "id": "double_angle_152_89_9p5_sr80_pf",
+      "paper_member_id": "2L152×89×9.5SR80PF",
+      "cross_section_family": "built_up_double_unequal_angle",
+      "end_condition": "PF",
+      "length_m": 4.04,
+      "paper_slenderness_ratio": 80,
+      "paper_fy_mpa": 281.11,
+      "coefficients": {
+        "alpha": 0.986,
+        "beta": 0.014,
+        "phi": 0.707,
+        "tau": 1.985,
+        "mu": 0.395,
+        "nu": 2.072,
+        "eta": 0.3,
+        "theta": 0.014,
+        "kappa": 0.004
+      },
+      "missing_author_parameters": [
+        "E",
+        "rho",
+        "gamma",
+        "zeta"
+      ],
+      "black_specimen_id_by_geometry": 20,
+      "source": "JBE2022_table2_p15",
+      "source_quality": "public_transcription_pending_publisher_pdf_verification",
+      "calibrated_to_Z30103A6": false,
+      "production_default_approved": false
+    },
+    {
+      "id": "pipe_p102_sr80_pp_row_a",
+      "paper_member_id": "P102×6.02SR80PP",
+      "cross_section_family": "circular_pipe",
+      "end_condition": "PP",
+      "length_m": 3.07,
+      "paper_slenderness_ratio": 80,
+      "paper_fy_mpa": 327.28,
+      "coefficients": {
+        "alpha": 0.506,
+        "beta": 0.02,
+        "phi": 0.797,
+        "tau": 1.449,
+        "mu": 0.474,
+        "nu": 1.549,
+        "eta": 0.544,
+        "theta": 0.02,
+        "kappa": 0.0044
+      },
+      "missing_author_parameters": [
+        "E",
+        "rho",
+        "gamma",
+        "zeta"
+      ],
+      "black_specimen_id_by_geometry": null,
+      "source": "JBE2022_table2_p15",
+      "source_quality": "public_transcription_pending_publisher_pdf_verification",
+      "calibrated_to_Z30103A6": false,
+      "production_default_approved": false
+    },
+    {
+      "id": "pipe_p102_sr80_pp_row_b",
+      "paper_member_id": "P102×6.02SR80PP",
+      "cross_section_family": "circular_pipe",
+      "end_condition": "PP",
+      "length_m": 3.07,
+      "paper_slenderness_ratio": 80,
+      "paper_fy_mpa": 327.28,
+      "coefficients": {
+        "alpha": 0.418,
+        "beta": 0.015,
+        "phi": 0.699,
+        "tau": 1.342,
+        "mu": 0.493,
+        "nu": 1.342,
+        "eta": 0.444,
+        "theta": 0.014,
+        "kappa": 0.0041
+      },
+      "missing_author_parameters": [
+        "E",
+        "rho",
+        "gamma",
+        "zeta"
+      ],
+      "black_specimen_id_by_geometry": null,
+      "source": "JBE2022_table2_p15",
+      "source_quality": "public_transcription_pending_publisher_pdf_verification",
+      "calibrated_to_Z30103A6": false,
+      "production_default_approved": false
+    },
+    {
+      "id": "pipe_p89_sr80_pf",
+      "paper_member_id": "P89×5.74SR80PF",
+      "cross_section_family": "circular_pipe",
+      "end_condition": "PF",
+      "length_m": 3.89,
+      "paper_slenderness_ratio": 80,
+      "paper_fy_mpa": 319.01,
+      "coefficients": {
+        "alpha": 0.804,
+        "beta": 0.025,
+        "phi": 0.694,
+        "tau": 1.298,
+        "mu": 0.551,
+        "nu": 1.196,
+        "eta": 0.488,
+        "theta": 0.027,
+        "kappa": 0.009
+      },
+      "missing_author_parameters": [
+        "E",
+        "rho",
+        "gamma",
+        "zeta"
+      ],
+      "black_specimen_id_by_geometry": 24,
+      "source": "JBE2022_table2_p15",
+      "source_quality": "public_transcription_pending_publisher_pdf_verification",
+      "calibrated_to_Z30103A6": false,
+      "production_default_approved": false
+    }
+  ]
+}

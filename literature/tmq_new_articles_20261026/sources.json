@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-26",
+  "source_files": [
+    {
+      "path": "article/Phenomenological hysteretic model for fixed-end steel equal leg angle Development and application.pdf",
+      "sha256": "b49ada51b634b1b56b19dc8e68937014eb4ffd7d696656932b9db4ac057fb582",
+      "size_bytes": 3539484
+    },
+    {
+      "path": "article/Progressive collapse analysis of a truss transmission tower-line system subjected to downburst loading.pdf",
+      "sha256": "6362c9efd66364b7d8a680e6bd52035007fc7f5d0df5126026ca1f40e20258d7",
+      "size_bytes": 10369811
+    },
+    {
+      "path": "article/主余震序列下输电塔-线体系概率性风险分析与韧性评估_刘俊才.caj",
+      "sha256": "8984e17b45b8d9fc8ba546ba986f9cac8fc47b02178c59e79213f048da811060",
+      "size_bytes": 24570386
+    },
+    {
+      "path": "article/杆件滞回模型的研究与空间桁架结构地震倒塌分析_郑华冬.caj",
+      "sha256": "6d6a46675311fb35612c127818fc26547ae7c0a1c20912def46cd91bf8addf80",
+      "size_bytes": 6552012
+    },
+    {
+      "path": "article/考虑失稳效应的角钢非线性滞回模型研究_刘俊才.pdf",
+      "sha256": "1599f014ab81d42545c6be2e0941036addea8b9bc90bf4af7dc03311544fa096",
+      "size_bytes": 2615388
+    }
+  ],
+  "review_scope": "parameter acquisition and implementation evidence; not a new fit",
+  "production_parameters_changed": false
+}

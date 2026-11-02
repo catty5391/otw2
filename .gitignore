@@ -33,3 +33,36 @@ __pycache__/*
 /validation/**/*.gz
 /validation/git_publish_20261024/archive*
 /validation/git_publish_20261024/verify_archives.py
+
+# Subsequent milestone pushes: retain source, methods, citations and summaries.
+# Full texts, cached publisher pages and binary archives stay in this workspace.
+/literature/**/*.pdf
+/literature/**/*.txt
+/literature/**/*.html
+/literature/**/extracted/
+/docs/ai_execution_plan/**/*.tar.gz
+/docs/ai_execution_plan/**/*.log
+
+# Per-run source copies and browser dumps are generated evidence, not source modules.
+/initial_imperfection_material/**/code_snapshot/
+/initial_imperfection_material/**/native_source_snapshot/
+/initial_imperfection_material/**/dashboard_browser*/
+
+# Rain-load histories, nodal tables, figures and solver output remain local.
+/rain_loading/results/*
+!/rain_loading/results/REPORT.md
+!/rain_loading/results/loading_interface.md
+!/rain_loading/results/summary.json
+!/rain_loading/results/verification.json
+!/rain_loading/results/loading_interface_verification.json
+/rain_loading/interface_validation/*
+!/rain_loading/interface_validation/summary.json
+
+# Keep web source (HTML/CSS/JS); do not add generated static media.
+/static/**/*.png
+/static/**/*.jpg
+/static/**/*.jpeg
+/static/**/*.gif
+/static/**/*.webp
+/static/**/*.mp4
+/static/**/*.pdf

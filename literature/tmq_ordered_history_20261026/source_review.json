@@ -1,0 +1,19 @@
+{
+  "method_paper": {
+    "url": "https://www.iitk.ac.in/nicee/wcee/article/WCEE2012_4366.pdf",
+    "file": "literature/tmq_ordered_history_20261026/papers/01_Lignos_Karamanci_Martin_2012_brace_database.pdf",
+    "sha256": "db5a395bc0d94766393379dbd847fc2eb37829268a6fafab403ec9b10b20d3e0",
+    "reviewed_sections": [
+      "2. Steel brace database",
+      "2.1. Statistical information on material properties"
+    ]
+  },
+  "original_thesis": {
+    "url": "https://deepblue.lib.umich.edu/handle/2027.42/127507",
+    "retrieval_status": "HTTP 403",
+    "full_text_reviewed": false
+  },
+  "raw_history_order": "retained_without_sorting_or_offset_correction",
+  "E_measured_status": "not_verified",
+  "fit_admitted": false
+}

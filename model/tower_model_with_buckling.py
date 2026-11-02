@@ -5,8 +5,10 @@ from typing import Any
 
 try:
     from .tower_model import OpenSeesModel, TagManager
+    from .steel02_parameters import Steel02Parameters
 except ImportError:  # pragma: no cover
     from tower_model import OpenSeesModel, TagManager
+    from steel02_parameters import Steel02Parameters
 
 
 class OpenSeesModelWithBuckling(OpenSeesModel):
@@ -15,18 +17,22 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
     The original SAP ids are kept as local ids. Actual OpenSees tags are
     allocated through the shared :class:`TagManager`, so multiple tower instances
     can be placed in one domain without node/element/material collisions.
+    The default member bow is L/1000; historical L/100 cases must request .01.
     """
 
     def __init__(
         self,
         *args: Any,
-        random_disp_ratio: float = 0.01,
+        random_disp_ratio: float = 0.001,
         member_divisions: int = 4,
         imperfection_seed: int | None = None,
         **kwargs: Any,
     ) -> None:
-        if int(member_divisions) < 2:
-            raise ValueError("member_divisions 必须大于等于 2。")
+        if (isinstance(member_divisions, bool) or not math.isfinite(float(member_divisions))
+                or int(member_divisions) != member_divisions or member_divisions < 2):
+            raise ValueError("member_divisions 必须为大于等于 2 的整数。")
+        if not math.isfinite(float(random_disp_ratio)) or float(random_disp_ratio) < 0:
+            raise ValueError("random_disp_ratio 必须为有限非负数。")
         super().__init__(*args, **kwargs)
         self.random_disp_ratio = float(random_disp_ratio)
         self.member_divisions = int(member_divisions)
@@ -299,7 +305,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
             g = float(basic.get("G12", e0 / (2 * (1 + float(basic.get("U12", 0.3))))))
             nu = float(basic.get("U12", 0.3))
             density = float(basic.get("UnitMass", 0.0))
-            ops.uniaxialMaterial("Steel02", tag, fy, e0, self.steel01_b, 20, 0.925, 0.15, 0.0005, 0.01, 0.0005, 0.01)
+            steel = Steel02Parameters.legacy_tower(E0=e0, fy=fy, b=self.steel01_b)
+            ops.uniaxialMaterial(*steel.opensees_arguments(tag))
             record = {
                 "mat_tag": tag,
                 "material_name": name,
@@ -310,6 +317,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
                 "density": density,
                 "b": self.steel01_b,
                 "ops_type": "Steel02",
+                **{key: value for key, value in steel.as_dict().items()
+                   if key not in {"E0", "fy", "b"}},
             }
             self.material_name_to_tag[name] = tag
             self.material_tag_map[tag] = record
@@ -317,7 +326,8 @@ class OpenSeesModelWithBuckling(OpenSeesModel):
         self._write_csv(
             self.output_dir / "materials.csv",
             rows,
-            ["mat_tag", "material_name", "fy", "e0", "g", "nu", "density", "b", "ops_type"],
+            ["mat_tag", "material_name", "fy", "e0", "g", "nu", "density", "b", "ops_type",
+             "R0", "cR1", "cR2", "a1", "a2", "a3", "a4", "sig_init"],
         )
         return self.material_tag_map
 

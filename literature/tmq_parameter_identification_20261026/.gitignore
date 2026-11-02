@@ -1,0 +1,4 @@
+# Downloaded papers and figure exports stay local; provenance and conclusions are versioned.
+papers/*.pdf
+derived/*.png
+derived/*.txt

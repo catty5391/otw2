@@ -1,0 +1,22 @@
+{
+  "tests_passed": 66,
+  "test_log": "tests.log",
+  "numerical_verification_passed": true,
+  "fine_time_step_relative_peak_error_percent": 0.03303134448782799,
+  "tower_displacement_difference_mm": 0.0,
+  "tower_reaction_difference_N": 0.0,
+  "http_verification": "http_verification.json",
+  "physical_validation": false,
+  "browser_note": "HTTP and 66 Python tests pass. Browser attempts did not complete; no claim of a complete browser regression pass.",
+  "browser_status": "partial; no overall browser pass recorded",
+  "browser_verified_before_timeout": [
+    "desktop and mobile actual figures decoded",
+    "all displayed report/data links returned 200 with UTF-8",
+    "desktop and mobile viewport overflow checks passed"
+  ],
+  "browser_limitations": [
+    "full-homepage entry stability wait timed out",
+    "direct page screenshot timed out",
+    "no-screenshot run timed out after mobile navigation reload"
+  ]
+}

@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="/static/rain.css?v=20261102">
+<article class="rain-study">
+  <header class="rain-hero">
+    <div class="eyebrow"><i></i> WIND–RAIN / RESEARCH &amp; VERIFICATION</div>
+    <h1 id="rainTitle">雨谱如何变成<br><em>塔与线上的荷载。</em></h1>
+    <p id="rainSubtitle">从雨滴粒径与速度出发，核对降雨通量，再计算构件迎雨方向的动量传递。</p>
+    <div class="rain-status"><span id="rainStatus" role="status" aria-live="polite">正在读取本轮研究结果…</span><time id="rainDate"></time></div>
+    <p class="rain-boundary">本页区分公式与代码的数值核验、真实结构分析，以及物理试验验证。合成降雨时程不代表当地实测雨谱。</p>
+  </header>
+  <nav class="rain-jumps" aria-label="雨荷载研究章节">
+    <a href="#rain-concepts">三个概念</a><a href="#rain-method">模拟与加载</a><a href="#rain-results">结果图表</a><a href="#rain-checks">验证与限制</a><a href="#rain-sources">文献与下载</a>
+  </nav>
+  <section id="rain-concepts" class="rain-section">
+    <div class="rain-heading"><span>01 / CONCEPTS</span><h2>先分清“谱”描述的是什么</h2></div>
+    <div class="rain-concept-grid">
+      <div class="rain-concept"><b>雨滴粒径谱</b><strong>n(D)</strong><p>描述单位空气体积中不同直径的雨滴有多少。横轴是粒径，需要结合雨滴质量、速度与迎雨面积才能算力。</p></div>
+      <div class="rain-concept"><b>雨强时间过程</b><strong>R(t)</strong><p>描述降水通量如何随时间变化，通常以 mm/h 表示。模拟值须说明均值、波动、时间间隔及相关性从何而来。</p></div>
+      <div class="rain-concept"><b>荷载功率谱</b><strong>S<sub>F</sub>(f)</strong><p>描述力在不同频率上的波动。它还取决于雨滴到达、风驱雨速度和空间关联，不能从粒径谱直接当作实测时程使用。</p></div>
+    </div>
+  </section>
+  <section id="rain-method" class="rain-section">
+    <div class="rain-heading"><span>02 / METHOD</span><h2>从雨到力，再到结构响应</h2></div>
+    <p id="rainScope" class="rain-lead">计算范围与假设将在结果加载后显示。</p>
+    <ol id="rainSteps" class="rain-steps"></ol>
+    <div id="rainEquations" class="rain-equations" hidden></div>
+  </section>
+  <section id="rain-results" class="rain-section">
+    <div class="rain-heading"><span>03 / RESULTS</span><h2>本轮计算得到的结果</h2></div>
+    <div id="rainFindings" class="rain-findings"></div>
+    <p id="rainPending" class="rain-empty">等待实际计算结果。页面不会用示意数值补齐未完成工况。</p>
+    <div id="rainTables"></div>
+    <div id="rainFigures" class="rain-figures"></div>
+  </section>
+  <section id="rain-checks" class="rain-section">
+    <div class="rain-heading"><span>04 / EVIDENCE</span><h2>检查了什么，还有什么未知</h2></div>
+    <p class="rain-lead">“通过”只针对表中列明的检查条件，不自动表示雨荷载或全塔响应已经通过物理试验验证。</p>
+    <div id="rainChecks"></div>
+    <div class="rain-assumption-box"><h3>适用范围与待确定参数</h3><ul id="rainAssumptions"></ul></div>
+  </section>
+  <section id="rain-sources" class="rain-section">
+    <div class="rain-heading"><span>05 / SOURCES</span><h2>公式依据与可追溯结果</h2></div>
+    <div id="rainSources" class="rain-sources"></div>
+    <h3>报告与数据</h3>
+    <div id="rainDownloads" class="rain-downloads"></div>
+    <p class="rain-lead">报告链接按 UTF-8 显示；CSV 与 JSON 保留计算时的单位和假设，图可点击查看原图。</p>
+  </section>
+  <noscript><p class="rain-empty">请启用 JavaScript 查看计算数据，或直接阅读 <a href="/rain-loading/results/REPORT.md">完整报告</a>。</p></noscript>
+</article>

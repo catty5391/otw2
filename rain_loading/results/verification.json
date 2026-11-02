@@ -1,0 +1,887 @@
+{
+  "schema": "otw2.rain_loading.verification.v1",
+  "numerical_checks_passed": true,
+  "physical_validation": false,
+  "checks": [
+    {
+      "name": "雨强水量闭合",
+      "passed": true,
+      "value": "最大绝对误差 < 1e-9 mm/h",
+      "criterion": "所有5档雨强回算正确"
+    },
+    {
+      "name": "粒径积分独立解析检查",
+      "passed": true,
+      "value": "240格相对误差 3.25e-06",
+      "criterion": "截断Gamma矩解析式，相对误差 < 1e-5"
+    },
+    {
+      "name": "合成风有限频带方差",
+      "passed": true,
+      "value": "时域方差 8.513402，谱离散积分 8.513402",
+      "criterion": "Parseval一致；没有偷偷缩放到无限频带方差9"
+    },
+    {
+      "name": "泊松雨滴冲量均值 dt=0.01s",
+      "passed": true,
+      "value": "偏差 0.609 个标准误",
+      "criterion": "均值与动量通量差 < 5个标准误"
+    },
+    {
+      "name": "泊松雨滴冲量方差 dt=0.01s",
+      "passed": true,
+      "value": "实测/解析 0.9953",
+      "criterion": "方差相对差 < 10%"
+    },
+    {
+      "name": "泊松雨滴冲量均值 dt=0.02s",
+      "passed": true,
+      "value": "偏差 0.348 个标准误",
+      "criterion": "均值与动量通量差 < 5个标准误"
+    },
+    {
+      "name": "泊松雨滴冲量方差 dt=0.02s",
+      "passed": true,
+      "value": "实测/解析 0.9966",
+      "criterion": "方差相对差 < 10%"
+    },
+    {
+      "name": "泊松雨滴冲量均值 dt=0.1s",
+      "passed": true,
+      "value": "偏差 0.677 个标准误",
+      "criterion": "均值与动量通量差 < 5个标准误"
+    },
+    {
+      "name": "泊松雨滴冲量方差 dt=0.1s",
+      "passed": true,
+      "value": "实测/解析 0.9648",
+      "criterion": "方差相对差 < 10%"
+    },
+    {
+      "name": "tower 0°荷载映射",
+      "passed": true,
+      "value": "合力误差 4e-13 N；力矩误差 2.7e-11 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "conductor 0°荷载映射",
+      "passed": true,
+      "value": "合力误差 1.8e-15 N；力矩误差 1.8e-12 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "tower 45°荷载映射",
+      "passed": true,
+      "value": "合力误差 6.8e-13 N；力矩误差 4.5e-12 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "conductor 45°荷载映射",
+      "passed": true,
+      "value": "合力误差 8.9e-16 N；力矩误差 1.1e-13 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "tower 90°荷载映射",
+      "passed": true,
+      "value": "合力误差 5.7e-13 N；力矩误差 7.3e-12 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "conductor 90°荷载映射",
+      "passed": true,
+      "value": "合力误差 2.2e-16 N；力矩误差 5.7e-14 Nm",
+      "criterion": "保留均布段荷载合力及初始坐标下力矩"
+    },
+    {
+      "name": "Steel02全塔 0°完成与平衡",
+      "passed": true,
+      "value": "completed",
+      "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+    },
+    {
+      "name": "Steel02全塔 45°完成与平衡",
+      "passed": true,
+      "value": "completed",
+      "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+    },
+    {
+      "name": "Steel02全塔 90°完成与平衡",
+      "passed": true,
+      "value": "completed",
+      "criterion": "2个状态通过自由自由度与全局合力/力矩检查"
+    }
+  ],
+  "quadrature": [
+    {
+      "bins": 60,
+      "relative_error": 5.20112106161541e-05
+    },
+    {
+      "bins": 120,
+      "relative_error": 1.3015841987540355e-05
+    },
+    {
+      "bins": 240,
+      "relative_error": 3.2548130095566563e-06
+    },
+    {
+      "bins": 480,
+      "relative_error": 8.137571227972984e-07
+    }
+  ],
+  "truncation": [
+    {
+      "Dmin_mm": 0.16,
+      "Dmax_mm": 5.8,
+      "LWC_g_m3": 4.08711951133161,
+      "raw_rain_mm_h": 101.99523024570674
+    },
+    {
+      "Dmin_mm": 0.2,
+      "Dmax_mm": 5.0,
+      "LWC_g_m3": 4.130025746504251,
+      "raw_rain_mm_h": 98.02598928391838
+    },
+    {
+      "Dmin_mm": 0.2,
+      "Dmax_mm": 5.8,
+      "LWC_g_m3": 4.086435564727866,
+      "raw_rain_mm_h": 101.99412874572313
+    },
+    {
+      "Dmin_mm": 0.2,
+      "Dmax_mm": 6.0,
+      "LWC_g_m3": 4.080040357939025,
+      "raw_rain_mm_h": 102.58219284390601
+    },
+    {
+      "Dmin_mm": 0.3,
+      "Dmax_mm": 5.8,
+      "LWC_g_m3": 4.082525335514563,
+      "raw_rain_mm_h": 101.98062289533773
+    }
+  ],
+  "rain_rate_closure": [
+    {
+      "rain_mm_h": 10,
+      "raw_recovered_mm_h": 11.635517478768588,
+      "closed_recovered_mm_h": 9.999999999999998,
+      "scale": 0.8594374954313009,
+      "LWC_g_m3": 0.5277268164197104
+    },
+    {
+      "rain_mm_h": 25,
+      "raw_recovered_mm_h": 28.139639837502422,
+      "closed_recovered_mm_h": 25.000000000000004,
+      "scale": 0.8884264384465169,
+      "LWC_g_m3": 1.1767341408124512
+    },
+    {
+      "rain_mm_h": 50,
+      "raw_recovered_mm_h": 54.072177315154924,
+      "closed_recovered_mm_h": 49.99999999999999,
+      "scale": 0.9246899696414924,
+      "LWC_g_m3": 2.1816737596695788
+    },
+    {
+      "rain_mm_h": 100,
+      "raw_recovered_mm_h": 101.99412874572313,
+      "closed_recovered_mm_h": 99.99999999999999,
+      "scale": 0.9804485927744468,
+      "LWC_g_m3": 4.086435564727866
+    },
+    {
+      "rain_mm_h": 200,
+      "raw_recovered_mm_h": 187.5179572557942,
+      "closed_recovered_mm_h": 199.99999999999997,
+      "scale": 1.0665645196165345,
+      "LWC_g_m3": 7.736321196235644
+    }
+  ],
+  "wind": {
+    "target_infinite_band_variance": 9.0,
+    "discrete_band_variance": 8.51340164181069,
+    "realized_variance": 8.513401641810688,
+    "seed": 30103,
+    "spatial_coherence": "single point only; no spatial rain coherence model"
+  },
+  "poisson": [
+    {
+      "expected_mean_N": 0.019635063837026213,
+      "observed_mean_N": 0.019575660199325155,
+      "expected_variance_N2": 0.0005703869108660951,
+      "observed_variance_N2": 0.0005677009222623329,
+      "standard_error_mean_N": 9.75010180174285e-05,
+      "area_m2": 0.01,
+      "dt_s": 0.01,
+      "duration_s": 600.0,
+      "seed": 772
+    },
+    {
+      "expected_mean_N": 0.019635063837026213,
+      "observed_mean_N": 0.019601169591976088,
+      "expected_variance_N2": 0.00028519345543304755,
+      "observed_variance_N2": 0.00028422255149172646,
+      "standard_error_mean_N": 9.75010180174285e-05,
+      "area_m2": 0.01,
+      "dt_s": 0.02,
+      "duration_s": 600.0,
+      "seed": 772
+    },
+    {
+      "expected_mean_N": 0.019635063837026213,
+      "observed_mean_N": 0.019569039752800752,
+      "expected_variance_N2": 5.703869108660951e-05,
+      "observed_variance_N2": 5.503354751532618e-05,
+      "standard_error_mean_N": 9.75010180174285e-05,
+      "area_m2": 0.01,
+      "dt_s": 0.1,
+      "duration_s": 600.0,
+      "seed": 772
+    }
+  ],
+  "load_mapping": [
+    {
+      "component": "tower",
+      "angle_deg": 0,
+      "force_N": [
+        410.52863054137464,
+        -4.336808689942018e-17,
+        -78.85771233783342
+      ],
+      "moment_Nm": [
+        8.881784197001252e-16,
+        8557.24924516998,
+        -1.2490009027033011e-15
+      ],
+      "force_mapping_error_N": 3.979039320256561e-13,
+      "moment_mapping_error_Nm": 2.7284841053187847e-11
+    },
+    {
+      "component": "conductor",
+      "angle_deg": 0,
+      "force_N": [
+        31.325580047188147,
+        -2.0816681711721685e-17,
+        -7.0906191319062115
+      ],
+      "moment_Nm": [
+        -1063.5928697859317,
+        773.2335352794742,
+        -4698.837007078223
+      ],
+      "force_mapping_error_N": 1.7763568394002505e-15,
+      "moment_mapping_error_Nm": 1.8189894035458565e-12
+    },
+    {
+      "component": "tower",
+      "angle_deg": 45,
+      "force_N": [
+        284.72500683527574,
+        335.73930038691464,
+        -82.97706235675605
+      ],
+      "moment_Nm": [
+        -7769.768660786203,
+        6026.104577878755,
+        -3.288377440546595
+      ],
+      "force_mapping_error_N": 6.821210263296962e-13,
+      "moment_mapping_error_Nm": 4.547473508864641e-12
+    },
+    {
+      "component": "conductor",
+      "angle_deg": 45,
+      "force_N": [
+        16.08334984307275,
+        0.06643218660307453,
+        -5.178270937842323
+      ],
+      "moment_Nm": [
+        -871.9406375308658,
+        397.04676306625936,
+        -2436.89581854518
+      ],
+      "force_mapping_error_N": 8.881784197001252e-16,
+      "moment_mapping_error_Nm": 1.1368683772161603e-13
+    },
+    {
+      "component": "tower",
+      "angle_deg": 90,
+      "force_N": [
+        2.4131455863940588e-14,
+        511.7950034066935,
+        -87.44119708516247
+      ],
+      "moment_Nm": [
+        -11994.81136771684,
+        5.329070518200751e-13,
+        -5.551115123125783e-15
+      ],
+      "force_mapping_error_N": 5.684341886080801e-13,
+      "moment_mapping_error_Nm": 7.275957614183426e-12
+    },
+    {
+      "component": "conductor",
+      "angle_deg": 90,
+      "force_N": [
+        4.228258367044948e-16,
+        0.051871885934171164,
+        -1.7688644209260223
+      ],
+      "moment_Nm": [
+        -339.66396591019287,
+        1.0436326921280646e-14,
+        -7.330345017155493e-14
+      ],
+      "force_mapping_error_N": 2.220446049250313e-16,
+      "moment_mapping_error_Nm": 5.684341886080802e-14
+    }
+  ],
+  "tower_cases": [
+    {
+      "angle_deg": 0.0,
+      "wind_m_s": 30.0,
+      "rain_mm_h": 100.0,
+      "horizontal_velocity_ratio": 1.0,
+      "status": "completed",
+      "physical_validation": false,
+      "material": "Steel02",
+      "divisions": 4,
+      "imperfection_ratio": 0.001,
+      "imperfection_seed": 30103,
+      "model": "single tower only",
+      "source_sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16",
+      "wind_model": "uniform flow, member breadth normal-cylinder proxy, Cd=1",
+      "rain_model": "rain-rate-closed MP, projected collector, gamma=1",
+      "limitations": [
+        "Angle leg breadth is an uncalibrated cylinder proxy; no shielding or wet Cd.",
+        "Static load mapping, not tower-line transient analysis or a wet design capacity."
+      ],
+      "states": [
+        {
+          "stage": "wind_only",
+          "rain_mm_h": 0.0,
+          "ux_mm": 11.963280731786055,
+          "uy_mm": 0.007065160404372449,
+          "uz_mm": -0.009256475192520987,
+          "along_wind_mm": 11.963280731786055,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            60235.04095830038,
+            0.0,
+            -218420.11082373973
+          ],
+          "external_moment_Nm": [
+            -0.5913403454210879,
+            1256053.5097379154,
+            -0.14714701238865757
+          ],
+          "reactions_force_N": [
+            -60235.04095828619,
+            3.033801476703957e-08,
+            218420.11082373778
+          ],
+          "reactions_moment_Nm": [
+            0.5913403728918638,
+            -1256053.5097379081,
+            0.1471469787611568
+          ],
+          "force_balance_error_N": 3.033801476703957e-08,
+          "moment_balance_error_Nm": 3.362750078395038e-08,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 2.370779839111492e-07,
+              "l2": 1.1802398590360986e-06,
+              "scale": 280395.808678606,
+              "scaled_maximum": 8.455118677715032e-13,
+              "threshold": 0.281395808678606,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 4.7864716634649085e-08,
+              "l2": 2.4126593854190894e-07,
+              "scale": 11103674.023672799,
+              "scaled_maximum": 4.310709818444104e-15,
+              "threshold": 11.104674023672798,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        },
+        {
+          "stage": "wind_and_rain",
+          "rain_mm_h": 100.0,
+          "ux_mm": 12.04486197560911,
+          "uy_mm": 0.007113153957505699,
+          "uz_mm": -0.00987470661511147,
+          "along_wind_mm": 12.04486197560911,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            60645.56958884182,
+            3.552713678800501e-15,
+            -218498.96853607782
+          ],
+          "external_moment_Nm": [
+            -0.5944629674703776,
+            1264619.7518947646,
+            -0.14909926281198693
+          ],
+          "reactions_force_N": [
+            -60645.569588744984,
+            1.7190814105561003e-08,
+            218498.9685360804
+          ],
+          "reactions_moment_Nm": [
+            0.5944630369194783,
+            -1264619.7518947842,
+            0.14909941440055263
+          ],
+          "force_balance_error_N": 9.683571988716722e-08,
+          "moment_balance_error_Nm": 1.5158856569996715e-07,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 3.6768915379070677e-07,
+              "l2": 1.3927246870044021e-06,
+              "scale": 280898.90739184926,
+              "scaled_maximum": 1.3089732430955546e-12,
+              "threshold": 0.28189890739184925,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 7.14259300593767e-08,
+              "l2": 2.2674824226629966e-07,
+              "scale": 11123596.73271723,
+              "scaled_maximum": 6.421118256588311e-15,
+              "threshold": 11.12459673271723,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        }
+      ],
+      "original_nodes": 621,
+      "physical_members": 1528,
+      "fe_nodes": 5205,
+      "fe_elements": 6112,
+      "wind_resultant": {
+        "force_N": [
+          60235.040958300364,
+          -7.105427357601002e-15,
+          5.684341886080802e-14
+        ],
+        "moment_Nm": [
+          0.0,
+          1254807.7433220027,
+          -1.3766765505351941e-14
+        ],
+        "force_mapping_error_N": 3.637978807091713e-11,
+        "moment_mapping_error_Nm": 2.561137080192566e-09
+      },
+      "rain_resultant": {
+        "force_N": [
+          410.52863054137464,
+          -4.336808689942018e-17,
+          -78.85771233783342
+        ],
+        "moment_Nm": [
+          8.881784197001252e-16,
+          8557.24924516998,
+          -1.2490009027033011e-15
+        ],
+        "force_mapping_error_N": 3.979039320256561e-13,
+        "moment_mapping_error_Nm": 2.7284841053187847e-11
+      },
+      "engine": "3.8.0",
+      "rain_displacement_increase_percent": 0.681930363853267,
+      "runtime_seconds": 439.4619294023141
+    },
+    {
+      "angle_deg": 45.0,
+      "wind_m_s": 30.0,
+      "rain_mm_h": 100.0,
+      "horizontal_velocity_ratio": 1.0,
+      "status": "completed",
+      "physical_validation": false,
+      "material": "Steel02",
+      "divisions": 4,
+      "imperfection_ratio": 0.001,
+      "imperfection_seed": 30103,
+      "model": "single tower only",
+      "source_sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16",
+      "wind_model": "uniform flow, member breadth normal-cylinder proxy, Cd=1",
+      "rain_model": "rain-rate-closed MP, projected collector, gamma=1",
+      "limitations": [
+        "Angle leg breadth is an uncalibrated cylinder proxy; no shielding or wet Cd.",
+        "Static load mapping, not tower-line transient analysis or a wet design capacity."
+      ],
+      "states": [
+        {
+          "stage": "wind_only",
+          "rain_mm_h": 0.0,
+          "ux_mm": 8.481897723707382,
+          "uy_mm": 11.769055313502546,
+          "uz_mm": -1.0069911705302252,
+          "along_wind_mm": 14.319586218101453,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            41759.08256657794,
+            49250.297782724534,
+            -218420.11082373955
+          ],
+          "external_moment_Nm": [
+            -1139664.3126825828,
+            884016.1159439044,
+            -6.714580335252904
+          ],
+          "reactions_force_N": [
+            -41759.08256665242,
+            -49250.29778268196,
+            218420.1108237377
+          ],
+          "reactions_moment_Nm": [
+            1139664.31268257,
+            -884016.1159438645,
+            6.714580617479669
+          ],
+          "force_balance_error_N": 7.447670213878155e-08,
+          "moment_balance_error_Nm": 2.8222676462519303e-07,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 3.59533061100592e-07,
+              "l2": 1.246762780548114e-06,
+              "scale": 309429.4911730422,
+              "scaled_maximum": 1.1619224132050502e-12,
+              "threshold": 0.3104294911730422,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 7.97405661501216e-08,
+              "l2": 2.83352954682874e-07,
+              "scale": 12253407.850452472,
+              "scaled_maximum": 6.507623603435111e-15,
+              "threshold": 12.25440785045247,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        },
+        {
+          "stage": "wind_and_rain",
+          "rain_mm_h": 100.0,
+          "ux_mm": 8.539850367240023,
+          "uy_mm": 11.849479745032951,
+          "uz_mm": -1.0145177686877043,
+          "along_wind_mm": 14.41743358623929,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            42043.80757341324,
+            49586.03708311148,
+            -218503.0878860967
+          ],
+          "external_moment_Nm": [
+            -1147442.930600309,
+            890048.6108201384,
+            -10.098415410548313
+          ],
+          "reactions_force_N": [
+            -42043.80757336749,
+            -49586.03708305317,
+            218503.08788611036
+          ],
+          "reactions_moment_Nm": [
+            1147442.9306003153,
+            -890048.6108201412,
+            10.098415097783516
+          ],
+          "force_balance_error_N": 5.8309524320065975e-08,
+          "moment_balance_error_Nm": 3.1276479717234906e-07,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 3.29513568431139e-07,
+              "l2": 1.192037160630874e-06,
+              "scale": 310132.93254262116,
+              "scaled_maximum": 1.0624913830647584e-12,
+              "threshold": 0.31113293254262114,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 4.350351900939131e-08,
+              "l2": 2.0946494863817715e-07,
+              "scale": 12281264.128687799,
+              "scaled_maximum": 3.5422671928186497e-15,
+              "threshold": 12.282264128687798,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        }
+      ],
+      "original_nodes": 621,
+      "physical_members": 1528,
+      "fe_nodes": 5205,
+      "fe_elements": 6112,
+      "wind_resultant": {
+        "force_N": [
+          41759.08256657803,
+          49250.297782724636,
+          1.1457501614131615e-13
+        ],
+        "moment_Nm": [
+          -1138447.7412698674,
+          883136.5002800688,
+          -5.684341886080802e-14
+        ],
+        "force_mapping_error_N": 2.255546860396862e-10,
+        "moment_mapping_error_Nm": 4.656612873077393e-10
+      },
+      "rain_resultant": {
+        "force_N": [
+          284.72500683527574,
+          335.73930038691464,
+          -82.97706235675605
+        ],
+        "moment_Nm": [
+          -7769.768660786203,
+          6026.104577878755,
+          -3.288377440546595
+        ],
+        "force_mapping_error_N": 6.821210263296962e-13,
+        "moment_mapping_error_Nm": 4.547473508864641e-12
+      },
+      "engine": "3.8.0",
+      "rain_displacement_increase_percent": 0.6833114214861213,
+      "runtime_seconds": 38.035264464095235
+    },
+    {
+      "angle_deg": 90.0,
+      "wind_m_s": 30.0,
+      "rain_mm_h": 100.0,
+      "horizontal_velocity_ratio": 1.0,
+      "status": "completed",
+      "physical_validation": false,
+      "material": "Steel02",
+      "divisions": 4,
+      "imperfection_ratio": 0.001,
+      "imperfection_seed": 30103,
+      "model": "single tower only",
+      "source_sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16",
+      "wind_model": "uniform flow, member breadth normal-cylinder proxy, Cd=1",
+      "rain_model": "rain-rate-closed MP, projected collector, gamma=1",
+      "limitations": [
+        "Angle leg breadth is an uncalibrated cylinder proxy; no shielding or wet Cd.",
+        "Static load mapping, not tower-line transient analysis or a wet design capacity."
+      ],
+      "states": [
+        {
+          "stage": "wind_only",
+          "rain_mm_h": 0.0,
+          "ux_mm": -0.0011465358923813103,
+          "uy_mm": 18.354792807760163,
+          "uz_mm": -1.569712030513899,
+          "along_wind_mm": 18.354792807760163,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            3.552713678800501e-12,
+            75220.13512528475,
+            -218420.11082373993
+          ],
+          "external_moment_Nm": [
+            -1763747.2208938994,
+            0.1658924403278661,
+            0.0166134601065977
+          ],
+          "reactions_force_N": [
+            3.791410563280806e-08,
+            -75220.13512521276,
+            218420.11082372034
+          ],
+          "reactions_moment_Nm": [
+            1763747.220893931,
+            -0.1658924108487554,
+            -0.016612525480013574
+          ],
+          "force_balance_error_N": 7.198832463473082e-08,
+          "moment_balance_error_Nm": 9.346265841259083e-07,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 2.33301761909388e-07,
+              "l2": 1.09754256060335e-06,
+              "scale": 296043.21751930885,
+              "scaled_maximum": 7.880665663085876e-13,
+              "threshold": 0.29704321751930884,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 4.230539474292527e-08,
+              "l2": 2.275426584577772e-07,
+              "scale": 11723311.413764631,
+              "scaled_maximum": 3.6086557159313755e-15,
+              "threshold": 11.72431141376463,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        },
+        {
+          "stage": "wind_and_rain",
+          "rain_mm_h": 100.0,
+          "ux_mm": -0.0011558892386690398,
+          "uy_mm": 18.479861709895403,
+          "uz_mm": -1.5811201653212348,
+          "along_wind_mm": 18.479861709895403,
+          "control_node": 350,
+          "control_height_m": 36.4,
+          "external_force_N": [
+            3.5775826745521044e-12,
+            75731.93012869159,
+            -218507.55202082513
+          ],
+          "external_moment_Nm": [
+            -1775755.849154852,
+            0.16724737456436856,
+            0.01675525608237649
+          ],
+          "reactions_force_N": [
+            9.818541002459824e-08,
+            -75731.93012870861,
+            218507.552020829
+          ],
+          "reactions_moment_Nm": [
+            1775755.8491548726,
+            -0.16724741191137582,
+            -0.01675537736082333
+          ],
+          "force_balance_error_N": 9.818898760727279e-08,
+          "moment_balance_error_Nm": 1.2127844684073352e-07,
+          "equilibrium": {
+            "schema": "otw2.static_equilibrium.v1",
+            "analysis": "static",
+            "passed": true,
+            "translation": {
+              "unit": "N",
+              "count": 15603,
+              "maximum_absolute": 2.7919486456084996e-07,
+              "l2": 1.1983245822025678e-06,
+              "scale": 296660.5493734744,
+              "scaled_maximum": 9.411256911324722e-13,
+              "threshold": 0.29766054937347436,
+              "passed": true
+            },
+            "rotation": {
+              "unit": "N m",
+              "count": 15603,
+              "maximum_absolute": 5.2501462732834625e-08,
+              "l2": 2.2147718628926898e-07,
+              "scale": 11747757.755189586,
+              "scaled_maximum": 4.46906242254119e-15,
+              "threshold": 11.748757755189585,
+              "passed": true
+            },
+            "excluded_constrained_dofs": 24,
+            "source": "explicit_nodal_load_ledger_minus_assembled_eleForce",
+            "requires_complete_load_ledger": true,
+            "dynamic_terms_included": false
+          },
+          "equilibrium_passed": true
+        }
+      ],
+      "original_nodes": 621,
+      "physical_members": 1528,
+      "fe_nodes": 5205,
+      "fe_elements": 6112,
+      "wind_resultant": {
+        "force_N": [
+          3.550480894340409e-12,
+          75220.13512528478,
+          7.37188088351104e-14
+        ],
+        "moment_Nm": [
+          -1761851.0706440255,
+          7.86997134127887e-11,
+          0.0
+        ],
+        "force_mapping_error_N": 1.6007106751203537e-10,
+        "moment_mapping_error_Nm": 2.561137080192566e-09
+      },
+      "rain_resultant": {
+        "force_N": [
+          2.4131455863940588e-14,
+          511.7950034066935,
+          -87.44119708516247
+        ],
+        "moment_Nm": [
+          -11994.81136771684,
+          5.329070518200751e-13,
+          -5.551115123125783e-15
+        ],
+        "force_mapping_error_N": 5.684341886080801e-13,
+        "moment_mapping_error_Nm": 7.275957614183426e-12
+      },
+      "engine": "3.8.0",
+      "rain_displacement_increase_percent": 0.681396425691938,
+      "runtime_seconds": 435.3227423094213
+    }
+  ]
+}

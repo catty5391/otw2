@@ -1,0 +1,78 @@
+{
+  "schema": "otw2.nodal_load_interface.v1",
+  "date": "2026-11-02",
+  "engine_version": "3.8.0",
+  "passed": true,
+  "checks": [
+    {
+      "name": "通用接口：风雨时程叠加与零雨回归",
+      "passed": true,
+      "value": "叠加误差 1.25e-16 m；零雨回归 0 m",
+      "criterion": "同一线性模型，最大差 < 1e-11 m"
+    },
+    {
+      "name": "通用接口：实际荷载与动力平衡",
+      "passed": true,
+      "value": "账本最大误差 2.13e-13 N；动力残差 3.47e-15 N",
+      "criterion": "外力=Ma+Cv+Ku，含已平衡预载"
+    },
+    {
+      "name": "通用接口：独立精确解与步长收敛",
+      "passed": true,
+      "value": "最细步长相对误差 0.00033；细/粗误差比 0.0625",
+      "criterion": "分段线性输入的矩阵指数精确解；细步误差 < 0.1%，且明显下降"
+    },
+    {
+      "name": "通用接口：实际Steel02全塔回归",
+      "passed": true,
+      "value": "位移差 0 mm；反力差 0 N",
+      "criterion": "0°、30m/s、100mm/h，接口替换前后同模型同荷载"
+    }
+  ],
+  "convergence": [
+    {
+      "dt_s": 0.01,
+      "max_displacement_error_m": 0.00011660349251529402,
+      "relative_peak_error": 0.005287261641073426,
+      "load_ledger_error_N": 1.0658141036401503e-13,
+      "dynamic_residual_N": 3.469446951953614e-15
+    },
+    {
+      "dt_s": 0.005,
+      "max_displacement_error_m": 2.914407807459024e-05,
+      "relative_peak_error": 0.0013213938185217366,
+      "load_ledger_error_N": 1.7763568394002505e-13,
+      "dynamic_residual_N": 3.4416913763379853e-15
+    },
+    {
+      "dt_s": 0.0025,
+      "max_displacement_error_m": 7.285403768063359e-06,
+      "relative_peak_error": 0.00033031344487827993,
+      "load_ledger_error_N": 2.1316282072803006e-13,
+      "dynamic_residual_N": 3.4416913763379853e-15
+    }
+  ],
+  "superposition_error_m": 1.249000902703301e-16,
+  "zero_rain_regression_error_m": 0.0,
+  "tower_regression": {
+    "status": "completed",
+    "max_displacement_difference_mm": 0.0,
+    "max_reaction_difference_N": 0.0,
+    "new_along_wind_mm": [
+      11.963280731786055,
+      12.04486197560911
+    ],
+    "rain_increment_percent": 0.681930363853267,
+    "original_source_sha256": "4ba541e896e203d896b9288b9c0dba27b8926fd351cc788054441eb7e8430d16"
+  },
+  "benchmark": {
+    "type": "single linear spring, not a tower dynamic analysis",
+    "mass_kg": 2.0,
+    "stiffness_N_m": 200.0,
+    "damping_N_s_m": 0.4,
+    "preload_N": -20.0,
+    "collector_area_m2": 0.01,
+    "initial_ramp_s": 0.5
+  },
+  "nonuniform_hold_workaround": "residual Path ending at zero + uniform held step; tested in real OpenSees"
+}

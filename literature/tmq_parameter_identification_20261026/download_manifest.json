@@ -1,0 +1,45 @@
+{
+  "access_date": "2026-10-26",
+  "files": [
+    {
+      "path": "papers/03_Zhang_Fan_Li_2014_Q345_equal_angle_cyclic_tests.pdf",
+      "source_url": "https://pubs.cstam.org.cn/data/article/em/preview/pdf/2014-11-53.pdf",
+      "doi": "10.6052/j.issn.1000-4750.2013.05.0505",
+      "bytes": 3922770,
+      "sha256": "5affcc7bc8042e4927446253bc884123082aba39f31138bb10cf6bb9ccf99a62",
+      "access": "official_public_pdf",
+      "read_scope": "printed55-59;Tables3-5;Figures3,4,8,9",
+      "upload": false
+    },
+    {
+      "path": "papers/04_Zhang_et_al_2024_convective_weather_collapse.pdf",
+      "source_url": "https://jf2.hep.com.cn/e075b8203b3a483c86d7b7244fed7dc9.pdf",
+      "doi": "10.13577/j.jnd.2024.0310",
+      "bytes": 8972427,
+      "sha256": "8dab16e1ef22068dcde635b9dbc1bcae84f98547855a842196d5d66e760cc9c7",
+      "access": "official_public_pdf",
+      "read_scope": "section3.1,printed115;references,printed121",
+      "upload": false
+    },
+    {
+      "path": "../transmission_tower_wind/papers/09_Black_Wenger_Popov_1980_cyclic_struts.pdf",
+      "source_url": "https://nehrpsearch.nist.gov/static/files/NSF/PB81154312.pdf",
+      "doi": null,
+      "bytes": 8686386,
+      "sha256": "221c9f21b3ac68319d2c43ded3a84e46a04df188f0677a8392ab5574cb5c0eb9",
+      "access": "existing_official_public_pdf",
+      "read_scope": "Tables1/2;AppendixA pipe material charts;AppendixB figuresB19/B20",
+      "upload": false
+    },
+    {
+      "path": "papers/05_Carden_et_al_2006_single_angle_cyclic_tests.pdf",
+      "source_url": "https://ej.aisc.org/index.php/engj/article/download/875/874",
+      "doi": "10.62913/engj.v43i2.875",
+      "bytes": 10352451,
+      "sha256": "7c4e1e208e95ec5aa7ef932abccb3563ca6853f1eef493d9f6f5116e6a9a4205",
+      "access": "official_public_pdf_downloaded_by_parent_agent",
+      "read_scope": "Table1,printed112(PDF2);Table4,printed120(PDF10);experimental program and buckling capacity discussion",
+      "upload": false
+    }
+  ]
+}

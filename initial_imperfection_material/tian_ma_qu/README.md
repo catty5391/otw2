@@ -5,6 +5,32 @@
 2026-10-24发布范围：本次同步代码、方法和结论，原始计算数据、图表与预生成结果页保留本地。
 下文的结果文件链接用于原工作区追溯，新克隆需重算或另行取得数据后使用；当前9999网页继续读取本地数据。
 
+## 当前实现、公式与参数缺口（2026-10-28）
+
+新增[Steel02分段初弯曲与当前TMQ对比](../steel02_tmq_comparison/README.md)：统一E/fy/b及端位移，46个工况含完整往复、网格、缺陷及力法梁检查。TMQ使用现有塔参数映射，未重新拟合。两种杆长完整往复相对16段Steel02的NRMSE/Afy约24%和32%；数值单杆比较不等于实验验证。[网页入口](http://localhost:9999/steel02-tmq/)。
+
+同日新增两个独立成果：[刘俊才角钢 PHM 形式的曲线本构试验](../liu_angle_phm/README.md)，以及[Carden偏左/符号审计](followup_results/carden_sign_audit_20261028/REPORT.md)。曲线本构实际OpenSees单杆完成1980步人工协议，但真实分支参数仍触界/秩不足，未替换本模块或全塔。Carden审计排除了整体翻号，定位恢复支与零尾部组合失配；Q原点说明已更正，原数值数据保留。
+
+[集中说明](followup_results/development_notes_20261028/REPORT.md)逐项列出 Python 本构、C++ OpenSees 接口、截面与全塔关系、当前全部主支公式、1528 根杆件的实际参数来源，以及分组识别与接受条件。
+[网页说明](http://localhost:9999/tmq/followup_results/development_notes_20261028/index.html)可直接阅读，无外部公式库依赖。
+当前仍是分段 TMQ 构件原型，钢管循环系数尚未得到本塔角钢验证；新文献角钢 PHM 尚未替换该实现。
+
+同批完成[单塔四风角新旧方案对比](followup_results/single_tower_wind_comparison_20261028/REPORT.md)与[塔线四风角对比](followup_results/tower_line_wind_comparison_20261028/REPORT.md)，均覆盖 0°/30°/45°/90°的共同 20/30/40 m/s 目标。单塔全部完成至 80 m/s；塔线 0°四段算例保留预算中止，其余达到 80 m/s。40 m/s 控制点位移差约 0.4%；高风速的 45°/90° TMQ 各有 1/2 杆进入本构压屈，整体仍近线性。该对比采用未校准静态验证风场，循环参数真实性及绝缘子构造仍未获验证。
+
+## 参数来源与遗传算法识别（2026-10-26）
+
+已核实2022原模型使用GA识别九个经验参数，并找到2023固定端单等边角钢后续模型。
+本轮实际确定的是5件Black双角钢/管件的条件首峰φ及10件Carden先压单角钢的条件容量比，后者约0.349～0.766；
+完整角钢循环参数和本塔适用性尚未确定。完整训练/留出滞回图是合成数据优化器检验，不能作为试验标定精度。
+
+[参数采用结论与实施步骤](followup_results/parameter_identification_20261026/INTEGRATION.md) ·
+[文献和九参数候选表](../../literature/tmq_parameter_identification_20261026/README.md) ·
+[9999参数识别页](http://localhost:9999/tmq/followup_results/parameter_identification_20261026/index.html)。
+
+新增`parameter_identification.py`提供有序u–F数据接口、真实编码GA、多起点及单列的局部精修；
+`carden_angle_identification.py`保留先载方向筛选和直接材性屈服力分母；`parameter_provenance.py`审计已存全塔参数。
+本轮未更换全塔材料默认值，PDF、图表及生成数据继续保留本地。
+
 ## 当前塔线模型的物理适用范围（2026-10-24）
 
 当前为单塔、两路单根导线、前后各300 m共四跨、两组V串、固定远端的简化模型。
@@ -16,7 +42,7 @@
 换算风速分别46.03、65.36 m/s；45°峰值第88步最小肢杆力约−10.96 kN，对应108.40 m/s。
 90°已保存全过程保持受拉。离散首次记录不等于精确临界点，换算风速不等于工程设计或倒塌风速。
 
-当前绝缘子保持拉压对称弹性刚度，没有松弛或压屈。应先按实际绝缘子类型与抗压能力决定模型，
+上述旧算例和默认配置的绝缘子保持拉压对称弹性刚度，没有松弛或压屈。应先按实际绝缘子类型与抗压能力决定模型，
 不能未经依据直接采用无限弹性抗压，也不能将所有复合绝缘子一概视作完全不能受压。
 V串两上挂点相距17.35 m、垂向落差4 m，每肢实际9.55 m、夹角约130.5°，需要核对真实几何。
 因此强风峰值只能作为旧假设下的数值结果保留；物理核查与修正后的0°/45°对照优先于模态扩阶。
@@ -27,6 +53,53 @@ V串两上挂点相距17.35 m、垂向落差4 m，每肢实际9.55 m、夹角约
 公式与[OpenSees CorotTruss源码](https://github.com/OpenSees/OpenSees/blob/master/SRC/element/truss/CorotTruss.cpp)中的工程应变定义一致。
 
 仓库成果索引、发布范围与当前测试见[项目首页](../../readme.md#当前成果总览2026-10-24redevelop)。
+
+## V串受压与松弛敏感性（2026-10-24）
+
+后续B2已完成本节建议的40/80段静态网格对照及历史重力态N06频响检查，见[B2完整报告](followup_results/B2_20261024/REPORT.md)和[统一任务进度](../../docs/ai_execution_plan/CURRENT_STATUS.md)。
+40→80段的41项指定静态输出全部通过；300阶使历史弹性V串挂点沿风静柔度误差降至1.57%/1.20%，其实际阻尼尚未验证。
+0°约92.64～93.18 m/s已首次超过导线目录计算拉断力，模型没有断裂机制；该筛查与网格通过分别解释。
+下一批优先N07瞬态小模型与N09风场核验，实际挂线/串型/角钢材料的证据继续补齐。
+
+已完成独立V串往复和6组单塔四跨静力对照，保留原挂点、每肢9.552781 m长度、EA=100 MN、质量、导线与塔材。
+新模块[insulator_mechanics.py](../../model/insulator_mechanics.py)以原生OpenSees `Elastic(E,0,Eneg)` 实现三种可逆轴向假设：
+原弹性杆（压拉刚度比r=1）、严格仅受拉（r=0）、数值敏感性（r=1e-6）。原配置默认仍是弹性杆。
+仅受拉支松弛时的负应变表示端点弦长缩短，不能解释成瓷件或芯棒的材料压应变；本模块没有模拟实际受压弯曲、断裂或滞回损伤。
+
+执行顺序为：核对几何及材料接口 → 独立V串解析与完整往复检查 → 同输入0°/45°三组全塔对照 → 逐步平衡/轴力复核 → 共同风速比较与网页发布。
+独立V串在H/W=0→1→2→2.2→3→0→−3→0后可恢复重力状态，严格仅受拉的单肢受力解析位置误差约1e-15 m。
+全塔六组各完成130个加载步、均达到本轮比较上限100 m/s；**该上限不是极限风速**。
+
+| 100 m/s等效静态风速 | 原弹性杆 | 严格仅受拉 |
+| --- | ---: | ---: |
+| 0°控制节点350沿风位移 | 0.206577 m | 0.213029 m（+3.12%） |
+| 45°控制节点350沿风位移 | 0.256668 m | 0.258155 m（+0.58%） |
+| 0°两挂点沿风位移最大幅值 | 0.146970 m | 0.966440 m |
+| 45°两挂点沿风位移最大幅值 | 0.095871 m | 0.562390 m |
+
+位移均以重力平衡状态为基准；控制节点350不泛指整塔最高节点。首次保存非受拉肢的风速区间为0°的45.4148～46.0000 m/s、
+45°的64.3816～64.9498 m/s；它是离散记录区间，不是断裂判据。r=1e-6相对r=0在所检查8个风速×4项输出中的最大相对差约0.294%。
+**塔身曲线接近，不能证明连接运动相同。** 仅受拉结果显示挂点运动明显放大，但实际串型、抗压能力和几何尚未确认，不能据此把r=0直接作为工程定论。
+后续优先补实际挂线资料，并对选定模型做40/80段大变形对照；本批每跨20段沿用旧风速算例，未替代该检查。
+
+复现时输出目录必须不存在；`--tower`运行完整6组，省略时只做独立V串：
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m initial_imperfection_material.tian_ma_qu.insulator_experiment --output /tmp/insulator_NEW --tower
+.venv/bin/python -m initial_imperfection_material.tian_ma_qu.publish_insulators --output /tmp/insulator_NEW
+.venv/bin/python -m unittest tests.test_insulator_mechanics tests.test_insulator_evidence -v
+```
+
+现有塔线入口可显式指定 `insulator_axial_behavior="tension_only"`，或指定 `"regularized_tension_only"`并给出
+`insulator_compression_stiffness_ratio=1e-6`；裸塔不接受这些设置。逐步记录新增`insulator_history.csv`，包含四肢轴力、状态、端距与挂点位移。
+全部786个保存状态的平衡检查通过，3144条肢杆轴力与端距独立重建相符（最大误差约6.40e-8 N）；74项相关测试通过、0跳过。
+针对原始配置与覆盖配置的隔离另增回归测试。本批来源快照字段更正已留存原副本和台账，有效输入与数值结果未改动。
+
+[完整报告](followup_results/insulator_sensitivity_20261024/REPORT.md) ·
+[本地网页](http://localhost:9999/tmq/followup_results/insulator_sensitivity_20261024/index.html) ·
+[数据与校验汇总](followup_results/insulator_sensitivity_20261024/verification.json)
+
+## 已有成果入口
 
 - [完整曲线与逐步回放](results/index.html)（下载/本地用浏览器打开）
 - [完整滞回图 PNG](results/full_hysteresis.png) / [矢量 PDF](results/full_hysteresis.pdf)
@@ -209,3 +282,11 @@ material.commit_state()       # 仅收敛状态提交；失败时 revert_to_last
 构件等效 `σ=N/A, ε=Δ/L`，不等于钢材纤维本构。E、ρ、γ、ζ 及不完整反转的回溯规则均有明确假设；PP/PF 影响来自文献试件参数，不是单 truss 再现了其端部弯曲。尚不支持损伤断裂、单元删除、MPI、数据库保存恢复、敏感性分析或可直接使用的 OpenSees 能量响应；后者返回 NaN，而不是伪造零耗能。CSV 的外功为 `∫N dΔ`，不自动等于耗散能。
 
 不要把独立探索性全塔入口直接用于已验证的全塔抗倒塌/易损性结果，也不要叠加同一杆件的四分段初弯曲。后续仍需补足原试验同协议验证、角钢专属标定和轴弯耦合影响评估。
+
+## 有序历史与分组识别（2026-10-26续作）
+
+已取得7条Jain单角钢试验的公开数字化记录，共9560点，按几何整理4个候选组；实测E、原文时序及初态尚未核对，严格准入0件，本轮未执行真实循环拟合。新增[识别接口与准入说明](GROUPED_IDENTIFICATION.md)、[步骤与结果](followup_results/ordered_history_20261026/REPORT.md)。9999主页新材料区提供完整曲线和原始行序查看。
+
+## Carden真实有序回线条件识别
+
+新批次已取得原报告实测E/fy及P/Q共9589个连续作者矢量顶点。以名义几何固定物理量，得到条件φ=0.72058、后续拉伸ρ=0.002819；完整回线误差仍为P36.77%/Q32.19%，后续压屈参数未全部确定。详见[报告与完整曲线](followup_results/carden_conditional_20261026/REPORT.md)。生产材料未变。

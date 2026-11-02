@@ -1,0 +1,140 @@
+{
+  "accessed": "2026-11-02",
+  "sources": [
+    {
+      "id": "MP1948",
+      "title": "The Distribution of Raindrops with Size",
+      "year": 1948,
+      "url": "https://journals.ametsoc.org/abstract/journals/atsc/5/4/1520-0469_1948_005_0165_tdorws_2_0_co_2.xml",
+      "scope": "publisher bibliography; formula cross-checked in Fu2017 Eq5"
+    },
+    {
+      "id": "Fu2017",
+      "title": "Rain load for transmission tower-line system",
+      "year": 2017,
+      "url": "https://objectext.auckland.ac.nz/figshare/9808657/Fu_Rainloadfortransmissiontowerlinesystem.pdf",
+      "scope": "full local 4-page conference paper; equations and explanatory text",
+      "local_pdf": "../material_wind_rain_20261102/wind_rain/R10_2017.pdf",
+      "equations": {
+        "MP": "p2 Eq5",
+        "velocity_ratio": "p2 Eq7",
+        "peak_force": "p2 Eq4",
+        "pulse_area_pressure": "p3 Eq10",
+        "tower_two_faces": "p3 Eq11",
+        "wet_conductor": "p3 Eq12"
+      }
+    },
+    {
+      "id": "Li2013",
+      "title": "Wind-rain-induced vibration test and analytical method of high-voltage transmission tower",
+      "year": 2013,
+      "doi": "10.12989/sem.2013.48.4.435",
+      "url": "https://www.techno-press.com/papers/15154",
+      "scope": "publisher abstract and partial web PDF parsing; complete equation audit not performed; PDF download 403"
+    },
+    {
+      "id": "Fu2015motion",
+      "title": "Research on motion of wind-driven rain and rain load acting on transmission tower",
+      "year": 2015,
+      "doi": "10.1016/j.jweia.2015.01.008",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0167610515000173",
+      "scope": "publisher abstract and method preview; no local full text",
+      "key_finding": "specific U10=40m/s case maximum displacement increment from impinging force 1.78%; wet aerodynamics needs attention"
+    },
+    {
+      "id": "Fu2015impact",
+      "title": "Calculation of rain load based on single raindrop impinging experiment and applications",
+      "year": 2015,
+      "doi": "10.1016/j.jweia.2015.09.017",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0167610515002329",
+      "scope": "publisher abstract/section previews; same-author 2017 conference supplies equations; raw pulses unavailable"
+    },
+    {
+      "id": "Fu2016",
+      "title": "Dynamic analysis of transmission tower-line system subjected to wind and rain loads",
+      "year": 2016,
+      "doi": "10.1016/j.jweia.2016.08.010",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0167610515302427",
+      "scope": "publisher abstract/section preview; no local full text"
+    },
+    {
+      "id": "Tian2018",
+      "title": "Velocity Ratio of Wind-Driven Rain and Its Application on a Transmission Tower Subjected to Wind and Rain Loads",
+      "year": 2018,
+      "doi": "10.1061/(ASCE)CF.1943-5509.0001210",
+      "url": "https://doi.org/10.1061/(ASCE)CF.1943-5509.0001210",
+      "public_author_pdf_url": "https://www.researchgate.net/profile/Xing-Fu-3/publication/326185875_Velocity_Ratio_of_Wind-Driven_Rain_and_Its_Application_on_a_Transmission_Tower_Subjected_to_Wind_and_Rain_Loads/links/5b4d3fac45851507a7a5b4cc/Velocity-Ratio-of-Wind-Driven-Rain-and-Its-Application-on-a-Transmission-Tower-Subjected-to-Wind-and-Rain-Loads.pdf",
+      "scope": "public author PDF full web text pp2-8 read; local download 403; piecewise velocity fit exponents require visual recheck before coding",
+      "equations": {
+        "trajectory": "p2 Eqs1-3",
+        "velocity_ratio_definition": "p3 Eq4",
+        "velocity_ratio_fit": "p5 Eq6 and Table1",
+        "normal_projection": "p7 Eq7",
+        "single_impact": "p7 Eq8",
+        "tower_load": "p8 Eqs11-12"
+      }
+    },
+    {
+      "id": "Fu2019",
+      "title": "Theoretical and Experimental Studies of the Rain Load for Transmission Tower Based on Single-Raindrop Impinging Force",
+      "year": 2019,
+      "doi": "10.1142/S0219455419501335",
+      "url": "https://doi.org/10.1142/S0219455419501335",
+      "scope": "publisher abstract and author preview; not full raw pulse data"
+    },
+    {
+      "id": "Kikuchi2003",
+      "title": "Aerodynamic drag of new-design electric power wire in a heavy rainfall and wind",
+      "year": 2003,
+      "doi": "10.1016/S0167-6105(02)00334-3",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0167610502003343",
+      "scope": "publisher abstract/section previews; model LP-810 only"
+    },
+    {
+      "id": "Yang2025",
+      "title": "Predicting the Dynamic Response of Transmission Tower–Line Systems Under Wind–Rain Loads",
+      "year": 2025,
+      "doi": "10.3390/electronics14030558",
+      "url": "https://www.mdpi.com/2079-9292/14/3/558",
+      "scope": "local full text pp4-8 equations read; critical geometry/unit audit",
+      "local_pdf": "../material_wind_rain_20261102/wind_rain/R09_2025.pdf"
+    },
+    {
+      "id": "AMS2020",
+      "title": "Multi-Instrument Rainfall-Rate Estimation in the Peruvian Central Andes",
+      "year": 2020,
+      "url": "https://journals.ametsoc.org/view/journals/atot/37/10/jtechD190105.xml",
+      "scope": "publisher indexed formula section; Eq5 diameter lower-bound D>=0.16mm"
+    },
+    {
+      "id": "AMS2022",
+      "title": "Rain Drop Size Distributions Estimated from NOAA Snow-Level Radar Data",
+      "year": 2022,
+      "url": "https://journals.ametsoc.org/view/journals/atot/39/3/JTECH-D-21-0049.1.xml",
+      "scope": "publisher indexed formula section Eq7 Atlas and measurement range discussion"
+    },
+    {
+      "id": "AMT2025",
+      "title": "Simulations of spectral polarimetric variables measured in rain at W-band",
+      "year": 2025,
+      "url": "https://amt.copernicus.org/articles/18/4857/2025/amt-18-4857-2025.html",
+      "scope": "publisher Eq7 alternative piecewise fall velocity; not adopted in present baseline"
+    },
+    {
+      "id": "Fu2020",
+      "title": "Fragility analysis of a transmission tower under combined wind and rain loads",
+      "year": 2020,
+      "doi": "10.1016/j.jweia.2020.104098",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0167610520300088",
+      "scope": "publisher abstract/preview; conditional fragility surfaces"
+    },
+    {
+      "id": "Fu2021",
+      "title": "Failure analysis of a transmission line considering the joint probability distribution of wind speed and rain intensity",
+      "year": 2021,
+      "doi": "10.1016/j.engstruct.2021.111913",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0141029621000638",
+      "scope": "publisher abstract/preview; time-resolution conversion and joint probability distinction"
+    }
+  ]
+}

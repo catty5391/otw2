@@ -1,0 +1,35 @@
+<section id="member" class="section" aria-labelledby="memberTitle">
+      <div class="section-heading">
+        <div><div class="section-index">LEGACY / MEMBER CALIBRATION</div><h2 id="memberTitle">旧版等效材料：单杆标定</h2></div>
+        <p>以带半正弦初弯曲的分段梁柱模型为参考，将构件级压屈响应转换为轴向等效本构。</p>
+      </div>
+      <div class="metric-row" id="memberMetrics">
+        <article class="metric-card"><span>参考峰值</span><strong>—</strong><small>kN</small></article>
+        <article class="metric-card"><span>曲线 NRMSE</span><strong>—</strong><small>%</small></article>
+        <article class="metric-card"><span>峰前卸载</span><strong>—</strong><small>零力恢复验收</small></article>
+        <article class="metric-card"><span>参考网格</span><strong>—</strong><small>分段</small></article>
+      </div>
+      <div class="split-grid chart-layout">
+        <article class="panel chart-panel">
+          <div class="panel-head"><div><span>FORCE–SHORTENING</span><h3>单调推覆曲线</h3></div><div class="legend" id="pushoverLegend"></div></div>
+          <div class="chart-wrap"><canvas id="pushoverChart"></canvas><div class="chart-tooltip" id="pushoverTooltip"></div></div>
+        </article>
+        <aside class="panel finding-panel">
+          <span class="panel-kicker">核心结论</span>
+          <h3>精度来自可追溯的构件级标定</h3>
+          <p>已有默认单杆算例的曲线重构误差约为 <b id="memberErrorText">—</b>。这项指标评价该参考骨架的重构，不包含空间端部约束、轴弯耦合或循环留出工况验证。</p>
+          <div class="rule"></div>
+          <dl>
+            <div><dt>实际 L125×8Q345</dt><dd id="memberRange">—</dd></div>
+            <div><dt>验证代表长度</dt><dd id="validationLengths">—</dd></div>
+            <div><dt>该算例峰前卸载</dt><dd id="unloadingState">—</dd></div>
+          </dl>
+          <a class="panel-link" href="/download?key=material-report">打开详细改写报告 <span>↗</span></a>
+        </aside>
+      </div>
+      <div class="image-strip">
+        <figure><img src="/asset/convergence" alt="分段和步长收敛图" loading="lazy"><figcaption><b>网格与步长收敛</b><span>4 / 8 / 16 分段基准检查</span></figcaption></figure>
+        <figure><img src="/asset/unloading" alt="峰前卸载验证图" loading="lazy"><figcaption><b>峰前卸载验证</b><span>修正材料的可恢复响应</span></figcaption></figure>
+        <figure><img src="/asset/validation" alt="实际塔杆长度验证图" loading="lazy"><figcaption><b>实际杆长验证</b><span>最短 / 中值 / 最长杆件</span></figcaption></figure>
+      </div>
+    </section>

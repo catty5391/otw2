@@ -1,0 +1,63 @@
+{
+  "source": "https://resslab-hub.epfl.ch/braces/database",
+  "total_catalog_records": 294,
+  "records": [
+    {
+      "file": "raw/braces.json",
+      "url": "https://resslab-hub.epfl.ch/api/braces?size=500&page=1",
+      "bytes": 469856,
+      "sha256": "63d2f62ba4c1e474030b62347d9bc89d3c8c2684d448b4cfb1e94a59341bbd22",
+      "cache_checked_utc": "2026-10-26T02:54:08.298097+00:00"
+    },
+    {
+      "file": "raw/Jain_2L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_2L/displacement/csv",
+      "bytes": 12721,
+      "sha256": "28c75f900ad23f0d34927eb93e247eaaebb02a7bfd91834b37f05df588541a1d",
+      "cache_checked_utc": "2026-10-26T02:54:08.302643+00:00"
+    },
+    {
+      "file": "raw/Jain_3L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_3L/displacement/csv",
+      "bytes": 22930,
+      "sha256": "e14e34d1a8549990a434cc5a10a8729c2e97649bcfce4d6ad04c8e14ec8dfa8e",
+      "cache_checked_utc": "2026-10-26T02:54:08.303515+00:00"
+    },
+    {
+      "file": "raw/Jain_4L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_4L/displacement/csv",
+      "bytes": 14527,
+      "sha256": "e3c5e5ea2994c4643ed11a065c5fa74b426c9eeb84bf3f6bb0285c44109843d5",
+      "cache_checked_utc": "2026-10-26T02:54:08.304342+00:00"
+    },
+    {
+      "file": "raw/Jain_5L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_5L/displacement/csv",
+      "bytes": 50542,
+      "sha256": "d70685de1737fe61c04a388f12d299de9d01778ca9703fe7ad0479f10c5223dd",
+      "cache_checked_utc": "2026-10-26T02:54:08.305544+00:00"
+    },
+    {
+      "file": "raw/Jain_6L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_6L/displacement/csv",
+      "bytes": 57293,
+      "sha256": "30ac38c6978c25abd5e7e6735da2827707252e0469bd3ba0e7656b1f44f39e1e",
+      "cache_checked_utc": "2026-10-26T02:54:08.307303+00:00"
+    },
+    {
+      "file": "raw/Jain_7L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_7L/displacement/csv",
+      "bytes": 47079,
+      "sha256": "30d90edb3cb8cff0f15853c3b9f46b7dde2403de372de64d630185ab34ca7b04",
+      "cache_checked_utc": "2026-10-26T02:54:08.309092+00:00"
+    },
+    {
+      "file": "raw/Jain_8L.csv",
+      "url": "https://resslab-hub.epfl.ch/api/braces/Jain_8L/displacement/csv",
+      "bytes": 24659,
+      "sha256": "b331546b50ec16b2e97fddb058479e0109086ab67e6c1307a083d0bd5788637e",
+      "cache_checked_utc": "2026-10-26T02:54:08.310522+00:00"
+    }
+  ],
+  "raw_data_policy": "local only; preserve downloaded bytes"
+}

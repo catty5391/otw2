@@ -56,6 +56,16 @@ def validate_config(config):
     if isinstance(n,bool) or int(n) != n or not 2 <= n <= 1000:
         raise ValueError("line_segments must be an integer in [2,1000]")
     c["line_segments"] = int(n)
+    if "insulator_axial_behavior" in c or "insulator_compression_stiffness_ratio" in c:
+        from model.insulator_mechanics import axial_contract
+        if c["mode"] != "tower_line_explicit":
+            raise ValueError("Insulator assumptions require tower_line_explicit mode")
+        material = {"axial_behavior": c.get("insulator_axial_behavior", "elastic")}
+        if "insulator_compression_stiffness_ratio" in c:
+            material["compression_stiffness_ratio"] = c["insulator_compression_stiffness_ratio"]
+        contract = axial_contract(material)
+        c["insulator_axial_behavior"] = contract["axial_behavior"]
+        c["insulator_compression_stiffness_ratio"] = contract["compression_stiffness_ratio"]
     for key in ("coefficient_provenance", "area_provenance", "height_factor_provenance",
                 "conductor_coefficient_provenance"):
         if not isinstance(c.get(key),str) or not c[key].strip():
@@ -78,7 +88,11 @@ def attach_explicit_lines(tower, output, config):
     system.tag_manager = tower.tag_manager
     system.towers = {"tower_1": tower}
     system._merge_tower_maps(tower)
-    insulators = {k:v for k,v in source["insulators"].items() if v["tower_id"] == "tower_1"}
+    insulators = {k:deepcopy(v) for k,v in source["insulators"].items() if v["tower_id"] == "tower_1"}
+    if "insulator_axial_behavior" in config:
+        for insulator in insulators.values():
+            insulator["material"]["axial_behavior"] = config["insulator_axial_behavior"]
+            insulator["material"]["compression_stiffness_ratio"] = config["insulator_compression_stiffness_ratio"]
     system.config = {"towers": {}, "insulators": insulators, "transmission_lines": {}}
     system.build_insulators()
     template = deepcopy(next(iter(source["transmission_lines"].values())))
@@ -117,10 +131,14 @@ def attach_explicit_lines(tower, output, config):
                 "conductor_model": template["conductor"], "source_configuration": str(system.config_path),
                 "source_configuration_sha256": hashlib.sha256(system.config_path.read_bytes()).hexdigest(),
                 "removed_duplicate_gravity_patterns": removed,
+                "insulator_assumptions": {key: {name: value for name, value in record.items() if name in (
+                    "axial_behavior", "compression_stiffness_ratio", "initial_leg_lengths_m",
+                    "included_angle_deg", "upper_separation_m", "drop_from_upper_midpoint_m")}
+                    for key, record in system.insulator_map.items()},
                 "limitations": ["Remote supports fixed; not a multiple-tower system",
                     "Two conductors only, one subconductor each; no ground wires/complete phase bundle",
                     "Initial parabolic sag and prestress inherited from existing example; gravity is equilibrated, target sag is NOT fitted",
-                    "Insulator drag omitted; elastic V strings inherited, not tension-only",
+                    "Insulator drag omitted; axial assumption explicitly recorded, actual string type/strength uncalibrated",
                     "Static geometry-frozen drag, no cable motion-dependent aerodynamic damping"]}
     return system, metadata
 

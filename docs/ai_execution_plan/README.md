@@ -2,12 +2,17 @@
 
 ## 当前续作入口（2026-10-24）
 
+**B2现已完成N06有界频响验证和仅受拉V串40/80段静态网格对照。** 统一进度以[CURRENT_STATUS.md](CURRENT_STATUS.md)及[CURRENT_STATUS.json](CURRENT_STATUS.json)为准：最新24项为7完成、5部分推进、12待执行，整份计划未完成。
+下一批优先N07解析小模型与空间瞬态接口，N09风场核验可并行；N08实际阻尼验证有前置条件。详见[B2报告](../../initial_imperfection_material/tian_ma_qu/followup_results/B2_20261024/REPORT.md)。
+
+### B1历史执行记录
+
 **首批N00～N05现已执行。** 用户随后授权3个子agent继续，实际步骤与结果见
 [B1完整报告](../../initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/REPORT.md)、
 [执行状态](../../initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/execution_status.json)和
 [测试记录](../../initial_imperfection_material/tian_ma_qu/followup_results/B1_20261024/verification.json)。
 本批无新FE：40→80段静态位移差已较小，但80段160阶对0°/45°挂点沿风响应仍有约14%的截断误差。
-下一批优先N06同网格扩阶与频响核验；原规划文件保留编制状态，执行进度以B1状态文件为准。
+当时建议下一批N06，现已由B2推进；原规划文件和B1状态保留历史，当前进度见上方统一入口。
 
 结合最新TMQ风速/峰后与单塔四跨导线模态成果，主agent与1个力学审查子agent补写了
 [TMQ下一阶段详细计划](tmq_next_plan_20261024/README.md)。从

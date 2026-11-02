@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-02",
+  "branch": "redevelop",
+  "previous_commit": "5608fa1",
+  "scope": "Source, tests, methods, conclusions, citation metadata and small parameter inputs; no new raw histories, generated figures, full-text PDFs or per-run source snapshots.",
+  "staged_python_syntax": "passed",
+  "staged_json_parse": "passed",
+  "staged_whitespace_check": "passed",
+  "source_export": {
+    "method": "Copy selected source/input files only after verifying each blob hash against the Git index. Omit stored calculation result directories.",
+    "files": 324,
+    "bytes": 19079264
+  },
+  "source_only_tests": {
+    "exit_code": 0,
+    "unittest_tests_run": 56,
+    "individual_tests_passed": 53,
+    "skip_records": 4,
+    "failures": 0,
+    "errors": 0,
+    "modules": [
+      "tests.test_nodal_loads",
+      "tests.test_directional_wind",
+      "tests.test_directional_integration",
+      "tests.test_wind_model_isolation",
+      "tests.test_analysis_workflows",
+      "tests.test_rain_loading",
+      "tests.test_rain_loading_dashboard"
+    ],
+    "skips": [
+      "test_all_directions_and_moments (tests.test_directional_integration.DirectionalEvidenceTests.test_all_directions_and_moments) ... skipped 'saved verification matrix not generated'",
+      "test_eight_cases_complete_no_capacity_claim (tests.test_directional_integration.DirectionalEvidenceTests.test_eight_cases_complete_no_capacity_claim) ... skipped 'saved verification matrix not generated'",
+      "test_gravity_not_duplicated_and_support_outputs_complete (tests.test_directional_integration.DirectionalEvidenceTests.test_gravity_not_duplicated_and_support_outputs_complete) ... skipped 'saved verification matrix not generated'",
+      "setUpClass (tests.test_rain_loading.RainPublishedEvidenceTests) ... skipped 'No published rain evidence'"
+    ]
+  },
+  "previous_workspace_regression": {
+    "tests_passed": 66,
+    "evidence": "rain_loading/interface_validation/summary.json",
+    "rerun_for_this_publication": false
+  },
+  "excluded_modified_tracked_files": [
+    "initial_imperfection_material/results/imperfection_sensitivity.csv",
+    "initial_imperfection_material/results/imperfection_sensitivity.png",
+    "initial_imperfection_material/results/material_backbones.csv",
+    "initial_imperfection_material/results/material_backbones.png",
+    "initial_imperfection_material/results/normalized_pushover.png",
+    "initial_imperfection_material/results/pushover_comparison.png",
+    "initial_imperfection_material/results/pushover_curves.csv",
+    "initial_imperfection_material/results/summary.json"
+  ],
+  "limits": [
+    "Source-only tests do not cover all research modules.",
+    "Skipped evidence checks need local calculation results.",
+    "No complete new browser regression was claimed.",
+    "Existing Git history and previously tracked resources were not rewritten."
+  ]
+}

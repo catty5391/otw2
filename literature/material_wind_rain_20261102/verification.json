@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-02",
+  "records": 25,
+  "categories": {
+    "materials": 8,
+    "wind": 7,
+    "wind_rain": 10
+  },
+  "downloaded_online": 4,
+  "reused_existing": 8,
+  "local_pdfs": 12,
+  "not_obtained_locally": 13,
+  "all_local_pdfs_parse": true,
+  "missing_metadata": {
+    "R08": [
+      "page_range_not_verified"
+    ]
+  },
+  "pdf_files": [
+    {
+      "id": "M02",
+      "local_pdf": "materials/M02_2023.pdf",
+      "sha256": "b49ada51b634b1b56b19dc8e68937014eb4ffd7d696656932b9db4ac057fb582",
+      "bytes": 3539484,
+      "pdf_pages": 14
+    },
+    {
+      "id": "M03",
+      "local_pdf": "materials/M03_2022.pdf",
+      "sha256": "1599f014ab81d42545c6be2e0941036addea8b9bc90bf4af7dc03311544fa096",
+      "bytes": 2615388,
+      "pdf_pages": 9
+    },
+    {
+      "id": "M04",
+      "local_pdf": "materials/M04_2006.pdf",
+      "sha256": "7c4e1e208e95ec5aa7ef932abccb3563ca6853f1eef493d9f6f5116e6a9a4205",
+      "bytes": 10352451,
+      "pdf_pages": 16
+    },
+    {
+      "id": "M05",
+      "local_pdf": "materials/M05_2008.pdf",
+      "sha256": "0e183d161f42d370ea64b8c85e5d7e21c736df43dc492855edd0472f98b24ed1",
+      "bytes": 18212814,
+      "pdf_pages": 401
+    },
+    {
+      "id": "W01",
+      "local_pdf": "wind/W01_2024_preprint.pdf",
+      "sha256": "fbdd8266c93886b1fdd7cac2b090592c8f54d974dd06a40a04e3491566854c9a",
+      "bytes": 4047930,
+      "pdf_pages": 33
+    },
+    {
+      "id": "W02",
+      "local_pdf": "wind/W02_2022.pdf",
+      "sha256": "a43597a63a0a25ff838516b886d9b66ad4215d3b209d77618841648a1e100071",
+      "bytes": 1740310,
+      "pdf_pages": 16
+    },
+    {
+      "id": "W03",
+      "local_pdf": "wind/W03_2023.pdf",
+      "sha256": "f20ccd13bb29809a4556799eab1ad63caedc95e5afc1d5ee3ae9aa8a1c4a3ebc",
+      "bytes": 3279009,
+      "pdf_pages": 29
+    },
+    {
+      "id": "W04",
+      "local_pdf": "wind/W04_2025.pdf",
+      "sha256": "e7d041f5db2784ddc031fa752872a2f40c553c0f0f97f52795553bd16818b364",
+      "bytes": 8806257,
+      "pdf_pages": 20
+    },
+    {
+      "id": "W05",
+      "local_pdf": "wind/W05_2022.pdf",
+      "sha256": "6362c9efd66364b7d8a680e6bd52035007fc7f5d0df5126026ca1f40e20258d7",
+      "bytes": 10369811,
+      "pdf_pages": 18
+    },
+    {
+      "id": "W06",
+      "local_pdf": "wind/W06_2026.pdf",
+      "sha256": "d59fa822d89d6a4c051b95ebc3dcc3558164df6743e47c7c3f8940ced0901958",
+      "bytes": 3650643,
+      "pdf_pages": 20
+    },
+    {
+      "id": "R09",
+      "local_pdf": "wind_rain/R09_2025.pdf",
+      "sha256": "fbee5260fa47950fadb5785752088bef63cf7bfa28cffde2254f776c768825ef",
+      "bytes": 2894836,
+      "pdf_pages": 22
+    },
+    {
+      "id": "R10",
+      "local_pdf": "wind_rain/R10_2017.pdf",
+      "sha256": "89bb6d208b1ef3c73b41ec7e8c0c176f48283f9ccce1ae0b462002034c08b073",
+      "bytes": 569857,
+      "pdf_pages": 4
+    }
+  ]
+}

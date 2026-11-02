@@ -1,0 +1,16 @@
+[
+  {
+    "id": "R01_2013",
+    "url": "https://www.techno-press.com/api/v1/papers/15154/download",
+    "status": 403,
+    "bytes": 93,
+    "pdf": false
+  },
+  {
+    "id": "R03_2018",
+    "url": "https://www.researchgate.net/profile/Xing-Fu-3/publication/326185875_Velocity_Ratio_of_Wind-Driven_Rain_and_Its_Application_on_a_Transmission_Tower_Subjected_to_Wind_and_Rain_Loads/links/5b4d3fac45851507a7a5b4cc/Velocity-Ratio-of-Wind-Driven-Rain-and-Its-Application-on-a-Transmission-Tower-Subjected-to-Wind-and-Rain-Loads.pdf",
+    "status": 403,
+    "bytes": 20178,
+    "pdf": false
+  }
+]

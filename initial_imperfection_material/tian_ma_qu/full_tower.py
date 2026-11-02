@@ -98,6 +98,7 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
             "util/processing/conductor_directional_wind.py",
             "initial_imperfection_material/tian_ma_qu/directional_loading.py",
             "model/tower_line_system_model.py","model/conductor_properties.py",
+            "model/insulator_mechanics.py",
             "model/.config/conductor_catalog.json","model/.config/tower_line_with_insulators.json")]
         summary["directional_input_sha256"]={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in provenance_files}
     history, recorder, stepper = [], None, None
@@ -111,6 +112,7 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
         nodes_writer.writerow(("step", "node_tag", "ux", "uy", "uz", "rx", "ry", "rz"))
     state_writer, history_writer = None, None
     line_history_file = None
+    insulator_history_file, insulator_writer = None, None
     reaction_file = None
     try:
         ops.wipe()
@@ -144,6 +146,7 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
                 line_history_file = (output / "line_history.csv").open("w",encoding="utf-8",newline="")
                 line_writer = csv.writer(line_history_file)
                 line_writer.writerow(("step","line_id","element_tag","axial_force_N"))
+                insulator_history_file = (output / "insulator_history.csv").open("w", encoding="utf-8", newline="")
             write_json(output / "wind_config.json", directional_config)
         gravity = _apply_gravity(model, steps=50 if line_system is not None else 10)
         gravity_u = float(ops.nodeDisp(control_node, control_dof))
@@ -172,7 +175,7 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
         recorder = TowerInternalForceRecorder(model, output / "internal_forces.sqlite", commit_every=10)
 
         def capture(step, stage):
-            nonlocal state_writer, history_writer
+            nonlocal state_writer, history_writer, insulator_writer
             factor = float(ops.getLoadFactor(wind.pattern_tag))
             loads = {(int(n), d): float(v) for n, values in gravity.node_loads.items()
                      for d, v in enumerate(values, 1)}
@@ -211,6 +214,25 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
                     row["equivalent_wind_speed_m_s"]=directional_config["wind_speed_m_s"]*math.sqrt(factor) if factor>=0 else None
                     row["horizontal_drift_ratio"]=math.hypot(ux,uy)/height
                 if line_system is not None:
+                    from model.insulator_mechanics import insulator_states
+                    string_states = insulator_states(line_system)
+                    row["insulator_min_force_N"] = min(s["axial_force_N"] for s in string_states)
+                    row["insulator_slack_legs"] = sum(s["state"] == "slack" for s in string_states)
+                    row["insulator_compression_legs"] = sum(s["axial_force_N"] < -1. for s in string_states)
+                    row["insulator_force_reconstruction_max_error_N"] = max(abs(s["force_reconstruction_residual_N"]) for s in string_states)
+                    for string in string_states:
+                        state_row = {"step": step, "wind_load_factor": factor, **string}
+                        if insulator_writer is None:
+                            insulator_writer = csv.DictWriter(insulator_history_file, fieldnames=list(state_row))
+                            insulator_writer.writeheader()
+                        insulator_writer.writerow(state_row)
+                    insulator_history_file.flush()
+                    for key, active in (("first_insulator_compression", row["insulator_compression_legs"]),
+                                        ("first_insulator_slack", row["insulator_slack_legs"])):
+                        if active and key not in summary:
+                            summary[key] = {**row, "legs": string_states,
+                                "equivalent_wind_speed_m_s": directional_config["wind_speed_m_s"]*math.sqrt(factor) if factor >= 0 else None,
+                                "interpretation": "first saved state, not a calibrated failure event"}
                     for line_id,line in line_system.transmission_line_map.items():
                         for tag in line["element_tags"]:
                             force=ops.eleResponse(tag,"axialForce")
@@ -319,6 +341,8 @@ def run(output, *, axial_mode="tmq", targets=DEFAULT_TARGETS, maximum_increment=
             nodes_file.close()
         if line_history_file is not None:
             line_history_file.close()
+        if insulator_history_file is not None:
+            insulator_history_file.close()
         if reaction_file is not None:
             reaction_file.close()
         if stepper is not None:

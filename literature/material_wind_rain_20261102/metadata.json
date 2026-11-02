@@ -1,0 +1,1634 @@
+{
+  "M01": {
+    "DOI": "10.1016/j.jobe.2021.103798",
+    "title": [
+      "Development of a hysteretic model for steel members under cyclic axial loading"
+    ],
+    "author": [
+      {
+        "given": "Juncai",
+        "family": "Liu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Li",
+        "family": "Tian",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ruisheng",
+        "family": "Ma",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Bing",
+        "family": "Qu",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Journal of Building Engineering"
+    ],
+    "volume": "46",
+    "page": "103798",
+    "article-number": "103798",
+    "published": {
+      "date-parts": [
+        [
+          2022,
+          4
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2022,
+          4
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.jobe.2021.103798",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S2352710221016569?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S2352710221016569?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "M02": {
+    "DOI": "10.1016/j.tws.2022.110335",
+    "title": [
+      "Phenomenological hysteretic model for fixed-end steel equal-leg angle: Development and application"
+    ],
+    "author": [
+      {
+        "given": "Juncai",
+        "family": "Liu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Li",
+        "family": "Tian",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ruisheng",
+        "family": "Ma",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Xiangrui",
+        "family": "Meng",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Thin-Walled Structures"
+    ],
+    "volume": "183",
+    "page": "110335",
+    "article-number": "110335",
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          2
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2023,
+          2
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.tws.2022.110335",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0263823122008874?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0263823122008874?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "M03": {
+    "error": "404 Client Error: Not Found for url: https://api.crossref.org/works/10.13465%2Fj.cnki.jvs.2022.23.003"
+  },
+  "M04": {
+    "DOI": "10.62913/engj.v43i2.875",
+    "title": [
+      "Cyclic Behavior of Single Angles for Ductile End Cross Frames"
+    ],
+    "author": [
+      {
+        "given": "Lyle P.",
+        "family": "Carden",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Francisco",
+        "family": "Garcia-Alvarez",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Ahmad M.",
+        "family": "Itani",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Ian G.",
+        "family": "Buckle",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Engineering Journal"
+    ],
+    "volume": "43",
+    "issue": "2",
+    "page": "111-126",
+    "published": {
+      "date-parts": [
+        [
+          2006,
+          6,
+          30
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2006,
+          6,
+          30
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.62913/engj.v43i2.875",
+    "link": [
+      {
+        "URL": "https://ej.aisc.org/index.php/engj/article/download/875/874",
+        "content-type": "application/pdf",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://ej.aisc.org/index.php/engj/article/download/875/874",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "M05": null,
+  "M06": {
+    "DOI": "10.1016/j.jcsr.2023.108395",
+    "title": [
+      "An adaptive nonlinear simulation method for member buckling in lattice towers"
+    ],
+    "author": [
+      {
+        "given": "Yu",
+        "family": "Zhu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Hong-Nan",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Ding-Hao",
+        "family": "Yu",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Journal of Constructional Steel Research"
+    ],
+    "volume": "213",
+    "page": "108395",
+    "article-number": "108395",
+    "published": {
+      "date-parts": [
+        [
+          2024,
+          2
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2024,
+          2
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.jcsr.2023.108395",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0143974X23006223?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0143974X23006223?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "M07": {
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1016%2Fj.engstruct.2021.112239"
+  },
+  "M08": {
+    "DOI": "10.1002/tal.70143",
+    "title": [
+      "A Uni‐Axial Damage Model for Axial Steel Braces in Large‐Span Structures Under Cyclic Loading Protocol"
+    ],
+    "author": [
+      {
+        "given": "Xiaofei",
+        "family": "Ma",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Intelligent Geotechnics and Tunnel China Railway First Survey and Design Institute Group Co. Ltd.  Xi'an China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Zhan",
+        "family": "Lu",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Research Center of Steel Structure Engineering, School of Civil Engineering Chongqing University  Chongqing China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Jianlong",
+        "family": "Sun",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Intelligent Geotechnics and Tunnel China Railway First Survey and Design Institute Group Co. Ltd.  Xi'an China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Liangming",
+        "family": "Tang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Research Center of Steel Structure Engineering, School of Civil Engineering Chongqing University  Chongqing China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-0726-9593",
+        "authenticated-orcid": false,
+        "given": "Yongtao",
+        "family": "Bai",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Research Center of Steel Structure Engineering, School of Civil Engineering Chongqing University  Chongqing China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "The Structural Design of Tall and Special Buildings"
+    ],
+    "volume": "35",
+    "issue": "4",
+    "article-number": "e70143",
+    "published": {
+      "date-parts": [
+        [
+          2026,
+          4
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2026,
+          4
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2026,
+          4,
+          20
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1002/tal.70143",
+    "link": [
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/tal.70143",
+        "content-type": "application/pdf",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/full-xml/10.1002/tal.70143",
+        "content-type": "application/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/tal.70143",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "W01": {
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1016%2Fj.jcsr.2024.109005"
+  },
+  "W02": null,
+  "W03": {
+    "DOI": "10.3390/buildings13020513",
+    "title": [
+      "Evaluation of the Ultimate Collapse Load of a High-Voltage Transmission Tower under Excessive Wind Loads"
+    ],
+    "author": [
+      {
+        "given": "Giacomo",
+        "family": "Vettoretto",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Mechanical Systems Engineering, EMPA Swiss Federal Laboratories for Materials Science and Technology, 8600 Duebendorf, Switzerland"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0003-4784-4684",
+        "authenticated-orcid": false,
+        "given": "Zongchen",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Mechanical Systems Engineering, EMPA Swiss Federal Laboratories for Materials Science and Technology, 8600 Duebendorf, Switzerland"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Christian",
+        "family": "Affolter",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Mechanical Systems Engineering, EMPA Swiss Federal Laboratories for Materials Science and Technology, 8600 Duebendorf, Switzerland"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Buildings"
+    ],
+    "volume": "13",
+    "issue": "2",
+    "page": "513",
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          2,
+          13
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2023,
+          2,
+          13
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.3390/buildings13020513",
+    "link": [
+      {
+        "URL": "https://www.mdpi.com/2075-5309/13/2/513/pdf",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "W04": {
+    "DOI": "10.3390/buildings15050654",
+    "title": [
+      "Nonlinear Pushover Analysis of Retrofitted Transmission Towers Under Static Wind Loads"
+    ],
+    "author": [
+      {
+        "given": "Quang-Viet",
+        "family": "Vu",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Laboratory for Computational Civil Engineering, Institute for Computational Science and Artificial Intelligence, Van Lang University, Ho Chi Minh City 70000, Vietnam"
+          },
+          {
+            "name": "Faculty of Civil Engineering, School of Technology, Van Lang University, Ho Chi Minh City 70000, Vietnam"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hyeok-Ju",
+        "family": "Lee",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Civil Engineering, Chonnam National University, 77 Yongbong-ro, Buk-gu, Gwangju 61186, Republic of Korea"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-7705-6462",
+        "authenticated-orcid": false,
+        "given": "Jae-Min",
+        "family": "Kim",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Civil Engineering, Chonnam National University, 77 Yongbong-ro, Buk-gu, Gwangju 61186, Republic of Korea"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Buildings"
+    ],
+    "volume": "15",
+    "issue": "5",
+    "page": "654",
+    "published": {
+      "date-parts": [
+        [
+          2025,
+          2,
+          20
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2025,
+          2,
+          20
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.3390/buildings15050654",
+    "link": [
+      {
+        "URL": "https://www.mdpi.com/2075-5309/15/5/654/pdf",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "W05": {
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1016%2Fj.jcsr.2021.107044"
+  },
+  "W06": {
+    "DOI": "10.3390/pr14203250",
+    "title": [
+      "Ductility-Based Stiffness Optimization of Transmission Tower–Line Systems for Wind-Induced Collapse Resistance"
+    ],
+    "author": [
+      {
+        "given": "Ling-Xing",
+        "family": "Meng",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Shandong Electric Power Engineering Consulting Institute Co., Ltd., Jinan 250013, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Yun-Jie",
+        "family": "Liu",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Shandong Electric Power Engineering Consulting Institute Co., Ltd., Jinan 250013, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jin-Peng",
+        "family": "Meng",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "College of Mechanical and Electrical Engineering, Qingdao Agricultural University, Qingdao 266109, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Xian-Chao",
+        "family": "Luo",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "School of Civil Engineering, Shandong University, Jinan 250061, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Shao-Yuan",
+        "family": "Zhang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Mechanical Engineering, North China Electric Power University, Baoding 071003, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Li",
+        "family": "Tian",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "School of Civil Engineering, Shandong University, Jinan 250061, China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Processes"
+    ],
+    "volume": "14",
+    "issue": "20",
+    "page": "3250",
+    "published": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          10
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          10
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.3390/pr14203250",
+    "link": [
+      {
+        "URL": "https://www.mdpi.com/2227-9717/14/20/3250/pdf",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "W07": {
+    "DOI": "10.1016/j.ress.2022.108875",
+    "title": [
+      "Wind-induced failure analysis of a transmission tower-line system with long-term measured data and orientation effect"
+    ],
+    "author": [
+      {
+        "given": "Wenzhe",
+        "family": "Bi",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Li",
+        "family": "Tian",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Chao",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Zhen",
+        "family": "Ma",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Haiyang",
+        "family": "Pan",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Reliability Engineering &amp; System Safety"
+    ],
+    "volume": "229",
+    "page": "108875",
+    "article-number": "108875",
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          1
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2023,
+          1
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.ress.2022.108875",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0951832022004926?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0951832022004926?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "R01": {
+    "DOI": "10.12989/sem.2013.48.4.435",
+    "title": [
+      "Wind-rain-induced vibration test and analytical method of high-voltage transmission tower"
+    ],
+    "author": [
+      {
+        "given": "Hong-Nan",
+        "family": "Li",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Shun-Yong",
+        "family": "Tang",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ting-Hua",
+        "family": "Yi",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Structural Engineering and Mechanics"
+    ],
+    "volume": "48",
+    "issue": "4",
+    "page": "435-453",
+    "published": {
+      "date-parts": [
+        [
+          2013,
+          11,
+          25
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2013,
+          11,
+          25
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.12989/sem.2013.48.4.435"
+  },
+  "R02": {
+    "DOI": "10.1016/j.jweia.2016.08.010",
+    "title": [
+      "Dynamic analysis of transmission tower-line system subjected to wind and rain loads"
+    ],
+    "author": [
+      {
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hong-Nan",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Journal of Wind Engineering and Industrial Aerodynamics"
+    ],
+    "volume": "157",
+    "page": "95-103",
+    "published": {
+      "date-parts": [
+        [
+          2016,
+          10
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2016,
+          10
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.jweia.2016.08.010",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167610515302427?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167610515302427?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "R03": {
+    "DOI": "10.1061/(asce)cf.1943-5509.0001210",
+    "title": [
+      "Velocity Ratio of Wind-Driven Rain and Its Application on a Transmission Tower Subjected to Wind and Rain Loads"
+    ],
+    "author": [
+      {
+        "given": "Li",
+        "family": "Tian",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Professor, School of Civil Engineering, Shandong Univ., No. 17922 Jingshi Rd., Jinan 250061, China."
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Yu-Jie",
+        "family": "Zeng",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Ph.D. Candidate, School of Civil Engineering, Shandong Univ., No. 17922 Jingshi Rd., Jinan 250061, China."
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Coastal and Offshore Engineering, Dalian Univ. of Technology, No. 2 Linggong Rd., Dalian 116023, China (corresponding author)."
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Journal of Performance of Constructed Facilities"
+    ],
+    "volume": "32",
+    "issue": "5",
+    "article-number": "04018065",
+    "published": {
+      "date-parts": [
+        [
+          2018,
+          10
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2018,
+          10
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1061/(asce)cf.1943-5509.0001210",
+    "link": [
+      {
+        "URL": "https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29CF.1943-5509.0001210",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "R04": {
+    "DOI": "10.1016/j.strusafe.2015.08.002",
+    "title": [
+      "Fragility analysis and estimation of collapse status for transmission tower subjected to wind and rain loads"
+    ],
+    "author": [
+      {
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hong-Nan",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Gang",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Structural Safety"
+    ],
+    "volume": "58",
+    "page": "1-10",
+    "published": {
+      "date-parts": [
+        [
+          2016,
+          1
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2016,
+          1
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.strusafe.2015.08.002",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167473015000624?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167473015000624?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "R05": {
+    "DOI": "10.1002/tal.1615",
+    "title": [
+      "Failure analysis of a transmission tower subjected to combined wind and rainfall excitations"
+    ],
+    "author": [
+      {
+        "ORCID": "https://orcid.org/0000-0002-4431-3872",
+        "authenticated-orcid": false,
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Coastal and Offshore Engineering Dalian University of Technology  Dalian China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hong‐Nan",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Coastal and Offshore Engineering Dalian University of Technology  Dalian China"
+          },
+          {
+            "name": "School of Civil Engineering Shenyang Jianzhu University  Shenyang China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jia",
+        "family": "Wang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "State Key Laboratory of Coastal and Offshore Engineering Dalian University of Technology  Dalian China"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "The Structural Design of Tall and Special Buildings"
+    ],
+    "volume": "28",
+    "issue": "10",
+    "article-number": "e1615",
+    "published": {
+      "date-parts": [
+        [
+          2019,
+          5
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2019,
+          7
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2019,
+          5
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1002/tal.1615",
+    "link": [
+      {
+        "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1002%2Ftal.1615",
+        "content-type": "application/pdf",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/tal.1615",
+        "content-type": "application/pdf",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/full-xml/10.1002/tal.1615",
+        "content-type": "application/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/tal.1615",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  },
+  "R06": {
+    "DOI": "10.1016/j.jweia.2020.104098",
+    "title": [
+      "Fragility analysis of a transmission tower under combined wind and rain loads"
+    ],
+    "author": [
+      {
+        "given": "Xing",
+        "family": "Fu",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Hong-Nan",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Gang",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0003-0312-5207",
+        "authenticated-orcid": false,
+        "given": "Zhi-Qian",
+        "family": "Dong",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Journal of Wind Engineering and Industrial Aerodynamics"
+    ],
+    "volume": "199",
+    "page": "104098",
+    "article-number": "104098",
+    "published": {
+      "date-parts": [
+        [
+          2020,
+          4
+        ]
+      ]
+    },
+    "published-print": {
+      "date-parts": [
+        [
+          2020,
+          4
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.1016/j.jweia.2020.104098",
+    "link": [
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167610520300088?httpAccept=text/xml",
+        "content-type": "text/xml",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      },
+      {
+        "URL": "https://api.elsevier.com/content/article/PII:S0167610520300088?httpAccept=text/plain",
+        "content-type": "text/plain",
+        "content-version": "vor",
+        "intended-application": "text-mining"
+      }
+    ]
+  },
+  "R07": {
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1016%2Fj.engstruct.2021.111913"
+  },
+  "R08": {
+    "error": "404 Client Error: Not Found for url: https://api.crossref.org/works/10.11776%2Fj.issn.1000-4939.2024.02.014"
+  },
+  "R09": {
+    "DOI": "10.3390/electronics14030558",
+    "title": [
+      "Predicting the Dynamic Response of Transmission Tower–Line Systems Under Wind–Rain Loads"
+    ],
+    "author": [
+      {
+        "ORCID": "https://orcid.org/0009-0006-4601-7897",
+        "authenticated-orcid": false,
+        "given": "Bo",
+        "family": "Yang",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Faculty of Information Engineering and Automation, Kunming University of Science and Technology, Kunming 650500, China"
+          },
+          {
+            "name": "Computer Technology Application Key Lab of the Yunnan Province, Kunming 650500, China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Yifan",
+        "family": "Luo",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Information Engineering and Automation, Kunming University of Science and Technology, Kunming 650500, China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0009-0000-6721-8459",
+        "authenticated-orcid": false,
+        "given": "Yingna",
+        "family": "Li",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Information Engineering and Automation, Kunming University of Science and Technology, Kunming 650500, China"
+          },
+          {
+            "name": "Computer Technology Application Key Lab of the Yunnan Province, Kunming 650500, China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0001-7366-4420",
+        "authenticated-orcid": false,
+        "given": "Lulu",
+        "family": "Wang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Information Engineering and Automation, Kunming University of Science and Technology, Kunming 650500, China"
+          },
+          {
+            "name": "Computer Technology Application Key Lab of the Yunnan Province, Kunming 650500, China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      },
+      {
+        "given": "Jiawen",
+        "family": "Zhang",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Information Engineering and Automation, Kunming University of Science and Technology, Kunming 650500, China"
+          }
+        ],
+        "role": [
+          {
+            "role": "author",
+            "vocabulary": "crossref"
+          }
+        ]
+      }
+    ],
+    "container-title": [
+      "Electronics"
+    ],
+    "volume": "14",
+    "issue": "3",
+    "page": "558",
+    "published": {
+      "date-parts": [
+        [
+          2025,
+          1,
+          30
+        ]
+      ]
+    },
+    "published-online": {
+      "date-parts": [
+        [
+          2025,
+          1,
+          30
+        ]
+      ]
+    },
+    "type": "journal-article",
+    "URL": "https://doi.org/10.3390/electronics14030558",
+    "link": [
+      {
+        "URL": "https://www.mdpi.com/2079-9292/14/3/558/pdf",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ]
+  }
+}

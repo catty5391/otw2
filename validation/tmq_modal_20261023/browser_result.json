@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "Homepage publishes actual coupled modal results",
+    "Report loads 160 mode shapes, three matched tower modes and scientific figures",
+    "Canvas animates saved eigenvectors and supports pause",
+    "Tower-shape shortcuts select matched global mode numbers",
+    "Model switching and mobile layout work without viewport overflow",
+    "No browser page errors"
+  ],
+  "errors": []
+}

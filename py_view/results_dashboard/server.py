@@ -15,6 +15,7 @@ from typing import Any, Iterator
 from urllib.parse import parse_qs, urlparse
 
 from util.analysis.result_quality import MemberDomainRange, ResultQuality, normalize_result_quality
+from py_view.results_dashboard.navigation import GROUPS, PAGES, render_page, add_detail_navigation
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -28,6 +29,61 @@ API_SCHEMA = "otw2.results_dashboard.v2"
 QUALITY_SUMMARY_SCHEMA = "otw2.result_quality_summary.v1"
 FIRST_DOMAIN_PREVIEW_LIMIT = 20
 TMQ_CASE_KEYS = {"p102_row_a", "p102_row_b", "p89_pf"}
+STEEL02_TMQ_ROOT = "initial_imperfection_material/steel02_tmq_comparison"
+SEGMENTED_VALIDATION_ROOT = "initial_imperfection_material/segmented_member_validation"
+TOWER_PUSHOVER_ROOT = "initial_imperfection_material/tower_material_pushover"
+RAIN_LOADING_ROOT = "rain_loading"
+RAIN_LOADING_PUBLIC_FILES = {"README.md"} | {f"results/{name}" for name in (
+    "REPORT.md", "summary.json", "verification.json", "case_summary.csv",
+    "droplet_spectrum.csv", "synthetic_history.csv", "pressure_sweep.csv",
+    "tower_nodal_loads.csv", "conductor_nodal_loads.csv", "stationary_load_spectrum.csv",
+    "loading_interface.md", "loading_interface_verification.json", "loading_interface_history.csv")}
+RAIN_LOADING_PUBLIC_FILES |= {f"results/{name}.{extension}" for name in (
+    "drop_spectrum", "rain_flux_closure", "load_sensitivity", "synthetic_history",
+    "poisson_verification", "tower_line_loads", "tower_response", "load_power_spectrum", "loading_interface_validation")
+    for extension in ("png", "svg", "pdf")}
+TOWER_PUSHOVER_PUBLIC_FILES = {"README.md"} | {f"results/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "verification.json", "case_summary.csv", "histories.csv",
+    "damage_candidates.json", "issues.json", "plan.json", "common_range.csv", "execution_notes.json")}
+TOWER_PUSHOVER_PUBLIC_FILES |= {f"results/{name}.{extension}" for name in (
+    "capacity", "alongwind_capacity", "member_events", "story_drift", "stiffness")
+    for extension in ("png", "svg", "pdf")}
+TOWER_PUSHOVER_PUBLIC_FILES |= {f"results/runs/{scheme}_deg_{angle}/{name}"
+    for scheme in ("steel01_four_segments", "steel02_four_segments", "tmq") for angle in (0, 30, 45, 90)
+    for name in ("summary.json", "history.csv", "attempts.jsonl", "input_audit.json", "section_groups.json")}
+SEGMENTED_VALIDATION_PUBLIC_FILES = {"README.md"} | {f"results/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "verification.json", "case_summary.csv", "histories.csv",
+    "convergence/summary.json", "convergence/plan.json", "convergence/mesh_summary.csv",
+    "convergence/fiber_summary.csv", "convergence/elastic_summary.csv",
+    "direction/direction_summary.json", "direction/direction_plan.json", "direction/direction_geometry_audit.csv",
+    "direction/direction_seed_geometry_verification.json")}
+SEGMENTED_VALIDATION_PUBLIC_FILES |= {f"results/{name}.{extension}" for name in (
+    "mesh_curves", "cyclic_curves", "direction_curves", "direction_peaks", "section_directions")
+    for extension in ("png", "svg", "pdf")}
+STEEL02_TMQ_FIGURES = ("monotonic", "hysteresis", "mesh_and_step", "imperfection",
+                      "mechanism", "convergence", "loading_and_geometry", "forcebeam_hysteresis")
+STEEL02_TMQ_PUBLIC_FILES = {"README.md"} | {f"results/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "plan.json", "verification.json",
+    "mesh_summary.csv", "convergence_summary.csv")}
+STEEL02_TMQ_PUBLIC_FILES |= {f"results/{name}.{ext}" for name in STEEL02_TMQ_FIGURES for ext in ("png","svg","pdf")}
+STEEL02_TMQ_RUNS = {f"{member}_{loading}_{suffix}"
+    for member in ("tower_median","long_demo") for loading in ("monotonic","cyclic","elastic")
+    for suffix in ("steel02_4","steel02_16","tmq","straight_steel02")}
+STEEL02_TMQ_RUNS |= {f"{member}_{suffix}" for member in ("tower_median","long_demo") for suffix in (
+    "monotonic_steel02_8", "monotonic_steel02_32", "imperfection_l2000", "imperfection_l500",
+    "shape_triangle", "shape_legacy_midpoint_only", "forcebeam_4", "forcebeam_16",
+    "cyclic_forcebeam_4", "cyclic_forcebeam_16", "monotonic_step_half")}
+STEEL02_TMQ_PUBLIC_FILES |= {f"results/runs/{run}/{name}" for run in STEEL02_TMQ_RUNS for name in (
+    "history.csv", "attempts.csv", "summary.json")}
+STEEL02_TMQ_LITERATURE_FILES = {"README.md", "download_manifest.json", "jeddi_2020_kns.pdf", "uriz_mahin_2008_peer.pdf"}
+STEEL02_TMQ_LITERATURE_FILES |= {f"supplement_20261029/{name}" for name in (
+    "download_manifest.json", "du_ssrc_2022.pdf", "vettoretto_2023_buildings.pdf")}
+LIU_PHM_PUBLIC_FILES = {"README.md"} | {f"results/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "fit.json", "events.json", "verification.json",
+    "curved_history.csv", "polygon_history.csv", "paper_unloading_history.csv", "opensees_history.csv",
+    "postbuckling_fit.csv", "reloading_fit.csv", "P_diagnostic_prefix.csv", "Q_diagnostic_prefix.csv")}
+LIU_PHM_PUBLIC_FILES |= {f"results/{name}.{ext}" for name in (
+    "full_hysteresis", "branch_fits", "literature_envelopes", "observed_diagnostics") for ext in ("png", "svg", "pdf")}
 TMQ_PUBLIC_FILES = {
     "README.md", "REPORT.md", "results/index.html", "results/summary.json",
     "results/full_hysteresis.png", "results/full_hysteresis.svg", "results/full_hysteresis.pdf",
@@ -69,6 +125,81 @@ TMQ_PUBLIC_FILES |= {f"{TMQ_MODAL_ROOT}/runs/{case}/{name}" for case in TMQ_MODA
     "summary.json","modes.csv","eigenvectors.npz","geometry.json","viewer_data.json",
     "opensees_modal_properties.txt","opensees_modal_properties.json","stiffness.npz","mass.npz","equation_modes.npz")}
 TMQ_B1_ROOT = "followup_results/B1_20261024"
+TMQ_B2_ROOT = "followup_results/B2_20261024"
+TMQ_PARAMETER_ROOT = "followup_results/parameter_identification_20261026"
+TMQ_ORDERED_ROOT = "followup_results/ordered_history_20261026"
+TMQ_CARDEN_ROOT = "followup_results/carden_conditional_20261026"
+TMQ_CARDEN_SIGN_ROOT = "followup_results/carden_sign_audit_20261028"
+TMQ_PUBLIC_FILES |= {f"{TMQ_CARDEN_SIGN_ROOT}/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "verification.json", "tests.log",
+    "coordinate_and_shift_audit.png", "coordinate_and_shift_audit.svg", "coordinate_and_shift_audit.pdf",
+    "source_page101.png", "recovery_crossings.csv", "browser_checks.json")}
+TMQ_DEVELOPMENT_ROOT = "followup_results/development_notes_20261028"
+TMQ_PUBLIC_FILES |= {f"{TMQ_DEVELOPMENT_ROOT}/{name}" for name in ("index.html", "REPORT.md")}
+TMQ_SINGLE_COMPARE_ROOT = "followup_results/single_tower_wind_comparison_20261028"
+TMQ_LINE_COMPARE_ROOT = "followup_results/tower_line_wind_comparison_20261028"
+TMQ_PUBLIC_FILES |= {f"{root}/{name}" for root in (TMQ_SINGLE_COMPARE_ROOT, TMQ_LINE_COMPARE_ROOT)
+                    for name in ("index.html", "REPORT.md", "summary.json", "comparison.csv", "verification.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_SINGLE_COMPARE_ROOT}/{name}" for name in (
+    "displacement_comparison.png", "force_displacement_comparison.png", "difference_comparison.png",
+    "case_selections.json", "executions.json", "executions_final.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_LINE_COMPARE_ROOT}/{name}" for name in (
+    "input_audit.json", "comparison.json", "plan.json", "runtime_budget_adjustment.json", "validation.json", "tmq_state_events.json",
+    "control_displacement.png", "tower_base_shear.png", "hanger_displacement.png",
+    "cable_tension.png", "v_string_force.png", "pushover_curve.png")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_SINGLE_COMPARE_ROOT}/runs/{scheme}_{angle}{suffix}/{name}"
+                    for scheme in ("tmq", "steel02_four_segments") for angle in (0, 30, 45, 90)
+                    for suffix in ("", "_budget_retry")
+                    for name in ("summary.json", "history.csv", "input_audit.json", "wind_load_plan.json",
+                                 "wind_nodal_loads.csv", "equilibrium.jsonl", "attempts.jsonl",
+                                 "node_states.csv.gz", "member_forces.csv.gz", "support_reactions.csv")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_LINE_COMPARE_ROOT}/{scheme}_deg_{angle}/{name}"
+                    for scheme in ("tmq", "segmented_reference") for angle in (0, 30, 45, 90)
+                    for name in ("summary.json", "history.csv", "targets.json", "states.jsonl",
+                                 "wind_load_plan.json", "semantic_wind_loads.json", "semantic_gravity_loads.json",
+                                 "equilibrium.jsonl", "attempts.jsonl")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_CARDEN_ROOT}/{name}" for name in (
+    "index.html", "REPORT.md", "summary.json", "verification.json", "frozen_plan.json", "diagnostics.json",
+    "observed_compression_peaks.csv", "P_predictions.csv", "Q_predictions.csv", "P_refined_predictions.csv", "Q_refined_predictions.csv")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_CARDEN_ROOT}/{name}.{ext}" for name in ("full_hysteresis", "mechanism_diagnostics") for ext in ("svg", "png", "pdf")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_ORDERED_ROOT}/{name}" for name in (
+    "index.html", "summary.json", "REPORT.md", "verification.json", "specimen_audit.csv", "curves.json",
+    "grouped_observations.png", "grouped_observations.svg", "grouped_observations.pdf")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_PARAMETER_ROOT}/{name}" for name in (
+    "index.html", "summary.json", "REPORT.md", "INTEGRATION.md", "verification.json", "verification.log", "publication_verification.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_PARAMETER_ROOT}/{group}/{name}" for group in (
+    "experimental_peak_features", "algorithm_check", "single_angle_features", "tower_audit")
+    for name in ("summary.json", "REPORT.md", "index.html")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_PARAMETER_ROOT}/{group}/{name}" for group, names in (
+    ("experimental_peak_features", ("features.json", "identified_peak_parameters.csv")),
+    ("algorithm_check", ("frozen_plan.json", "training.json", "holdout.json", "ga_history.csv",
+                         "training_ordered_predictions.csv", "holdout_ordered_predictions.csv", "example_fit_settings.json")),
+    ("single_angle_features", ("source_features.json", "conditional_phi.csv"))) for name in names}
+TMQ_PUBLIC_FILES |= {f"{TMQ_PARAMETER_ROOT}/{group}/{name}.{ext}" for group, name in (
+    ("experimental_peak_features", "peak_identification"), ("algorithm_check", "synthetic_recovery"),
+    ("single_angle_features", "single_angle_capacity")) for ext in ("svg", "png", "pdf")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/{name}" for name in (
+    "index.html", "summary.json", "REPORT.md", "execution_status.json", "verification.json", "execution_log.md")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/{group}/{name}" for group in ("insulator_grid", "frequency_response")
+    for name in ("index.html", "summary.json", "REPORT.md", "verification.json", "frozen_plan.json", "modal_admission.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/insulator_grid/{name}" for name in (
+    "FROZEN_PLAN.md", "execution.json", "response_history.csv", "grid_comparisons.csv", "input_checks.csv",
+    "conductor_strength_screen.csv", "conductor_source_verification.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/insulator_grid/{name}.{ext}" for name in (
+    "grid_response", "grid_forces") for ext in ("svg", "png", "pdf")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/frequency_response/{name}" for name in (
+    "eigen_quality.json", "load_audit.json", "response_metrics.csv", "static_metrics.csv", "execution_log.md",
+    "frequency_grid_checks.json", "postprocessing_revision.json",
+    "output_descriptors.json", "frequency_responses.npz")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_B2_ROOT}/frequency_response/{name}.{ext}" for name in (
+    "response_curves", "truncation_errors") for ext in ("svg", "png", "pdf")}
+TMQ_INSULATOR_ROOT = "followup_results/insulator_sensitivity_20261024"
+TMQ_INSULATOR_CASES = {f"{variant}_{angle}" for variant in ("elastic","tension_only","regularized") for angle in (0,45)}
+TMQ_PUBLIC_FILES |= {f"{TMQ_INSULATOR_ROOT}/{name}" for name in (
+    "index.html","summary.json","REPORT.md","comparisons.csv","response_history.csv","verification.json","source_snapshot_correction.json")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_INSULATOR_ROOT}/{name}.{ext}" for name in ("standalone_comparison","tower_comparison") for ext in ("svg","png","pdf")}
+TMQ_PUBLIC_FILES |= {f"{TMQ_INSULATOR_ROOT}/runs/{case}/{name}" for case in TMQ_INSULATOR_CASES
+    for name in ("insulator_history.csv","history.csv","summary.json","equilibrium.jsonl")}
 TMQ_PUBLIC_FILES |= {f"{TMQ_B1_ROOT}/{name}" for name in (
     "index.html","summary.json","REPORT.md","verification.json","execution_status.json","execution_log.md","publication_manifest.json")}
 TMQ_PUBLIC_FILES |= {f"{TMQ_B1_ROOT}/{group}/{name}" for group in ("audit","modal","wind_projection","damping")
@@ -688,6 +819,18 @@ class DashboardData:
                 }
             )
         reports = [
+                {"key": "rain-loading-report", "name": "雨谱、塔线雨荷载与数值验证", "type": "Markdown"},
+                {"key": "rain-loading-literature", "name": "风驱雨文献与公式来源调查", "type": "Markdown"},
+                {"key": "tower-pushover-report", "name": "全塔位移控制推覆：三方案四风角与停止问题", "type": "Markdown"},
+                {"key": "segmented-validation-report", "name": "四分段初缺陷：空间单杆网格、方向与幅值验证", "type": "Markdown"},
+                {"key": "liu-angle-report", "name": "刘俊才角钢曲线本构：解析公式、拟合和实际OpenSees试验", "type": "Markdown"},
+                {"key": "tmq-carden-sign-audit", "name": "Carden拟合偏左：符号、原点和恢复分支审计", "type": "Markdown"},
+                {"key": "tmq-development", "name": "当前新材料：实现流程、公式、参数缺口与确定方法", "type": "Markdown"},
+                {"key": "tmq-single-wind-comparison", "name": "新旧单塔方案：四风攻角静态风荷载对比", "type": "Markdown"},
+                {"key": "tmq-tower-line-wind-comparison", "name": "新旧塔线方案：四风攻角、挂点与索力对比", "type": "Markdown"},
+                {"key": "tmq-parameter-study", "name": "TMQ 参数识别：实际试验特征、遗传算法和适用范围", "type": "Markdown"},
+                {"key": "tmq-parameter-literature", "name": "TMQ 遗传算法与角钢参数文献核查", "type": "Markdown"},
+                {"key": "tmq-parameter-sources", "name": "TMQ 参数论文获取状态与精确出处", "type": "Markdown"},
                 {"key": "tmq-report", "name": "Tian–Ma–Qu 新材料：实施步骤与完整滞回结果", "type": "Markdown"},
                 {"key": "tmq-sources", "name": "Tian–Ma–Qu 文献公式、参数与缺项核查", "type": "Markdown"},
                 {"key": "tmq-readme", "name": "Tian–Ma–Qu 运行与测试说明", "type": "Markdown"},
@@ -722,6 +865,55 @@ class DashboardData:
         return candidate if candidate and candidate.is_relative_to(self.tmq_root.resolve()) else None
 
     def tian_ma_qu(self) -> dict[str, Any]:
+        carden_path = self.tmq_file(f"{TMQ_CARDEN_ROOT}/summary.json")
+        carden = self._read_json(carden_path) if carden_path else None
+        if carden is not None:
+            if carden.get("schema") != "otw2.tmq_carden_conditional.v1":
+                raise ValueError("不支持的Carden条件识别格式")
+            carden = {key: carden[key] for key in ("schema", "status", "strict_geometry_admitted",
+                "conditional_nominal_geometry", "physical_validation", "production_parameters_changed", "phi",
+                "curve_metrics", "tension_refinement") if key in carden}
+            carden["viewer_url"] = f"/tmq/{TMQ_CARDEN_ROOT}/index.html"
+        ordered_path = self.tmq_file(f"{TMQ_ORDERED_ROOT}/summary.json")
+        ordered = self._read_json(ordered_path) if ordered_path else None
+        if ordered is not None:
+            if ordered.get("schema") != "otw2.tmq_ordered_history_audit.v1":
+                raise ValueError("不支持的TMQ有序历史审计格式")
+            ordered = {key: ordered[key] for key in (
+                "schema", "curve_count", "point_count", "group_count", "strict_fit_admitted_count",
+                "real_history_fit_executed", "physical_validation", "production_parameters_changed")}
+            ordered["viewer_url"] = f"/tmq/{TMQ_ORDERED_ROOT}/index.html"
+        parameter_path = self.tmq_file(f"{TMQ_PARAMETER_ROOT}/summary.json")
+        parameters = self._read_json(parameter_path) if parameter_path else None
+        if parameters is not None:
+            if parameters.get("schema") != "otw2.tmq_parameter_identification_study.v1":
+                raise ValueError("不支持的TMQ参数识别格式")
+            parameters = {key: parameters[key] for key in (
+                "schema", "production_parameters_changed", "full_hysteresis_validation",
+                "single_angle_full_cyclic_parameters_determined", "peak_identification", "algorithm_check")
+                if key in parameters}
+            parameters["viewer_url"] = f"/tmq/{TMQ_PARAMETER_ROOT}/index.html"
+            angle_path = self.tmq_file(f"{TMQ_PARAMETER_ROOT}/single_angle_features/summary.json")
+            angle = self._read_json(angle_path) if angle_path else None
+            if angle is not None:
+                if angle.get("schema") != "otw2.tmq_single_angle_capacity_identification.v1":
+                    raise ValueError("不支持的单角钢容量比格式")
+                parameters["single_angle_capacity"] = {key: angle[key] for key in (
+                    "selected_compression_first", "excluded_tension_first", "conditional_phi_range", "full_hysteresis_validation")}
+        b2_path = self.tmq_file(f"{TMQ_B2_ROOT}/summary.json")
+        b2 = self._read_json(b2_path) if b2_path else None
+        if b2 is not None:
+            if b2.get("schema") != "otw2.tmq_b2_followup.v1":
+                raise ValueError("不支持的塔线续作结果格式")
+            b2 = {key: b2[key] for key in ("schema", "execution_status", "assessment", "physical_validation",
+                                           "components", "new_FE_runs", "new_eigen_solves", "gates")}
+        insulator_path=self.tmq_file(f"{TMQ_INSULATOR_ROOT}/summary.json")
+        insulators=self._read_json(insulator_path) if insulator_path else None
+        if insulators is not None:
+            if insulators.get("schema")!="otw2.insulator_sensitivity.v1":
+                raise ValueError("不支持的绝缘子敏感性结果格式")
+            insulators={key:insulators[key] for key in ("schema","physical_validation","all_cases_complete",
+                "all_equilibrium_checks_passed","actual_geometry_and_string_type_confirmed")}
         b1_path=self.tmq_file(f"{TMQ_B1_ROOT}/summary.json")
         b1=self._read_json(b1_path) if b1_path else None
         if b1 is not None and b1.get("schema")!="otw2.tmq_b1_diagnostics.v1":
@@ -753,7 +945,11 @@ class DashboardData:
         path = self.tmq_file("results/summary.json")
         if path is None:
             return {"available": False, "summary": None, "full_tower": tower, "weakness": weakness,
-                    "directional_wind":directional,"wind_speed":speed,"modal_analysis":modal,"b1_diagnostics":b1,"reason": "Tian–Ma–Qu 单杆结果尚未生成"}
+                    "directional_wind":directional,"wind_speed":speed,"modal_analysis":modal,"b1_diagnostics":b1,
+                    "insulator_sensitivity":insulators,"b2_followup":b2,"parameter_identification":parameters,
+                    "ordered_history": ordered,
+                    "carden_conditional": carden,
+                    "reason": "Tian–Ma–Qu 单杆结果尚未生成"}
         summary = self._read_json(path)
         if summary.get("schema_version") != 1 or not isinstance(summary.get("cases"), list):
             raise ValueError("不支持的 Tian–Ma–Qu 结果格式")
@@ -764,16 +960,46 @@ class DashboardData:
                 "wind_speed":speed,
                 "modal_analysis":modal,
                 "b1_diagnostics":b1,
+                "insulator_sensitivity":insulators,
+                "b2_followup":b2,
+                "parameter_identification":parameters,
+                "ordered_history": ordered,
+                "carden_conditional": carden,
                 "viewer_url": "/tmq/results/index.html",
                 "interpretation": "单杆与全塔结果分别呈现；已接入独立全塔试验，不等于角钢材料标定或全塔验证通过。"}
 
     def downloadable(self, key: str) -> Path | None:
         literature = self.project_root / "literature" / "transmission_tower_wind"
+        if key == "rain-loading-report":
+            return self._existing_file(self.project_root / RAIN_LOADING_ROOT / "results/REPORT.md")
+        if key == "rain-loading-literature":
+            return self._existing_file(self.project_root / "literature/rain_loading_investigation_20261102/README.md")
+        parameter_docs = {"tmq-parameter-literature": "README.md", "tmq-parameter-sources": "SOURCES.md",
+                          "tmq-parameter-candidates": "parameter_candidates.json"}
+        if key in parameter_docs:
+            return self._existing_file(self.project_root / "literature/tmq_parameter_identification_20261026" / parameter_docs[key])
+        if key == "tmq-parameter-study":
+            return self.tmq_file(f"{TMQ_PARAMETER_ROOT}/REPORT.md")
+        if key == "liu-angle-report":
+            return self._existing_file(self.project_root / "initial_imperfection_material/liu_angle_phm/results/REPORT.md")
+        if key == "steel02-tmq-report":
+            return self._existing_file(self.project_root / STEEL02_TMQ_ROOT / "results/REPORT.md")
+        if key == "tower-pushover-report":
+            return self._existing_file(self.project_root / TOWER_PUSHOVER_ROOT / "results/REPORT.md")
+        if key == "segmented-validation-report":
+            return self._existing_file(self.project_root / SEGMENTED_VALIDATION_ROOT / "results/REPORT.md")
+        if key == "steel02-tmq-literature":
+            return self._existing_file(self.project_root / "literature/opensees_segmented_steel02_20261028/README.md")
         tmq_downloads = {"tmq-report": "REPORT.md", "tmq-readme": "README.md",
-                         "tmq-summary": "results/summary.json", "tmq-hysteresis": "results/full_hysteresis.pdf"}
+                         "tmq-summary": "results/summary.json", "tmq-hysteresis": "results/full_hysteresis.pdf",
+                         "tmq-development": f"{TMQ_DEVELOPMENT_ROOT}/REPORT.md",
+                         "tmq-single-wind-comparison": f"{TMQ_SINGLE_COMPARE_ROOT}/REPORT.md",
+                         "tmq-tower-line-wind-comparison": f"{TMQ_LINE_COMPARE_ROOT}/REPORT.md"}
+        tmq_downloads["tmq-carden-sign-audit"] = f"{TMQ_CARDEN_SIGN_ROOT}/REPORT.md"
         if key in tmq_downloads:
             return self.tmq_file(tmq_downloads[key])
         allowed = {
+            "tmq-angle-literature": self.project_root / "literature" / "tmq_new_articles_20261026" / "README.md",
             "tmq-sources": literature / "tian_ma_qu_sources.md",
             "material-report": self.project_root / "initial_imperfection_material" / "REPORT.md",
             "tower-report": self.project_root
@@ -876,7 +1102,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def _send_file(self, path: Path, *, download: bool = False) -> None:
         body = path.read_bytes()
+        if path.suffix == ".html" and not download:
+            body = add_detail_navigation(body.decode("utf-8"), urlparse(self.path).path).encode("utf-8")
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        if path.suffix.lower() == ".md" and not download:
+            # Browsers do not consistently display text/markdown inline.
+            # Keep report links readable; explicit downloads retain their MIME.
+            content_type = "text/plain"
+        # Reports are stored as UTF-8.  Markdown has no in-document charset
+        # declaration, so browsers otherwise guess an encoding for Chinese.
+        if content_type.startswith("text/") or content_type in {
+            "application/json", "application/javascript", "application/xml", "image/svg+xml",
+        }:
+            content_type += "; charset=utf-8"
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
@@ -886,8 +1124,18 @@ class DashboardHandler(BaseHTTPRequestHandler):
         else:
             # Refresh application entry points after deployment, without asking
             # users to wait for an old HTML/JS version to expire.
-            self.send_header("Cache-Control", "no-cache" if path.suffix in {".html", ".js", ".css", ".json"}
+            self.send_header("Cache-Control", "no-cache" if path.suffix in {".html", ".js", ".css", ".json", ".md", ".txt", ".csv"}
                              else "public, max-age=300")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_page(self, key: str) -> None:
+        body = render_page(STATIC_ROOT, key).encode("utf-8")
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(body)
 
@@ -901,17 +1149,44 @@ class DashboardHandler(BaseHTTPRequestHandler):
         query = parse_qs(parsed.query)
         try:
             if parsed.path in {"/", "/index.html"}:
-                self._send_file(STATIC_ROOT / "index.html")
+                self._send_page("home")
+                return
+            if parsed.path.startswith("/modules/"):
+                key = parsed.path.removeprefix("/modules/").removesuffix("/")
+                if key not in GROUPS and key not in PAGES:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                elif not parsed.path.endswith("/"):
+                    self.send_response(HTTPStatus.FOUND)
+                    self.send_header("Location", f"/modules/{key}/")
+                    self.send_header("Cache-Control", "no-store")
+                    self.end_headers()
+                else:
+                    self._send_page(key)
                 return
             if parsed.path.startswith("/static/"):
                 name = parsed.path.removeprefix("/static/")
-                if name not in {"styles.css", "app.js"}:
+                if name not in {"styles.css", "app.js", "site.js", "rain.js", "rain.css"}:
                     self.send_error(HTTPStatus.NOT_FOUND)
                     return
                 self._send_file(STATIC_ROOT / name)
                 return
             if parsed.path == "/health":
                 self._send_json({"status": "ok", "service": "Z30103A6 results dashboard"})
+                return
+            if parsed.path in {"/rain-loading", "/rain-loading/", "/rain-loading/results/index.html"}:
+                self._send_page("rain")
+                return
+            if parsed.path.startswith("/rain-loading/"):
+                relative_path = parsed.path.removeprefix("/rain-loading/")
+                if relative_path == "literature/README.md":
+                    artifact = self.data._existing_file(self.data.project_root / "literature/rain_loading_investigation_20261102/README.md")
+                else:
+                    artifact = (self.data._existing_file(self.data.project_root / RAIN_LOADING_ROOT / relative_path)
+                                if relative_path in RAIN_LOADING_PUBLIC_FILES else None)
+                if artifact is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(artifact)
                 return
             if parsed.path == "/api/tian-ma-qu":
                 self._send_json(self.data.tian_ma_qu())
@@ -921,6 +1196,71 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 self.send_header("Location", "/tmq/results/index.html")
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
+                return
+            if parsed.path in {"/liu-phm", "/liu-phm/"}:
+                self.send_response(HTTPStatus.FOUND)
+                self.send_header("Location", "/liu-phm/results/index.html")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return
+            if parsed.path in {"/steel02-tmq", "/steel02-tmq/"}:
+                self.send_response(HTTPStatus.FOUND)
+                self.send_header("Location", "/steel02-tmq/results/index.html")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return
+            if parsed.path in {"/tower-pushover", "/tower-pushover/"}:
+                self.send_response(HTTPStatus.FOUND)
+                self.send_header("Location", "/tower-pushover/results/index.html")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return
+            if parsed.path.startswith("/tower-pushover/"):
+                relative_path = parsed.path.removeprefix("/tower-pushover/")
+                artifact = (self.data._existing_file(self.data.project_root / TOWER_PUSHOVER_ROOT / relative_path)
+                            if relative_path in TOWER_PUSHOVER_PUBLIC_FILES else None)
+                if artifact is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(artifact)
+                return
+            if parsed.path in {"/segmented-validation", "/segmented-validation/"}:
+                self.send_response(HTTPStatus.FOUND)
+                self.send_header("Location", "/segmented-validation/results/index.html")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return
+            if parsed.path.startswith("/segmented-validation/"):
+                relative_path = parsed.path.removeprefix("/segmented-validation/")
+                artifact = (self.data._existing_file(self.data.project_root / SEGMENTED_VALIDATION_ROOT / relative_path)
+                            if relative_path in SEGMENTED_VALIDATION_PUBLIC_FILES else None)
+                if artifact is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(artifact)
+                return
+            if parsed.path.startswith("/steel02-tmq/"):
+                relative_path = parsed.path.removeprefix("/steel02-tmq/")
+                artifact = None
+                if relative_path in STEEL02_TMQ_PUBLIC_FILES:
+                    artifact = self.data._existing_file(self.data.project_root / STEEL02_TMQ_ROOT / relative_path)
+                elif relative_path.startswith("literature/"):
+                    name = relative_path.removeprefix("literature/")
+                    if name in STEEL02_TMQ_LITERATURE_FILES:
+                        artifact = self.data._existing_file(self.data.project_root / "literature/opensees_segmented_steel02_20261028" / name)
+                if artifact is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(artifact)
+                return
+            if parsed.path.startswith("/liu-phm/"):
+                relative_path = parsed.path.removeprefix("/liu-phm/")
+                artifact = (self.data._existing_file(self.data.project_root / "initial_imperfection_material"
+                            / "liu_angle_phm" / relative_path) if relative_path in LIU_PHM_PUBLIC_FILES else None)
+                if artifact is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(artifact)
                 return
             if parsed.path.startswith("/tmq/"):
                 artifact = self.data.tmq_file(parsed.path.removeprefix("/tmq/"))
