@@ -4,6 +4,7 @@ from dataclasses import replace
 from html import escape
 import json
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 
 import numpy as np
 
@@ -17,7 +18,7 @@ def publish(output,summary,rows,old_rows,literal_rows,post,reloading):
     output=Path(output);fit=summary['fit'];geom=fit['geometry'];length=geom['length_m'];area=geom['area_m2']
     def save(fig,name):
         fig.tight_layout()
-        for ext in ('png','svg','pdf'):fig.savefig(output/f'{name}.{ext}',dpi=170,bbox_inches='tight')
+        save_figure(fig, output/f'{name}.png')
         plt.close(fig)
     def xy(data):return np.array([x['strain'] for x in data])*length*1000,np.array([x['stress_Pa'] for x in data])*area/1000
     x,y=xy(rows);xo,yo=xy(old_rows);xl,yl=xy(literal_rows)

@@ -16,6 +16,7 @@ import json
 import math
 import os
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 import re
 import subprocess
 import sys
@@ -516,51 +517,7 @@ def make_report(output):
         with (output/"comparison.csv").open("w", newline="", encoding="utf-8") as f:
             w=csv.DictWriter(f, fieldnames=list(comparisons[0])); w.writeheader(); w.writerows(comparisons)
     # Connected lines display accepted equilibrium states, not artificial target extrapolation.
-    plots = [("control_displacement.png", "along_wind_displacement_m", 1000., "Control 350 displacement along wind [mm]"),
-             ("tower_base_shear.png", "tower_base_along_N", .001, "Tower base shear increment along wind [kN]"),
-             ("hanger_displacement.png", "hanger_max_horizontal_displacement_m", 1000., "Maximum V lower-node horizontal displacement [mm]"),
-             ("cable_tension.png", "line_max_force_N", .001, "Maximum cable axial force [kN]"),
-             ("v_string_force.png", "insulator_min_force_N", .001, "Minimum V-leg axial force [kN]; tension positive")]
-    for filename, metric, scale, ylabel in plots:
-        fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharex=True)
-        for axis, angle in zip(axes.flat, ANGLES):
-            for kind, color in (("tmq", "#b84634"), ("segmented_reference", "#1b6996")):
-                directory=output/f"{kind}_deg_{angle:g}"
-                path=directory/"history.csv"
-                if not path.exists(): continue
-                with path.open() as f: rows=list(csv.DictReader(f))
-                rows=[r for r in rows if r["equilibrium_passed"]=="True" and r["global_balance_passed"]=="True"]
-                axis.plot([float(r["wind_speed_m_s"]) for r in rows], [float(r[metric])*scale for r in rows],
-                          color=color, label="TMQ" if kind=="tmq" else "Steel02 / 4 segments", marker=".", markersize=3)
-                invalid=[r for r in rows if r["axial_assumption_guard_passed"]!="True"]
-                if invalid:
-                    axis.scatter([float(r["wind_speed_m_s"]) for r in invalid], [float(r[metric])*scale for r in invalid],
-                                 facecolors="none", edgecolors=color, s=35)
-            axis.set_title(f"Wind angle {angle:g} deg")
-            axis.grid(alpha=.25); axis.set_xlabel("Static equivalent wind speed [m/s]")
-            axis.set_ylabel(ylabel, fontsize=9); axis.legend(fontsize=8)
-            if metric=="insulator_min_force_N": axis.axhline(0, color="black", lw=.7)
-        fig.suptitle("Tower + four 300 m spans | common frozen initial wind geometry\nOpen circles: V/cable assumption guard exceeded", fontsize=11)
-        fig.tight_layout(); fig.savefig(output/filename, dpi=170); plt.close(fig)
-    fig, axes=plt.subplots(2,2,figsize=(11,7))
-    for axis,angle in zip(axes.flat,ANGLES):
-        for kind,color in (("tmq","#b84634"),("segmented_reference","#1b6996")):
-            path=output/f"{kind}_deg_{angle:g}/history.csv"
-            if not path.exists(): continue
-            with path.open() as f: rows=list(csv.DictReader(f))
-            rows=[r for r in rows if r["equilibrium_passed"]=="True" and r["global_balance_passed"]=="True"]
-            axis.plot([1000*float(r["along_wind_displacement_m"]) for r in rows],
-                      [.001*float(r["tower_base_along_N"]) for r in rows], color=color,
-                      label="TMQ" if kind=="tmq" else "Steel02 / 4 segments")
-            invalid=[r for r in rows if r["axial_assumption_guard_passed"]!="True"]
-            axis.scatter([1000*float(r["along_wind_displacement_m"]) for r in invalid],
-                         [.001*float(r["tower_base_along_N"]) for r in invalid],facecolors="none",edgecolors=color,s=28)
-        axis.set_title(f"Wind angle {angle:g} deg")
-        axis.set_xlabel("Control 350 displacement along wind [mm]")
-        axis.set_ylabel("Tower base shear increment along wind [kN]")
-        axis.grid(alpha=.25); axis.legend(fontsize=8)
-    fig.suptitle("Static force-displacement comparison | open circles: V/cable assumption guard exceeded")
-    fig.tight_layout(); fig.savefig(output/"pushover_curve.png",dpi=170); plt.close(fig)
+    draw_figures(output)
     lines=["# 新旧模型塔线静态风对比（2026-10-28）", "",
         "对比当前 TMQ 轴向等效塔与四分段 Steel02 纤维梁塔，并连接相同四跨导线及两组 V 串。四个风攻角为 0°、30°、45°、90°，共同目标为 20、30、40、60、80 m/s。结果仅为未标定均匀静态风下的模型形式对比，不是极限风速、脉动风时程或工程设计验证。", "",
         "## 实施步骤", "",
@@ -671,6 +628,57 @@ def main():
     elif args.command=="report": make_report(args.output)
     else: run_batch(args.output, timeout=args.timeout)
 
+
+
+def draw_figures(output):
+    """Regenerate plots from saved evidence without solving or rewriting tables."""
+    from matplotlib import pyplot as plt
+    output = Path(output)
+    plots = [("control_displacement.png", "along_wind_displacement_m", 1000., "Control 350 displacement along wind [mm]"),
+             ("tower_base_shear.png", "tower_base_along_N", .001, "Tower base shear increment along wind [kN]"),
+             ("hanger_displacement.png", "hanger_max_horizontal_displacement_m", 1000., "Maximum V lower-node horizontal displacement [mm]"),
+             ("cable_tension.png", "line_max_force_N", .001, "Maximum cable axial force [kN]"),
+             ("v_string_force.png", "insulator_min_force_N", .001, "Minimum V-leg axial force [kN]; tension positive")]
+    for filename, metric, scale, ylabel in plots:
+        fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharex=True)
+        for axis, angle in zip(axes.flat, ANGLES):
+            for kind, color in (("tmq", "#b84634"), ("segmented_reference", "#1b6996")):
+                directory=output/f"{kind}_deg_{angle:g}"
+                path=directory/"history.csv"
+                if not path.exists(): continue
+                with path.open() as f: rows=list(csv.DictReader(f))
+                rows=[r for r in rows if r["equilibrium_passed"]=="True" and r["global_balance_passed"]=="True"]
+                axis.plot([float(r["wind_speed_m_s"]) for r in rows], [float(r[metric])*scale for r in rows],
+                          color=color, label="TMQ" if kind=="tmq" else "Steel02 / 4 segments", marker=".", markersize=3)
+                invalid=[r for r in rows if r["axial_assumption_guard_passed"]!="True"]
+                if invalid:
+                    axis.scatter([float(r["wind_speed_m_s"]) for r in invalid], [float(r[metric])*scale for r in invalid],
+                                 facecolors="none", edgecolors=color, s=35)
+            axis.set_title(f"Wind angle {angle:g} deg")
+            axis.grid(alpha=.25); axis.set_xlabel("Static equivalent wind speed [m/s]")
+            axis.set_ylabel(ylabel, fontsize=9); axis.legend(fontsize=8)
+            if metric=="insulator_min_force_N": axis.axhline(0, color="black", lw=.7)
+        fig.suptitle("Tower + four 300 m spans | common frozen initial wind geometry\nOpen circles: V/cable assumption guard exceeded", fontsize=11)
+        fig.tight_layout(); save_figure(fig, output/filename); plt.close(fig)
+    fig, axes=plt.subplots(2,2,figsize=(11,7))
+    for axis,angle in zip(axes.flat,ANGLES):
+        for kind,color in (("tmq","#b84634"),("segmented_reference","#1b6996")):
+            path=output/f"{kind}_deg_{angle:g}/history.csv"
+            if not path.exists(): continue
+            with path.open() as f: rows=list(csv.DictReader(f))
+            rows=[r for r in rows if r["equilibrium_passed"]=="True" and r["global_balance_passed"]=="True"]
+            axis.plot([1000*float(r["along_wind_displacement_m"]) for r in rows],
+                      [.001*float(r["tower_base_along_N"]) for r in rows], color=color,
+                      label="TMQ" if kind=="tmq" else "Steel02 / 4 segments")
+            invalid=[r for r in rows if r["axial_assumption_guard_passed"]!="True"]
+            axis.scatter([1000*float(r["along_wind_displacement_m"]) for r in invalid],
+                         [.001*float(r["tower_base_along_N"]) for r in invalid],facecolors="none",edgecolors=color,s=28)
+        axis.set_title(f"Wind angle {angle:g} deg")
+        axis.set_xlabel("Control 350 displacement along wind [mm]")
+        axis.set_ylabel("Tower base shear increment along wind [kN]")
+        axis.grid(alpha=.25); axis.legend(fontsize=8)
+    fig.suptitle("Static force-displacement comparison | open circles: V/cable assumption guard exceeded")
+    fig.tight_layout(); save_figure(fig, output/"pushover_curve.png"); plt.close(fig)
 
 if __name__=="__main__":
     main()

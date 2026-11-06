@@ -3,6 +3,7 @@ import csv
 import html
 import json
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 
 import matplotlib
 matplotlib.use('Agg')
@@ -13,7 +14,7 @@ from .experiment import initial_coordinates, write_csv
 
 FIGURES = ('monotonic', 'hysteresis', 'mesh_and_step', 'imperfection',
            'mechanism', 'convergence', 'loading_and_geometry', 'forcebeam_hysteresis')
-COLORS = {'steel02_4':'#d18424','steel02_16':'#226d93','tmq':'#bd4054','straight_steel02':'#82908d'}
+COLORS = {'steel02_4':'#0072B2','steel02_16':'#56B4E9','tmq':'#D55E00','straight_steel02':'#666666'}
 LABELS = {'steel02_4':'Steel02 / 4 segments','steel02_16':'Steel02 / 16 segments',
           'tmq':'TMQ / current tower coefficients','straight_steel02':'Straight Steel02 truss (no buckling)'}
 
@@ -23,7 +24,7 @@ def publish(output, summary, histories):
     plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False,'svg.fonttype':'none'})
     def save(fig,name):
         fig.tight_layout()
-        for ext in ('png','svg','pdf'):fig.savefig(output/f'{name}.{ext}',dpi=170,bbox_inches='tight')
+        save_figure(fig, output/f'{name}.png')
         plt.close(fig)
     def curve(ax,key,label,color=None,compression=False,**kwargs):
         rows=histories[key];sign=-1 if compression else 1
@@ -104,10 +105,10 @@ def publish(output, summary, histories):
                 accepted_substeps=c['accepted_substeps'],failed_attempts=c['failed_attempts'],
                 mean_iterations=c['accepted_iterations_mean'],max_iterations=c['accepted_iterations_max'],runtime_seconds=c['runtime_seconds']))
             ax[0,j].bar(i,c['accepted_iterations_mean'],color=COLORS[suffix])
-            ax[0,j].text(i,c['accepted_iterations_mean']+.08,f"max {c['accepted_iterations_max']}",ha='center',fontsize=8)
+            ax[0,j].text(i,c['accepted_iterations_mean']+.08,f"max {c['accepted_iterations_max']}",ha='center',va='bottom',fontsize=8)
             ax[1,j].bar(i,c['runtime_seconds'],color=COLORS[suffix])
         for a in ax[:,j]:a.set_xticks(range(4),['Steel02 4','Steel02 16','TMQ','Straight S02']);a.grid(axis='y',alpha=.2)
-        ax[0,j].set(ylabel='Mean accepted iterations',title=titles[key])
+        ax[0,j].set(ylabel='Mean accepted iterations',title=titles[key]);ax[0,j].margins(y=.22);ax[0,j].grid(False)
         ax[1,j].set(ylabel='Recorded wall time (s)',title='Includes fiber queries and Python bridge; not a tower speedup')
     save(fig,'convergence');write_csv(output/'convergence_summary.csv',stats)
     fig,ax=plt.subplots(1,2,figsize=(12,4.5))

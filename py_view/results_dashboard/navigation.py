@@ -79,7 +79,9 @@ def home_content(root):
     items += [rain, ('内力探索','按模型、分量和时间段查看全塔内力分布。','/modules/forces/'),
               ('报告与文献','查看方法说明、计算报告和本地论文。','/modules/resources/'),
               ('既有计算成果','查看初缺陷模型、推覆、找形和历史图表。','/modules/archive/')]
-    recent=[rain,GROUPS['tower'][2][0],GROUPS['materials'][2][0]]
+    gallery=('科研图表统一重绘','查看材料、推覆、静风与雨荷载的高清图，下载 PDF / SVG。','/scientific-figures/')
+    items.append(gallery)
+    recent=[gallery,rain,GROUPS['tower'][2][0]]
     return content.replace('{{categories}}',cards(items)).replace('{{recent}}',cards(recent,extra_class='recent-grid'))
 
 

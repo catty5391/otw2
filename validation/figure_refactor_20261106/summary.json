@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-06",
+  "skill": "nature-figure",
+  "backend": "Python / Matplotlib",
+  "figures": 37,
+  "groups": {
+    "tower": 5,
+    "steel02": 8,
+    "liu": 4,
+    "tmq": 3,
+    "single_wind": 3,
+    "tower_line": 6,
+    "rain": 8
+  },
+  "export_formats": [
+    "PNG 300 dpi",
+    "PDF TrueType text",
+    "SVG editable text"
+  ],
+  "rendered_alignment_passed": 37,
+  "rendered_pdf_text_passed": 37,
+  "rendered_collision_passed": 37,
+  "minimum_pdf_glyph_pt": 5.25,
+  "all_style_data_digests_unchanged": true,
+  "input_files_checked_per_group": {
+    "tmq": 16,
+    "tower_line": 201,
+    "single_wind": 135,
+    "liu": 16,
+    "steel02": 143,
+    "rain": 50,
+    "tower": 251
+  },
+  "unit_tests": {
+    "first_suite": 43,
+    "export_suite": 5,
+    "overlap": 3,
+    "unique_tests_passed": 45,
+    "failures": 0,
+    "skipped": 0
+  },
+  "http": {
+    "export_files": 111,
+    "all_status_200_and_exact_bytes": true,
+    "denied_paths_checked": 4
+  },
+  "browser": {
+    "passed": true,
+    "figures": 37,
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": []
+  },
+  "source_preflight": {
+    "composed_source_failures": 0,
+    "warnings_reviewed": 5,
+    "note": "Standalone regex checks cannot follow shared exporters. Composed actual source has no FAIL. Final PDF and axes measurements remain authoritative."
+  },
+  "visual_review": "All 37 figures reviewed in contact sheets; selected complete figures inspected; Steel02/TMQ old-color collision corrected and the 8 Steel02 figures re-exported and re-audited.",
+  "limits": [
+    "No new physical validation or full-tower solve.",
+    "Historical modal, 3D and unlisted figures retain their existing styles.",
+    "PNG is 300 dpi; no TIFF submission package was requested.",
+    "Zoom-clipped curves may be rasterized in PDF/SVG at 300 dpi to preserve actual clipping; text remains editable."
+  ],
+  "tmq_native_point_counts": {
+    "p102_row_a": {
+      "old_display": 86,
+      "new_display": 3401
+    },
+    "p102_row_b": {
+      "old_display": 86,
+      "new_display": 3401
+    },
+    "p89_pf": {
+      "old_display": 86,
+      "new_display": 3401
+    }
+  }
+}

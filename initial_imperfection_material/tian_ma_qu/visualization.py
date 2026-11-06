@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 
 import matplotlib
 matplotlib.use("Agg")
@@ -23,9 +24,9 @@ def create_figures(directory, bundles, variants):
         ax.plot(points[:,0], points[:,1], color="#176b8d", lw=1.15, label="TMQ prototype: ALL steps")
         native = bundle.get("opensees_rows")
         if native:
-            sampled = native[::max(1,len(native)//85)]
+            sampled = native  # Preserve every committed native equilibrium state.
             ax.scatter([r["displacement_m"]*1e3 for r in sampled], [r["force_N"]/1e3 for r in sampled],
-                       s=11, facecolors="none", edgecolors="#d47829", linewidths=.7, label="OpenSees truss check")
+                       s=2, facecolors="none", edgecolors="#333333", linewidths=.25, alpha=.45, zorder=1, label="OpenSees truss check")
         peaks = [e for e in events if e["event"] == "buckling"]
         ax.scatter([peaks[0]["strain"]*case.length*1e3], [peaks[0]["stress"]*case.area/1e3],
                    color="#b73445", marker="v", s=42, label="First buckling (exact event)", zorder=4)
@@ -36,8 +37,7 @@ def create_figures(directory, bundles, variants):
     fig.text(.5,.018,"Published 2022 coefficients + assumed E, rho, gamma, zeta. Demo loading; NOT a fitted experimental reproduction.",
              ha="center", fontsize=9, color="#8b3a21")
     fig.tight_layout(rect=(0,.06,1,.93))
-    for extension in ("png", "svg", "pdf"):
-        fig.savefig(directory/f"full_hysteresis.{extension}",dpi=180)
+    save_figure(fig, directory/'full_hysteresis.png')
     plt.close(fig)
 
     fig, axes = plt.subplots(len(bundles), 2, figsize=(13, 10))
@@ -49,7 +49,7 @@ def create_figures(directory, bundles, variants):
         axes[index,1].plot(t,[r["force_N"]/1e3 for r in rows],color="#9f4349",lw=1)
         axes[index,1].set(ylabel="Axial force (kN)",xlabel="Committed step (not physical time)")
     fig.suptitle("Full loading and response histories - no truncated cycles",fontsize=15)
-    fig.tight_layout(rect=(0,0,1,.96));fig.savefig(directory/"loading_history.png",dpi=160);plt.close(fig)
+    fig.tight_layout(rect=(0,0,1,.96));save_figure(fig, directory/"loading_history.png");plt.close(fig)
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 8))
     first = bundles[0];case = first["case"]
@@ -75,7 +75,7 @@ def create_figures(directory, bundles, variants):
     axes[1,1].set(xlabel="Displacement (mm)",ylabel="Force (kN)",title="Pre-yield cycles retrace the elastic line")
     axes[1,0].legend(fontsize=8);axes[1,1].legend(fontsize=8)
     fig.suptitle("Mechanism checks | parameter-dependent research prototype",fontsize=15)
-    fig.tight_layout(rect=(0,0,1,.96));fig.savefig(directory/"mechanism_checks.png",dpi=170);plt.close(fig)
+    fig.tight_layout(rect=(0,0,1,.96));save_figure(fig, directory/"mechanism_checks.png");plt.close(fig)
 
     if variants:
         fig,axes=plt.subplots(1,3,figsize=(15,4.8))
@@ -88,7 +88,7 @@ def create_figures(directory, bundles, variants):
                     ax.plot(points[:,0],points[:,1],lw=.7,alpha=.7,label=item["label"])
             ax.set(title=f"Uncalibrated {parameter}",xlabel="Displacement (mm)",ylabel="Force (kN)");ax.legend(fontsize=8)
         fig.suptitle("Missing-parameter sensitivity (P102 row A) - not an accuracy bound",fontsize=14)
-        fig.tight_layout(rect=(0,0,1,.93));fig.savefig(directory/"assumption_sensitivity.png",dpi=160);plt.close(fig)
+        fig.tight_layout(rect=(0,0,1,.93));save_figure(fig, directory/"assumption_sensitivity.png");plt.close(fig)
 
 
 def create_viewer(directory, bundles):

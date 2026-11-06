@@ -16,6 +16,7 @@ from urllib.parse import parse_qs, urlparse
 
 from util.analysis.result_quality import MemberDomainRange, ResultQuality, normalize_result_quality
 from py_view.results_dashboard.navigation import GROUPS, PAGES, render_page, add_detail_navigation
+from py_view.results_dashboard import figure_gallery
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -1148,6 +1149,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
         try:
+            if parsed.path in {"/scientific-figures", "/scientific-figures/"}:
+                body = figure_gallery.render(self.data.project_root).encode("utf-8")
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-cache")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            if parsed.path.startswith("/scientific-figures/"):
+                path = figure_gallery.artifact(self.data.project_root, parsed.path.removeprefix("/scientific-figures/"))
+                if path is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                else:
+                    self._send_file(path)
+                return
             if parsed.path in {"/", "/index.html"}:
                 self._send_page("home")
                 return

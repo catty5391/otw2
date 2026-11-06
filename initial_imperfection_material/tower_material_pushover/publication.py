@@ -5,6 +5,7 @@ import csv
 import html
 import json
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 import math
 
 from .experiment import OUTPUT, SCHEMES, ANGLES, write_json
@@ -151,7 +152,7 @@ def figures(root,cases):
             'story_drift':'Gravity subtracted; lower-section mean rigid rotation removed',
             'stiffness':'Initial stiffness: OLS of first six accepted samples (including gravity origin)'}[kind]
         fig.suptitle(caption,fontsize=12)
-        for ext in ('png','svg','pdf'):fig.savefig(root/f'{kind}.{ext}')
+        save_figure(fig, root/f'{kind}.png')
         plt.close(fig)
 
 

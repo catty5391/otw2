@@ -17,6 +17,7 @@ import json
 import math
 import os
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 import subprocess
 import sys
 import time
@@ -383,43 +384,7 @@ def publish(output):
         writer = csv.DictWriter(file, fieldnames=fields)
         writer.writeheader()
         writer.writerows(table)
-    fig, axes = plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
-    for angle, ax in zip(ANGLES,axes.flat):
-        for scheme, color, label in (("tmq","#156a8c","TMQ axial + elastic bending"),("steel02_four_segments","#c55d2b","4-segment Steel02 fiber")):
-            case = next(c for c in cases if c["scheme"] == scheme and c["angle_deg"] == angle)
-            rows = [r for r in case["history"] if r["equilibrium_passed"] == "True"]
-            ax.plot([float(r["wind_speed_m_s"]) for r in rows],[1000*float(r["along_wind_displacement_m"]) for r in rows],".-",color=color,label=label)
-        ax.set(title=f"Wind angle {angle} deg",xlabel="Equivalent steady wind speed (m/s)",ylabel="Node 350 along-wind increment (mm)")
-        ax.grid(alpha=.25)
-        ax.legend(fontsize=8)
-    fig.savefig(output/"displacement_comparison.png",dpi=170)
-    plt.close(fig)
-    fig, axes = plt.subplots(1,2,figsize=(12,4),constrained_layout=True)
-    for angle in ANGLES:
-        rows = [r for r in table if r["angle_deg"] == angle and r["comparable"]]
-        axes[0].plot([r["speed_m_s"] for r in rows],[r["tmq_vs_steel02_displacement_change_percent"] for r in rows],"o-",label=f"{angle} deg")
-        axes[1].plot([r["speed_m_s"] for r in rows],[r["member_axial_relative_L2_percent"] for r in rows],"o-",label=f"{angle} deg")
-    axes[0].set(xlabel="Wind speed (m/s)",ylabel="TMQ displacement change\nrelative to Steel02 (%)")
-    axes[1].set(xlabel="Wind speed (m/s)",ylabel="Physical-member axial-force\nrelative L2 difference (%)")
-    for ax in axes:
-        ax.grid(alpha=.25)
-        ax.legend()
-    fig.savefig(output/"difference_comparison.png",dpi=170)
-    plt.close(fig)
-    fig, axes = plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
-    for angle, ax in zip(ANGLES, axes.flat):
-        direction = math.cos(math.radians(angle)), math.sin(math.radians(angle))
-        for scheme,color,label in (("tmq","#156a8c","TMQ axial + elastic bending"),("steel02_four_segments","#c55d2b","4-segment Steel02 fiber")):
-            case = next(c for c in cases if c["scheme"] == scheme and c["angle_deg"] == angle)
-            rows=[r for r in case["history"] if r["equilibrium_passed"] == "True"]
-            ax.plot([1000*float(r["along_wind_displacement_m"]) for r in rows],
-                    [(float(r["base_shear_x_N"])*direction[0]+float(r["base_shear_y_N"])*direction[1])/1000 for r in rows],
-                    ".-",color=color,label=label)
-        ax.set(title=f"Wind angle {angle} deg",xlabel="Node 350 along-wind increment (mm)",ylabel="Along-wind base shear (kN)")
-        ax.grid(alpha=.25)
-        ax.legend(fontsize=8)
-    fig.savefig(output/"force_displacement_comparison.png",dpi=170)
-    plt.close(fig)
+    draw_figures(output, cases, table)
     report = _report(result)
     (output/"REPORT.md").write_text(report,encoding="utf-8")
     # Standalone report does not depend on a frontend build or a CDN.
@@ -638,6 +603,49 @@ def main():
     publish(args.output)
     return 0
 
+
+
+def draw_figures(output, cases, table):
+    """Regenerate plots from saved evidence without solving or rewriting tables."""
+    from matplotlib import pyplot as plt
+    output = Path(output)
+    fig, axes = plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
+    for angle, ax in zip(ANGLES,axes.flat):
+        for scheme, color, label in (("tmq","#156a8c","TMQ axial + elastic bending"),("steel02_four_segments","#c55d2b","4-segment Steel02 fiber")):
+            case = next(c for c in cases if c["scheme"] == scheme and c["angle_deg"] == angle)
+            rows = [r for r in case["history"] if r["equilibrium_passed"] == "True"]
+            ax.plot([float(r["wind_speed_m_s"]) for r in rows],[1000*float(r["along_wind_displacement_m"]) for r in rows],".-",color=color,label=label)
+        ax.set(title=f"Wind angle {angle} deg",xlabel="Equivalent steady wind speed (m/s)",ylabel="Node 350 along-wind increment (mm)")
+        ax.grid(alpha=.25)
+        ax.legend(fontsize=8)
+    save_figure(fig, output/"displacement_comparison.png")
+    plt.close(fig)
+    fig, axes = plt.subplots(1,2,figsize=(12,4),constrained_layout=True)
+    for angle in ANGLES:
+        rows = [r for r in table if r["angle_deg"] == angle and r["comparable"]]
+        axes[0].plot([r["speed_m_s"] for r in rows],[r["tmq_vs_steel02_displacement_change_percent"] for r in rows],"o-",label=f"{angle} deg")
+        axes[1].plot([r["speed_m_s"] for r in rows],[r["member_axial_relative_L2_percent"] for r in rows],"o-",label=f"{angle} deg")
+    axes[0].set(xlabel="Wind speed (m/s)",ylabel="TMQ displacement change\nrelative to Steel02 (%)")
+    axes[1].set(xlabel="Wind speed (m/s)",ylabel="Physical-member axial-force\nrelative L2 difference (%)")
+    for ax in axes:
+        ax.grid(alpha=.25)
+        ax.legend()
+    save_figure(fig, output/"difference_comparison.png")
+    plt.close(fig)
+    fig, axes = plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
+    for angle, ax in zip(ANGLES, axes.flat):
+        direction = math.cos(math.radians(angle)), math.sin(math.radians(angle))
+        for scheme,color,label in (("tmq","#156a8c","TMQ axial + elastic bending"),("steel02_four_segments","#c55d2b","4-segment Steel02 fiber")):
+            case = next(c for c in cases if c["scheme"] == scheme and c["angle_deg"] == angle)
+            rows=[r for r in case["history"] if r["equilibrium_passed"] == "True"]
+            ax.plot([1000*float(r["along_wind_displacement_m"]) for r in rows],
+                    [(float(r["base_shear_x_N"])*direction[0]+float(r["base_shear_y_N"])*direction[1])/1000 for r in rows],
+                    ".-",color=color,label=label)
+        ax.set(title=f"Wind angle {angle} deg",xlabel="Node 350 along-wind increment (mm)",ylabel="Along-wind base shear (kN)")
+        ax.grid(alpha=.25)
+        ax.legend(fontsize=8)
+    save_figure(fig, output/"force_displacement_comparison.png")
+    plt.close(fig)
 
 if __name__ == "__main__":
     raise SystemExit(main())

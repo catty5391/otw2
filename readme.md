@@ -1,5 +1,12 @@
 # 易损性分析流程
 
+## 科研图表统一重绘（2026-11-06）
+
+使用 nature-figure 技能整合公共科研绘图出口，完成材料滞回、全塔推覆、单塔/塔线静风及雨荷载7组37幅图。
+提供300 dpi PNG与PDF/SVG，保留曲线顺序、停止点和科学限定。37幅渲染审计通过，45项独立测试通过；原始数据与大图留在本地。
+
+[9999图册](http://localhost:9999/scientific-figures/) · [方法、范围与复现说明](util/postprocess/SCIENTIFIC_FIGURES.md) · [检查汇总](validation/figure_refactor_20261106/summary.json)
+
 ## 阶段同步与最新入口（2026-11-02）
 
 后续在完成并验证一个阶段后提交、推送到 `redevelop`。同步代码、测试、方法、结论报告、文献索引和必要的小型参数文件；

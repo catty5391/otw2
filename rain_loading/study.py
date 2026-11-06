@@ -6,6 +6,7 @@ Missing/failed FE cases remain explicitly missing/failed in the publication.
 from __future__ import annotations
 import csv,json,math,hashlib
 from pathlib import Path
+from util.postprocess.scientific_figures import save_figure
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -38,7 +39,7 @@ def csv_save(name,rows):
 
 
 def fig_save(name):
-    plt.tight_layout();plt.savefig(OUT/name,dpi=170);plt.close()
+    save_figure(plt.gcf(), OUT/name);plt.close()
 
 
 def main():
